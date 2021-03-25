@@ -1,0 +1,66 @@
+package com.example.webmoduleproject.web;
+
+import com.example.webmoduleproject.model.view.*;
+import com.example.webmoduleproject.service.AppointmentService;
+import com.example.webmoduleproject.service.PrescriptionService;
+import com.example.webmoduleproject.service.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+import java.security.Principal;
+import java.util.List;
+
+@Controller
+@RequestMapping("/prescriptions")
+public class PrescriptionController {
+    private final PrescriptionService prescriptionService;
+    private final UserService userService;
+    private final AppointmentService appointmentService;
+
+    public PrescriptionController(PrescriptionService prescriptionService, UserService userService, AppointmentService appointmentService) {
+        this.prescriptionService = prescriptionService;
+        this.userService = userService;
+        this.appointmentService = appointmentService;
+    }
+
+    @GetMapping("/details/{id}")
+    public String getExistingPrescription(@PathVariable("id") String appointmentId,
+                                                Model model) {
+        if (this.prescriptionService.existingPrescriptionByAppointmentId(appointmentId)) {
+            PrescriptionViewModel prescriptionViewModel = this.prescriptionService.getPrescriptionByAppointmentId(appointmentId);
+            MdDocumentViewModel mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+            mdDetailsByAppointmentId.setTelephone(prescriptionViewModel.getMdTelephoneNumber());
+            PatientPrescriptionViewModel patientViewModelByAppointmentId = this.appointmentService.getPatientPrescriptionViewModelByAppointmentId(appointmentId);
+            patientViewModelByAppointmentId.setAddress(prescriptionViewModel.getPatientAddress());
+            model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
+            model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
+            model.addAttribute("prescription", prescriptionViewModel);
+            return "prescription";
+        }
+        return "redirect:/home";
+    }
+
+    @PreAuthorize("hasRole('ROLE_MD')")
+    @GetMapping("/all")
+    public String getAllPrescriptionsByMd(Principal principal, Model model) {
+        String userEmail = principal.getName();
+        List<PrescriptionListAllViewModel> prescriptions = this.prescriptionService.getAllPrescriptionsByMdEmail(userEmail);
+        model.addAttribute("own", false);
+        model.addAttribute("prescriptions", prescriptions);
+        return "prescriptions-list";
+    }
+
+    @GetMapping("/own")
+    public String getOwnAmbulatoryListsByUserEmail(Principal principal, Model model) {
+        String userEmail = principal.getName();
+        List<PrescriptionListAllViewModel> prescriptions = this.prescriptionService.getAllPrescriptionsByPatientEmail(userEmail);
+        model.addAttribute("own", true);
+        model.addAttribute("prescriptions", prescriptions);
+        return "prescriptions-list";
+    }
+}

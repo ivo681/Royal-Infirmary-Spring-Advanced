@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body class="logged-in">
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="well-block">
+                            <div class="well-title">
+                                <h2>Questions? Book an Appointment With</h2>
+                                    <!-- <h4>Questions? Book an Appointment</h4> -->
+                            </div>
+                            <div class="col-sm-12 p-2">
+                                <div class="card align-items-center">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">My GP</h5>
+                                        <a th:href="@{/appointments/book/{id}(id = ${gpId})}" class="btn btn-success">Select</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-sm-12 p-2">
+                                <div class="card align-items-center">
+                                    <div class="card-body text-center">
+                                        <h5 class="card-title">Another Specialist</h5>
+                                        <a th:href="@{/appointments/book/choose-specialist}" class="btn btn-success">Select</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- form end -->
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="well-block">
+                            <div class="well-title">
+                                <h2>Why make an appointment with us</h2>
+                            </div>
+                            <div class="feature-block">
+                                <div class="feature feature-blurb-text">
+                                    <h4 class="feature-title">24/7 Support & Service</h4>
+                                    <div class="feature-content">
+                                        <p>We are openly engaging our community and this website is designed to function
+                                            as a communication portal between our medical staff and patients</p>
+                                    </div>
+                                </div>
+                                <div class="feature feature-blurb-text">
+                                    <h4 class="feature-title">Experienced Staff Available</h4>
+                                    <div class="feature-content">
+                                        <p>All of our staff at Royal Informary St. Sofia strive to deliver the highest
+                                            quality of patient care, living up to our core values- compassion, integrity
+                                            and excellence.</p>
+                                    </div>
+                                </div>
+                                <div class="feature feature-blurb-text">
+                                    <h4 class="feature-title">Low Price & Fees</h4>
+                                    <div class="feature-content">
+                                        <p>One of the most affordable prices in the health sector, delivering high-tech
+                                            and high-quality health service.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+</body>
+
+</html>

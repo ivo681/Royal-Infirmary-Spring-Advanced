@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body class="logged-in">
+    <header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+    </header>
+
+    <main>
+        <section class="py-5 container">
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well-block">
+                            <div class="well-title">
+                                <h2>Appointment summary</h2>
+                                <!-- <h4>Questions? Book an Appointment</h4> -->
+                            </div>
+                            <form th:object="${unconfirmedAppointmentById}" method="POST"
+                            th:action="@{/appointments/confirm/{id}(id = ${id})}">
+                                <!-- Form start -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="reason">Reason for appointment</label>
+                                            <input th:field="*{reason}" th:errorclass="bg-danger" id="reason" name="reason" type="text" placeholder="Reason" class="form-control input-md" readonly>
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="email">Email</label>
+                                            <input th:value="*{userEmail}" id="email" name="email" type="email" class="form-control input-md" readonly>
+                                        </div>
+                                    </div>
+                                    <!-- Text input-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="date">Preferred Date</label>
+                                            <input th:value="*{date}" th:errorclass="bg-danger" id="date" name="date" type="date" class="form-control input-md" readonly>
+                                        </div>
+                                    </div>
+                                    <!-- Select Basic -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="timeSpan">Preferred Time</label>
+                                            <input th:field="*{timeSpan}" th:errorclass="bg-danger" id="timeSpan" name="timeSpan" type="text" class="form-control input-md" readonly>
+                                        </div>
+                                    </div>
+                                    <!-- Select Basic -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="md">Appointment With</label>
+                                            <input th:value="*{mdFullName}" id="md" name="md" type="text" class="form-control input-md" readonly>
+                                        </div>
+                                    </div>
+                                    <!-- Button -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <br>
+                                            <button type="submit" name="action" class="btn btn-danger" value="cancel">Cancel</button>
+                                            <button type="submit" name="action" class="btn btn-primary" value="confirm">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- form end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+</body>
+
+</html>

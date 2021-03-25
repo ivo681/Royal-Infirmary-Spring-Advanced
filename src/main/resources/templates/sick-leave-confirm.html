@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments :: header">
+</head>
+
+<body class="patient-login">
+<header>
+    <nav th:replace="fragments/fragments :: navigation"></nav>
+</header>
+    <main>
+
+        <section class="py-5 container">
+            <div>
+                <div id="wholeTable" class="well-block" th:object="${sickLeaveView}">
+                    <div>
+                        <div class="prescription-row">
+                            <div class="col">
+                                <h2>Royal Infirmary St. Sofia</h2>
+                                <h3>Sick Leave Medical Certificate</h3>
+                                <h5 th:utext="'Date: ' + *{fromDate}"></h5>
+                            </div>
+                            <div class="col-auto"><img class="logo" src="/images/medicine-logo-png-1.png"></div>
+                        </div>
+                        <br>
+                        <h4 th:utext="'№:' + *{number}" class="row justify-content-center"></h4>
+                    </div>
+                    <br>
+                    <h4 class="col">Doctor Details</h4>
+                    <div th:object="${mdView}" class="well-block">
+                        <!--                        <form>-->
+                        <!-- Form start -->
+                        <div class="row">
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">MD</label>
+                                    <input id="mdName" name="mdName" type="text"
+                                           th:value="'' + *{firstName} + ' ' + *{lastName}" class="form-control input-md"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Doctor ID</label>
+                                    <input th:field="*{hospitalId}" name="hospitalId" type="text" placeholder="678475638"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Telephone Number</label>
+                                    <input th:field="*{telephone}" id="docTelephoneNumber" name="docTelephoneNumber"
+                                           type="text" placeholder="0897435212"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <!-- Text input-->
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Email</label>
+                                    <input th:field="*{email}" id="mdEmail" name="mdEmail" type="email" placeholder="E-Mail"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                        </form>-->
+                    </div>
+                    <br>
+                    <h4 class="col">Patient Details</h4>
+                    <div class="well-block" th:object="${patientView}">
+                        <div class="row">
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Patient Name</label>
+                                    <input th:value="'' + *{firstName} + ' ' + *{lastName}" id="patientName"
+                                           name="patientName" type="text"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">ID</label>
+                                    <input th:value="*{idNumber}" id="idNumber"
+                                           name="idNumber" type="text"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Address</label>
+                                    <input th:value="*{address}" id="address"
+                                           name="address" type="text"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Telephone Number</label>
+                                    <input th:value="*{telephone}" id="telephone"
+                                           name="telephone" type="text"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Job position</label>
+                                    <input th:value="*{job}" id="job"
+                                           name="job" type="text"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Employer</label>
+                                    <input th:value="*{employer}" id="employer"
+                                           name="employer" type="text"
+                                           class="form-control input-md" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <h4 class="col">Conclusions</h4>
+                    <div class="well-block">
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Diagnosis</label>
+                                    <textarea th:text="${sickLeaveView.getDiagnosis()}" class="form-control"
+                                              id="diagnosis" rows="3" readonly></textarea>
+                                </div>
+                            </div>
+                                <div class="col-md-12 p-1">
+                                    <div class="form-group">
+                                        <label class="control-label">Reason for absence</label>
+                                        <input th:value="*{reason}" name="reason" type="text"
+                                               class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <p></p>
+                                <p></p>
+                                <p></p>
+                                <div class="col-md-6 p-1">
+                                    <div class="form-group">
+                                        <label class="control-label">Absence period:</label>
+                                        <div class=" input-md">
+                                            <label class="control-label">from</label>
+                                            <label>
+                                                <input th:value="*{fromDate}" type="text"
+                                                       max="9999-12-31" name="fromDate" readonly>
+                                            </label>
+                                            <label class="control-label">to</label>
+                                            &nbsp
+                                            <label>
+                                                <input th:value="*{toDate}" type="text"
+                                                       max="9999-12-31" name="toDate" readonly>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="prescription-row p-1">
+                        <div class="col">
+                            <img class="float-end stamp" src="/images/Screenshot 2021-03-05 19.17.28_burned.png">
+                        </div>
+                    </div>
+                    <br>
+                    <h4 class="row justify-content-center">In accordance with Ministry of Health</h4>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <br>
+                        <button name="downloadButton" class="btn btn-success"
+                            onclick="downloadTableWithPdf()">Download</button>    
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="footer-container">
+            <span class="text-muted">©2021 Royal Infirmary St. Sofia</span>
+            <!-- <div>
+                    <a onclick="window.scrollTo(0,0)">Go back to top</a>
+                </div> -->
+        </div>
+    </footer>
+</body>
+
+</html>

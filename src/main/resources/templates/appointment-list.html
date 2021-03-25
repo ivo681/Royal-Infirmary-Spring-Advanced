@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+
+            <div class="table-responsive form">
+                <input id='myInput' onkeyup='searchTable()' type='text' placeholder="Search...">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+                <h1 th:if="${today}" class="header-home">Today's Appointments</h1>
+                <h1 th:if="${past}" class="header-home">Past Appointments</h1>
+                <h1 th:if="${future}" class="header-home">Future Appointments</h1>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)" class="text-center sortable">Date</th>
+                            <th onclick="sortTable(1)" class="text-center sortable">Time slot</th>
+                            <th onclick="sortByText(2)" class="text-center sortable">First name</th>
+                            <th onclick="sortByText(3)" class="text-center sortable">Last name</th>
+                            <th onclick="sortByText(4)" class="text-center sortable">Reason</th>
+                            <th onclick="sortById(5)" class="text-center sortable">ID</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="a : ${appointments}" th:object="${a}">
+                            <td th:text="*{date}" class="text-center"></td>
+                            <td th:text="*{timeSpan}" class="text-center"></td>
+                            <td th:text="*{firstName}" class="text-center"></td>
+                            <td th:text="*{lastName}" class="text-center"></td>
+                            <td th:text="*{reason}" class="text-center"></td>
+                            <td th:text="*{idNumber}" class="text-center"></td>
+                            <td th:if="${past}" class="text-center"><a th:href="@{/ambulatory-list/details/{id}(id = *{id})}" class="btn btn-primary btn-xs"><span
+                                        class="glyphicon "></span>Details</a></td>
+                            <td th:if="${today}" class="text-center"><a th:href="@{/ambulatory-list/new/{id}(id = *{id})}" class="btn btn-success btn-xs"><span
+                                    class="glyphicon "></span>Open</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- </div> -->
+            </div>
+
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+</body>
+
+</html>

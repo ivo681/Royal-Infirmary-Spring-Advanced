@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body class="logged-in">
+    <header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+    </header>
+
+    <main>
+        <section class="py-5 container">
+        <div>
+            <div class="row">
+                <div class="col-md-6" style="float:none;margin:auto;">
+                    <div class="well-block">
+                        <div class="well-title">
+                            <h1>Complete your profile</h1>
+                        </div>
+                        <form th:object="${completeProfileBindingModel}"
+                              th:action="@{/complete-profile}" method="POST">
+                            <div sec:authorize="hasRole('ROLE_MD')" class="row">
+                                <div class="col-md-6" style="float:none;margin:auto;">
+                                    <div class="form-group">
+                                        <label class="control-label">Doctor ID</label>
+                                        <input th:value="${hospitalId}" name="doctorId" type="text"
+                                            class="form-control input-md" readonly>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Form start -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Personal ID</label>
+                                        <input th:field="*{idNumber}" th:errorclass="is-invalid" name="idNumber" type="text" class="form-control input-md" required autofocus>
+                                        <small id="idNumberError" th:each="e : ${#fields.errors('idNumber')}" th:text="${e}"
+                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                                    </div>
+                                </div>
+                                <!-- Text input-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Telephone</label>
+                                        <input th:field="*{telephone}" th:errorclass="is-invalid" name="telephone" type="text" placeholder="0*********"
+                                            class="form-control input-md" required autofocus>
+                                        <small id="telephoneError" th:each="e : ${#fields.errors('telephone')}" th:text="${e}"
+                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label">Address</label>
+                                        <input th:field="*{address}" th:errorclass="is-invalid" name="address" type="text" placeholder="Address"
+                                               class="form-control input-md" required autofocus>
+                                        <small id="addressError" th:each="e : ${#fields.errors('address')}" th:text="${e}"
+                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                                    </div>
+                                </div>
+                                <p>
+
+                                <div class="col-md-12x" sec:authorize="!hasRole('ROLE_MD')" >
+                                    <h6 class="d-flex align-items-center justify-content-center">Currently I am:</h6>
+                                    <div class="form-check d-flex align-items-center justify-content-center">
+                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="enableEmployeeDetails()">
+                                        <label class="form-check-label">
+                                            Employed
+                                        </label>
+                                    </div>
+                                    <div class="form-check d-flex align-items-center justify-content-center">
+                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="disableEmployeeDetails()">
+                                        <label class="form-check-label">
+                                            Unemployed/Self-employed/Student/Pensioner
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" sec:authorize="!hasRole('ROLE_MD')">
+                                    <div class="form-group">
+                                        <label class="control-label">Job description</label>
+                                        <input th:field="*{job}" id="job" name="job" type="text"
+                                               class="form-control input-md" readonly>
+
+                                    </div>
+                                </div>
+                                <!-- Text input-->
+                                <div class="col-md-6" sec:authorize="!hasRole('ROLE_MD')">
+                                    <div class="form-group">
+                                        <label class="control-label">Employer</label>
+                                        <input th:field="*{employer}" id="employer" name="employer" type="text"
+                                               class="form-control input-md" readonly>
+                                    </div>
+                                </div><!-- Text input-->
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <br>
+                                        <button
+                                            class="btn btn-primary" type="submit">Next</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+<!--                        <form sec:authorize="hasRole('ROLE_PATIENT')" th:object="${completePatientBindingModel}"-->
+<!--                              th:action="@{/complete-profile-patient}" method="POST">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label class="control-label">Personal ID</label>-->
+<!--                                        <input th:field="*{idNumber}" name="idNumber" type="text" class="form-control input-md">-->
+<!--                                        <small th:each="e : ${#fields.errors('idNumber')}" th:text="${e}"-->
+<!--                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; Text input&ndash;&gt;-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label class="control-label">Telephone</label>-->
+<!--                                        <input th:field="*{telephone}" name="telephone" type="text" placeholder="0888665544"-->
+<!--                                               class="form-control input-md">-->
+<!--                                        <small th:each="e : ${#fields.errors('telephone')}" th:text="${e}"-->
+<!--                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <p>-->
+<!--                                <div class="col-md-12x" >-->
+<!--                                    <h6 class="d-flex align-items-center justify-content-center">Currently I am:</h6>-->
+<!--                                    <div class="form-check d-flex align-items-center justify-content-center">-->
+<!--                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="enableEmployeeDetails()">-->
+<!--                                        <label class="form-check-label">-->
+<!--                                          Employed-->
+<!--                                        </label>-->
+<!--                                      </div>-->
+<!--                                      <div class="form-check d-flex align-items-center justify-content-center">-->
+<!--                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="disableEmployeeDetails()">-->
+<!--                                        <label class="form-check-label">-->
+<!--                                          Unemployed/Self-employed/Student/Pensioner-->
+<!--                                        </label>-->
+<!--                                      </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label class="control-label">Job description</label>-->
+<!--                                        <input th:field="*{job}" id="job" name="job" type="text"-->
+<!--                                            class="form-control input-md" readonly>-->
+
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; Text input&ndash;&gt;-->
+<!--                                <div class="col-md-6">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label class="control-label">Employer</label>-->
+<!--                                        <input th:field="*{employer}" id="employer" name="employer" type="text"-->
+<!--                                            class="form-control input-md" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <br>-->
+<!--                                        <button id="singlebutton" name="singlebutton"-->
+<!--                                            class="btn btn-primary">Next</button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </form>-->
+                        <!-- form end -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+</body>
+
+</html>

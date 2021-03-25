@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments :: navigation">
+        </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+                <h1 class="header-home">Choose your Job Title</h1>
+                <div class="row">
+                    <div th:each="j : ${jobs}" class="col-sm-3 p-2">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 th:text="${j}" th:value="${j}" class="card-title"></h5>
+                                <a th:href="@{/users/choose-job/{id}(id = *{j})}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer th:replace="fragments/fragments :: footer">
+    </footer>
+
+</body>
+
+</html>

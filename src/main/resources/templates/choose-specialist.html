@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body class="logged-in">
+<header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+</header>
+
+    <main>
+        <section class="py-5 container">
+            <div class="table-responsive form">
+        
+                <h1 class="header-home">Choose the specialist for your appointment</h1>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)" class="text-center">Hospital ID</th>
+                            <th onclick="sortTable(1)" class="text-center">First name</th>
+                            <th onclick="sortTable(2)" class="text-center">Last name</th>
+                            <th onclick="sortTable(3)" class="text-center">Job Title</th>
+                            <th onclick="sortTable(4)" class="text-center">Age</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tr th:each="md : ${mds}" th:object="${md}">
+                        <td th:text="*{hospitalId}" class="text-center"></td>
+                        <td th:text="*{firstName}" class="text-center"></td>
+                        <td th:text="*{lastName}" class="text-center"></td>
+                        <td th:text="*{job}" class="text-center"></td>
+                        <td th:text="*{age}" class="text-center"></td>
+                        <td class="text-center"><a th:href="@{/appointments/book/{id}(id = *{id})}" onclick="ConfirmSelection()" type="submit"
+                                class="btn btn-success btn-xs"><span class="glyphicon "></span> Select</a></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <iframe src="http://free.timeanddate.com/clock/i7peu5ok/n238/pct/avt/ftb/bo2/tt0/td1/th1/tb4" frameborder="0" width="219" height="38" allowTransparency="true"></iframe>
+    <main>
+        <section class="py-5 container">
+        <div>
+
+            <h1 sec:authorize="hasRole('ROLE_MD')" class="fw-light">Doctor Menu</h1>
+            <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+            <div sec:authorize="hasRole('ROLE_MD')" class="row justify-content-center">
+                <div sec:authorize="hasRole('ROLE_GP')" class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View My Patients</h5>
+                            <a th:href="@{/patients/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Patient Appointments</h5>
+                            <a th:href="@{/patients/appointments}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Patient Ambulatory lists</h5>
+                            <a th:href="@{/ambulatory-list/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Patient Prescriptions</h5>
+                            <a th:href="@{/prescriptions/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Patient Sick leaves</h5>
+                            <a th:href="@{/sick-leaves/all}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="fw-light">Patient Menu</h1>
+
+            <div class="row justify-content-center">
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Make an Appointment</h5>
+                            <a th:href="@{/appointments/book}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Own Appointments</h5>
+                            <a th:href="@{/users/appointments}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Own Ambulatory lists</h5>
+                            <a th:href="@{/ambulatory-list/own}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Own Prescriptions</h5>
+                            <a th:href="@{/prescriptions/own}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">View Own Sick leaves</h5>
+                            <a th:href="@{/sick-leaves/own}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Change GP</h5>
+                            <a th:href="@{/change-gp}" class="btn btn-success">Select</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+</body>
+
+</html>

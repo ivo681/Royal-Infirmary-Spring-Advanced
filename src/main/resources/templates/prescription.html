@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+
+<header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+</header>
+
+<main>
+    <section class="py-5 container">
+        <div id="wholeTable" class="well-block" th:object="${prescription}">
+            <div>
+                <div>
+                    <div class="prescription-row">
+                        <div class="col">
+                            <h2>Royal Infirmary St. Sofia</h2>
+                            <h3>Ambulatory List</h3>
+                            <h5 th:utext="'Date: ' + *{date}"></h5>
+                        </div>
+                        <div class="col-auto"><img class="logo" src="/images/medicine-logo-png-1.png"></div>
+                    </div>
+                    <br>
+                    <h4 th:utext="'№:' + *{number}" class="row justify-content-center"></h4>
+                </div>
+            </div>
+            <br>
+            <h4 class="col">Doctor Details</h4>
+            <div th:object="${mdViewModel}" class="well-block">
+                <div class="row">
+                    <div class="col-md-6 p-1">
+                        <div class="form-group">
+                            <label class="control-label">MD</label>
+                            <input id="mdName" name="mdName" type="text"
+                                   th:value="'' + *{firstName} + ' ' + *{lastName}" class="form-control input-md"
+                                   readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Doctor ID</label>
+                            <input th:field="*{hospitalId}" name="hospitalId" type="text" placeholder="678475638"
+                                   class="form-control input-md" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Telephone Number</label>
+                            <input th:field="*{telephone}" id="docTelephoneNumber" name="docTelephoneNumber"
+                                   type="text" placeholder="0897435212"
+                                   class="form-control input-md" readonly>
+                        </div>
+                    </div>
+                    <!-- Text input-->
+                    <div class="col-md-6 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Email</label>
+                            <input th:field="*{email}" id="mdEmail" name="mdEmail" type="email" placeholder="E-Mail"
+                                   class="form-control input-md" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <h4 class="col">For</h4>
+            <div th:object="${patientViewModel}" class="well-block">
+                <div class="row">
+                    <div class="col-md-6 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Patient Name</label>
+                            <input th:value="'' + *{firstName} + ' ' + *{lastName}" id="patientName"
+                                   name="patientName" type="text"
+                                   class="form-control input-md" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Date of Birth</label>
+                            <input th:field="*{dateOfBirth}" id="dateOfBirth" name="dateOfBirth" type="text"
+                                   placeholder="29/11/1987"
+                                   class="form-control input-md" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-12 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Address</label>
+                            <input th:field="*{address}" id="patHomeAddress" name="patHomeAddress"
+                                   type="text"
+                                   class="form-control input-md" readonly>
+                        </div>
+                    </div>
+                </div>
+                <!--                        </form>-->
+            </div>
+            <br>
+            <h4 class="col">Rp.</h4>
+            <div class="well-block">
+                <div class="row">
+                    <div class="col-md-12 p-1">
+                        <div class="form-group">
+                            <label class="control-label">Medicines prescribed</label>
+                            <textarea th:field="*{medicines}"
+                                      class="form-control" id="medicines" name="medicines"
+                                      rows="3" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="prescription-row p-1">
+                <div class="col">
+                    <img class="float-end stamp" src="/images/Screenshot 2021-03-05 19.17.28_burned.png">
+                </div>
+            </div>
+            <br>
+            <h4 class="row justify-content-center">In accordance with Ministry of Health</h4>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <br>
+                <button name="downloadButton" class="btn btn-success"
+                        onclick="downloadTableWithPdf()">Download
+                </button>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="fragments/fragments::footer">
+</footer>
+</body>
+
+</html>

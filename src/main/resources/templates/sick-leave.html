@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments :: header">
+</head>
+
+<body class="patient-login">
+<header>
+    <nav th:replace="fragments/fragments :: navigation"></nav>
+</header>
+
+<main>
+
+    <section class="py-5 container">
+        <div>
+            <div class="well-block">
+                <div>
+                    <div class="prescription-row">
+                        <div class="col">
+                            <h2>Royal Infirmary St. Sofia</h2>
+                            <h3>Sick Leave Medical Certificate</h3>
+                            <h5 th:utext="'Date: ' + ${today}"></h5>
+                        </div>
+                        <div class="col-auto"><img class="logo" src="/images/medicine-logo-png-1.png"></div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+                <h4 class="col">Doctor Details</h4>
+                <div th:object="${mdViewModel}" class="well-block">
+                    <!--                        <form>-->
+                    <!-- Form start -->
+                    <div class="row">
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">MD</label>
+                                <input id="mdName" name="mdName" type="text"
+                                       th:value="'' + *{firstName} + ' ' + *{lastName}" class="form-control input-md"
+                                       readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Doctor ID</label>
+                                <input th:field="*{hospitalId}" name="hospitalId" type="text" placeholder="678475638"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Telephone Number</label>
+                                <input th:field="*{telephone}" id="docTelephoneNumber" name="docTelephoneNumber"
+                                       type="text" placeholder="0897435212"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <!-- Text input-->
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Email</label>
+                                <input th:field="*{email}" id="mdEmail" name="mdEmail" type="email" placeholder="E-Mail"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <!--                        </form>-->
+                </div>
+                <br>
+                <h4 class="col">Patient Details</h4>
+                <div class="well-block" th:object="${patientViewModel}">
+                    <div class="row">
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Patient Name</label>
+                                <input th:value="'' + *{firstName} + ' ' + *{lastName}" id="patientName"
+                                       name="patientName" type="text"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">ID</label>
+                                <input th:value="*{idNumber}" id="idNumber"
+                                       name="idNumber" type="text"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Address</label>
+                                <input th:value="*{address}" id="address"
+                                       name="address" type="text"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Telephone Number</label>
+                                <input th:value="*{telephone}" id="telephone"
+                                       name="telephone" type="text"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Job position</label>
+                                <input th:value="*{job}" id="job"
+                                       name="job" type="text"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Employer</label>
+                                <input th:value="*{employer}" id="employer"
+                                       name="employer" type="text"
+                                       class="form-control input-md" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <h4 class="col">Conclusions</h4>
+                <div class="well-block">
+                    <div class="row">
+                        <div class="col-md-12 p-1">
+                            <div class="form-group">
+                                <label class="control-label">Diagnosis</label>
+                                <textarea th:text="${patientViewModel.getDiagnosis()}" class="form-control"
+                                          id="diagnosis" rows="3" readonly></textarea>
+                            </div>
+                        </div>
+                        <form id="sickLeaveSpecs" th:action="@{/sick-leaves/create-{id}(id = ${appId})}"
+                              th:object="${sickLeaveBindingModel}" method="GET">
+                            <div class="col-md-12 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Reason for absence</label>
+                                    <input th:field="*{reason}" th:errorclass="is-invalid"
+                                           name="reason" type="text" placeholder="Sickness"
+                                           class="form-control input-md">
+                                    <small id="reasonError" th:each="e : ${#fields.errors('reason')}"
+                                           th:text="${e}"
+                                           class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                                </div>
+                            </div>
+                            <p></p>
+                            <p></p>
+                            <p></p>
+                            <div class="col-md-6 p-1">
+                                <div class="form-group">
+                                    <label class="control-label">Absence period:</label>
+                                    <div class=" input-md">
+                                        <label class="control-label">from</label>
+                                        <label>
+                                            <input th:field="*{fromDate}" th:errorclass="is-invalid" type="date"
+                                                   max="9999-12-31" name="fromDate" required>
+                                            <small id="fromDateError" th:each="e : ${#fields.errors('fromDate')}"
+                                                   th:text="${e}"
+                                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                                        </label>
+                                        <label class="control-label">to</label>
+                                        &nbsp
+                                        <label>
+                                            <input th:field="*{toDate}" th:errorclass="is-invalid" type="date"
+                                                   max="9999-12-31" name="toDate" required>
+                                            <small id="toDateError" th:each="e : ${#fields.errors('toDate')}"
+                                                   th:text="${e}"
+                                                   class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <br>
+                                    <button class="btn btn-primary" type="submit"
+                                            form="sickLeaveSpecs">Create
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="fragments/fragments :: footer">
+</footer>
+</body>
+
+</html>

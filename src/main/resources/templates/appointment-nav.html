@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div id="date-div"></div>
+            <div>
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-3 p-2">
+                        <div class="card align-items-center">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View past appointments</h5>
+                                <a th:if="${enableMdSection}" th:href="@{/patients/appointments/past}" class="btn btn-success">Select</a>
+                                <a th:if="${enablePatientSection}" th:href="@{/users/appointments/past}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${enableMdSection}" class="col-sm-3 p-2">
+                        <div class="card align-items-center">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View today's appointments</h5>
+                                <a th:href="@{/patients/appointments/today}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 p-2">
+                        <div class="card align-items-center">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View future appointments</h5>
+                                <a th:if="${enableMdSection}" th:href="@{/patients/appointments/future}" class="btn btn-success">Select</a>
+                                <a th:if="${enablePatientSection}" th:href="@{/users/appointments/future}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+</body>
+
+</html>

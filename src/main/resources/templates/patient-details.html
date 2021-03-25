@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+
+    <main>
+        <section class="py-5" th:object="${patient}">
+            <table id="myTable" class="table table-bordered table-striped custab container table-sm form">
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">First name</td>
+                    <td th:text="*{firstName}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Last name</td>
+                    <td th:text="*{lastName}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">ID Number</td>
+                    <td th:text="*{idNumber}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Date of birth</td>
+                    <td th:text="*{dateOfBirth}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Email address</td>
+                    <td th:text="*{email}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Telephone number</td>
+                    <td th:text="*{telephone}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Address</td>
+                    <td th:text="*{address}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Employer</td>
+                    <td th:text="*{employer}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Job position</td>
+                    <td th:text="*{job}" class="text-center"></td>
+                </tr>
+            </table>
+            <br>
+            <div class="col-md-12 row justify-content-center">
+                <div class="form-group text-center">
+                    <button name="singlebutton" class="btn btn-primary">Get past
+                        appointments</button>
+                    <button name="singlebutton" class="btn btn-primary">Get ambulatory
+                        lists</button>
+                    <button name="singlebutton" class=" align-items-center btn btn-primary">Get
+                        prescriptions</button>
+                    <button name="singlebutton" class=" align-items-center btn btn-primary">Get
+                        sick leave certificates</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+</body>
+
+</html>

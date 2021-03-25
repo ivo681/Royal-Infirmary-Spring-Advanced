@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/navbar-static/">
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+    <script src="functions.js"></script>
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+    <script src="bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="logged-in">
+    <header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark  ">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Royal Infirmary St. Sofia</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" aria-current="page" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-us.html">About us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="choosegp.html">Choose your GP</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-md-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" aria-current="page" href="login.html">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    </header>
+
+    <main>
+        <section class="py-5 container">
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well-block">
+                        <div class="well-title">
+                            <h2>Appointment summary</h2>
+                            <!-- <h4>Questions? Book an Appointment</h4> -->
+                        </div>
+                        <form>
+                            <!-- Form start -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">Patient Name</label>
+                                        <input id="reason" name="reason" type="text" placeholder="Full Name" class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">ID</label>
+                                        <input id="reason" name="reason" type="text" placeholder="ID" class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="name">Reason for appointment</label>
+                                        <input id="reason" name="reason" type="text" placeholder="Reason" class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <!-- Text input-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="email">Email</label>
+                                        <input id="email" name="email" type="email" placeholder="E-Mail" class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <!-- Text input-->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="date">Date</label>
+                                        <input id="date" name="date" type="date" placeholder="Preferred Date" class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <!-- Select Basic -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="time">Time</label>
+                                        <input id="date" name="date" type="text" placeholder="9:00 to 10:00" class="form-control input-md" readonly>
+                                    </div>
+                                </div>
+                                <!-- Select Basic -->
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label" for="appointmentfor">Diagnosis</label>
+                                        <input id="date" name="date" type="textarea" placeholder="Diagnosis" class="form-control input-md">
+                                    </div>
+                                </div>
+                                <!-- Button -->
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <br>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-danger">Close appointment</button>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Add/Edit ambulatory list</button>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Add/Edit prescription</button>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">Add/Edit sick leave certificate</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <br>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-danger">Go back</button>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">View ambulatory list</button>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">View prescription</button>
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-primary">View sick leave certificate</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- form end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="footer-container">
+            <span class="text-muted">©2021 Royal Infirmary St. Sofia</span>
+            <!-- <div>
+                    <a onclick="window.scrollTo(0,0)">Go back to top</a>
+                </div> -->
+        </div>
+    </footer>
+</body>
+
+</html>

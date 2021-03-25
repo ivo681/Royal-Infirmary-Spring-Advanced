@@ -1,0 +1,82 @@
+[
+  {
+    "firstName": "Ivan",
+    "lastName": "Mandrazhiiski",
+    "dateOfBirth": "1963-06-10",
+    "email": "mandrazhiiski@abv.bg",
+    "telephone": 863787562,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "467 Crown St."
+  },
+  {
+    "firstName": "Boris",
+    "lastName": "Katardiev",
+    "dateOfBirth": "1965-08-15",
+    "email": "katardiev@abv.bg",
+    "telephone": 863675894,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "P.O. Box 4657, 304 Lege St."
+  },
+  {
+    "firstName": "Ivanka",
+    "lastName": "Browning",
+    "dateOfBirth": "1992-12-28",
+    "email": "odio.tristique@Proinvelarcu.com",
+    "telephone": 885863023,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "P.O. Box 703, 5642 Litora Rd."
+  },
+  {
+    "firstName": "Ivanka",
+    "lastName": "Hunter",
+    "dateOfBirth": "1990-01-29",
+    "email": "mi.pede@necorciDonec.org",
+    "telephone": 869293962,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "4247 Dictum Rd."
+  },
+  {
+    "firstName": "Dimitar",
+    "lastName": "Osborne",
+    "dateOfBirth": "1995-03-08",
+    "email": "feugiat@Sedeunibh.com",
+    "telephone": 868810354,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "Ap #866-4479 Malesuada St."
+  },
+  {
+    "firstName": "Dimitar",
+    "lastName": "Chen",
+    "dateOfBirth": "1972-04-27",
+    "email": "nec@velitAliquamnisl.co.uk",
+    "telephone": 895548783,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "4427 Lacus. St."
+  },
+  {
+    "firstName": "Dimitar",
+    "lastName": "Hardy",
+    "dateOfBirth": "1994-02-07",
+    "email": "arcu@tinciduntDonec.co.uk",
+    "telephone": 889257986,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "8570 Leo Road"
+  },
+  {
+    "firstName": "Dimitar",
+    "lastName": "Hardin",
+    "dateOfBirth": "1991-03-14",
+    "email": "sollicitudin@arcuvelquam.edu",
+    "telephone": 872736356,
+    "password": "TopSecret12!",
+    "job": "General Practitioner",
+    "address": "P.O. Box 807, 7779 Justo Rd."
+  }
+]

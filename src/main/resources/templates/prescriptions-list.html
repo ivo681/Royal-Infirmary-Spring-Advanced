@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div class="table-responsive form">
+                <h1 class="header-home">Prescriptions</h1>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead th:if="${!own}">
+                        <tr>
+                            <th onclick="sortTable(0)" class="text-center">Date</th>
+                            <th onclick="sortTable(1)" class="text-center">First name</th>
+                            <th onclick="sortTable(2)" class="text-center">Last name</th>
+                            <th onclick="sortTable(3)" class="text-center">ID</th>
+                            <th onclick="sortTable(4)" class="text-center">Diagnosis</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <thead th:if="${own}">
+                    <tr>
+                        <th onclick="sortTable(0)" class="text-center">Date</th>
+                        <th onclick="sortTable(1)" class="text-center">Doctor</th>
+                        <th onclick="sortTable(2)" class="text-center">Job</th>
+                        <th onclick="sortTable(3)" class="text-center">Hospital Id</th>
+                        <th onclick="sortTable(4)" class="text-center">Diagnosis</th>
+                        <th class="text-center"></th>
+                    </tr>
+                    </thead>
+                    <tr th:if="${!own}" th:each="p : ${prescriptions}" th:object="${p}">
+                        <td th:text="*{date}" class="text-center"></td>
+                        <td th:text="*{firstName}" class="text-center"></td>
+                        <td th:text="*{lastName}" class="text-center"></td>
+                        <td th:text="*{idNumber}" class="text-center"></td>
+                        <td th:text="*{diagnosis}" class="text-center"></td>
+                        <td class="text-center"><a th:href="@{/prescriptions/details/{id}(id = *{appointmentId})}"
+                                class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>
+                    </tr>
+                    <tr th:if="${own}" th:each="p : ${prescriptions}" th:object="${p}">
+                        <td th:text="*{date}" class="text-center"></td>
+                        <td th:utext="'' + *{firstName} + ' ' + *{lastName}" class="text-center"></td>
+                        <td th:text="*{job}" class="text-center"></td>
+                        <td th:text="*{hospitalId}" class="text-center"></td>
+                        <td th:text="*{diagnosis}" class="text-center"></td>
+                        <td class="text-center"><a th:href="@{/prescriptions/details/{id}(id = *{appointmentId})}"
+                                                   class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+
+    </main>
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>
