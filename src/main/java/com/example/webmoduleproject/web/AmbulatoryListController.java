@@ -1,14 +1,16 @@
 package com.example.webmoduleproject.web;
 
 import com.example.webmoduleproject.model.binding.AmbulatoryListBindingModel;
-import com.example.webmoduleproject.model.view.AmbulatoryListAllViewModel;
-import com.example.webmoduleproject.model.view.AmbulatoryListViewModel;
-import com.example.webmoduleproject.model.view.MdDocumentViewModel;
-import com.example.webmoduleproject.model.view.PatientAmbulatoryListViewModel;
+import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
+import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
+import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
+import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientAmbulatoryListDetails;
 import com.example.webmoduleproject.service.AmbulatoryListService;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.PrescriptionService;
 import com.example.webmoduleproject.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +31,14 @@ public class AmbulatoryListController {
     private final AmbulatoryListService ambulatoryListService;
     private final AppointmentService appointmentService;
     private final PrescriptionService prescriptionService;
+    private final ModelMapper modelMapper;
 
-    public AmbulatoryListController(UserService userService, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, PrescriptionService prescriptionService) {
+    public AmbulatoryListController(UserService userService, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, PrescriptionService prescriptionService, ModelMapper modelMapper) {
         this.userService = userService;
         this.ambulatoryListService = ambulatoryListService;
         this.appointmentService = appointmentService;
         this.prescriptionService = prescriptionService;
+        this.modelMapper = modelMapper;
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
@@ -48,8 +52,8 @@ public class AmbulatoryListController {
                     if (!model.containsAttribute("ambulatoryListBindingModel")) {
                         model.addAttribute("ambulatoryListBindingModel", new AmbulatoryListBindingModel());
                     }
-                    MdDocumentViewModel mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
-                    PatientAmbulatoryListViewModel patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
+                    MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
+                    PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
                     model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
                     model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
                     model.addAttribute("appId", id);
@@ -77,7 +81,8 @@ public class AmbulatoryListController {
                             bindingResult);
                     return "redirect:/ambulatory-list/new/" + appointmentId;
                 }
-                this.ambulatoryListService.createNewList(appointmentId, ambulatoryListBindingModel);
+                this.ambulatoryListService.createNewList(appointmentId,
+                        this.modelMapper.map(ambulatoryListBindingModel, AmbulatoryListServiceModel.class));
                 if (!ambulatoryListBindingModel.getMedicines().trim().isBlank()) {
                     this.prescriptionService.createNewPrescription(appointmentId, ambulatoryListBindingModel.getMedicines());
                 }
@@ -92,9 +97,9 @@ public class AmbulatoryListController {
     public String getExistingAmbulatoryList(@PathVariable("id") String id, Model model) {
         if (this.ambulatoryListService.existingListForAppointment(id)) {
             AmbulatoryListViewModel ambulatoryListByAppointmentId = this.ambulatoryListService.getAmbulatoryListByAppointmentId(id);
-            MdDocumentViewModel mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
+            MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
             mdDetailsByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getMdTelephoneNumber());
-            PatientAmbulatoryListViewModel patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
+            PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
             patientViewModelByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getPatientTelephoneNumber());
             model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
             model.addAttribute("patientViewModel", patientViewModelByAppointmentId);

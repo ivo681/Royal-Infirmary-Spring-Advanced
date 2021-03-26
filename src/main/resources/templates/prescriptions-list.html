@@ -48,7 +48,7 @@
                         <td th:text="*{date}" class="text-center"></td>
                         <td th:utext="'' + *{firstName} + ' ' + *{lastName}" class="text-center"></td>
                         <td th:text="*{job}" class="text-center"></td>
-                        <td th:text="*{hospitalId}" class="text-center"></td>
+                        <td th:text="*{idNumber}" class="text-center"></td>
                         <td th:text="*{diagnosis}" class="text-center"></td>
                         <td class="text-center"><a th:href="@{/prescriptions/details/{id}(id = *{appointmentId})}"
                                                    class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>

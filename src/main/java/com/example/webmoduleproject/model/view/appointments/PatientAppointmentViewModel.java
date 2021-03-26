@@ -1,15 +1,15 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.appointments;
 
 import com.example.webmoduleproject.model.view.commonDetails.AppointmentDetails;
 
 import java.time.LocalDate;
 
-public class AppointmentPatientViewModel extends AppointmentDetails {
+public class PatientAppointmentViewModel extends AppointmentDetails {
     private String doctor;
     private String job;
     private String hospitalId;
 
-    public AppointmentPatientViewModel() {
+    public PatientAppointmentViewModel() {
     }
 
     public String getDoctor() {

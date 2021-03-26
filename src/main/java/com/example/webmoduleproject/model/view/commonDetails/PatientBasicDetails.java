@@ -1,16 +1,17 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.commonDetails;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class PatientPrescriptionViewModel {
+public abstract class PatientBasicDetails {
     private String firstName;
     private String lastName;
-    private String address;
+    private String telephone;
     private LocalDate dateOfBirth;
+    private String address;
 
-    public PatientPrescriptionViewModel() {
+    public PatientBasicDetails() {
     }
 
     public String getFirstName() {
@@ -29,12 +30,12 @@ public class PatientPrescriptionViewModel {
         this.lastName = lastName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -44,5 +45,13 @@ public class PatientPrescriptionViewModel {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

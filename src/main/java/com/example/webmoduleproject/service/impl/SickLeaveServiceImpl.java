@@ -2,13 +2,12 @@ package com.example.webmoduleproject.service.impl;
 
 import com.example.webmoduleproject.model.binding.SickLeaveBindingModel;
 import com.example.webmoduleproject.model.entities.SickLeave;
-import com.example.webmoduleproject.model.view.SickLeaveDetailsViewModel;
-import com.example.webmoduleproject.model.view.SickLeaveListAllViewModel;
+import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveViewModel;
+import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveListAllViewModel;
 import com.example.webmoduleproject.repository.SickLeaveRepository;
 import com.example.webmoduleproject.service.AmbulatoryListService;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.SickLeaveService;
-import com.example.webmoduleproject.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -57,9 +56,9 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     }
 
     @Override
-    public SickLeaveDetailsViewModel getSickLeaveByAppointmentId(String appointmentId) {
+    public SickLeaveViewModel getSickLeaveByAppointmentId(String appointmentId) {
         SickLeave sickLeave = this.sickLeaveRepository.getSickLeaveByAppointmentId(appointmentId).get();
-        SickLeaveDetailsViewModel viewModel = this.modelMapper.map(sickLeave, SickLeaveDetailsViewModel.class);
+        SickLeaveViewModel viewModel = this.modelMapper.map(sickLeave, SickLeaveViewModel.class);
         viewModel.setPatientEmployer(sickLeave.getPatientEmployer());
         viewModel.setPatientJob(sickLeave.getPatientJob());
         viewModel.setPatientTelephoneNumber(sickLeave.getPatientTelephoneNumber());

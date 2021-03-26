@@ -1,18 +1,16 @@
-package com.example.webmoduleproject.model.view;
-
+package com.example.webmoduleproject.model.view.ambulatoryLists;
 import com.example.webmoduleproject.model.view.commonDetails.DocumentDetails;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class PrescriptionViewModel extends DocumentDetails {
+public class AmbulatoryListViewModel extends DocumentDetails {
+    private String id;
     private LocalDate date;
     private String medicines;
 
-    public PrescriptionViewModel() {
+    public AmbulatoryListViewModel() {
     }
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     public LocalDate getDate() {
         return date;
     }
@@ -29,4 +27,11 @@ public class PrescriptionViewModel extends DocumentDetails {
         this.medicines = medicines;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

@@ -37,10 +37,11 @@
                         <td th:text="*{job}"  class="text-center"></td>
                         <td th:text="*{hospitalId}"  class="text-center"></td>
                         <td th:text="*{reason}"  class="text-center"></td>
-                        <td th:if="${currDate} < *{date}"  class="text-center"><a th:href="@{/users/appointments/cancel-{id}(id = *{id})}" class="btn btn-danger btn-xs"><span class="glyphicon "></span>
-                                Cancel</a></td>
-                        <td th:if="${currDate} > *{date}" class="text-center"><a th:href="@{/ambulatory-list/details/{id}(id = *{id})}" class="btn btn-primary btn-xs"><span class="glyphicon "></span>
-                            Details</a></td>
+                        <td class="text-center">
+                            <a th:if="${currDate} < *{date}" th:href="@{/users/appointments/cancel-{id}(id = *{id})}" class="btn btn-danger btn-xs"><span class="glyphicon "></span>
+                                Cancel</a>
+                            <a th:if="${currDate} > *{date}" th:href="@{/ambulatory-list/details/{id}(id = *{id})}" class="btn btn-primary btn-xs"><span class="glyphicon "></span>
+                                Details</a></td>
                     </tr>
                 </tbody>
             </table>

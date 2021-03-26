@@ -1,17 +1,13 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.commonDetails;
 
-import java.time.LocalDate;
-
-public class AmbulatoryListAllViewModel {
+public abstract class DocumentListDetails {
     private String appointmentId;
     private String firstName;
     private String lastName;
-    private LocalDate date;
     private String job;
-    private String diagnosis;
     private String idNumber;
 
-    public AmbulatoryListAllViewModel() {
+    public DocumentListDetails() {
     }
 
     public String getAppointmentId() {
@@ -38,20 +34,12 @@ public class AmbulatoryListAllViewModel {
         this.lastName = lastName;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public String getJob() {
+        return job;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getDiagnosis() {
-        return diagnosis;
-    }
-
-    public void setDiagnosis(String diagnosis) {
-        this.diagnosis = diagnosis;
+    public void setJob(String job) {
+        this.job = job;
     }
 
     public String getIdNumber() {
@@ -60,13 +48,5 @@ public class AmbulatoryListAllViewModel {
 
     public void setIdNumber(String idNumber) {
         this.idNumber = idNumber;
-    }
-
-    public String getJob() {
-        return job;
-    }
-
-    public void setJob(String job) {
-        this.job = job;
     }
 }

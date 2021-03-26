@@ -1,4 +1,4 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.appointments;
 
 import com.example.webmoduleproject.model.entities.enums.StatusEnum;
 import com.example.webmoduleproject.model.view.commonDetails.AppointmentDetails;

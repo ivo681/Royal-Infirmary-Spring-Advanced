@@ -1,16 +1,14 @@
 package com.example.webmoduleproject.service;
 
-import com.example.webmoduleproject.model.binding.AmbulatoryListBindingModel;
-import com.example.webmoduleproject.model.view.AmbulatoryListAllViewModel;
-import com.example.webmoduleproject.model.view.AmbulatoryListViewModel;
+import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
+import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
+import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
 
 import java.util.List;
 
 public interface AmbulatoryListService {
 
-    Long getAmbulatoryListNumber();
-
-    void createNewList(String appointmentId, AmbulatoryListBindingModel ambulatoryListBindingModel);
+    void createNewList(String appointmentId, AmbulatoryListServiceModel ambulatoryListBindingModel);
 
     boolean existingListForAppointment(String appointmentId);
 

@@ -2,15 +2,12 @@ package com.example.webmoduleproject.model.view;
 
 import com.example.webmoduleproject.model.entities.User;
 import com.example.webmoduleproject.model.entities.UserRole;
+import com.example.webmoduleproject.model.view.commonDetails.PatientBasicDetails;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class PatientDetailsViewModel {
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
-    private String telephone;
+public class PatientDetailsViewModel extends PatientBasicDetails {
     private String email;
     private String job;
     private String idNumber;
@@ -18,38 +15,6 @@ public class PatientDetailsViewModel {
     private String address;
 
     public PatientDetailsViewModel() {
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
     }
 
     public String getEmail() {

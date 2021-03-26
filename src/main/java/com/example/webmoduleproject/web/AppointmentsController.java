@@ -2,7 +2,7 @@ package com.example.webmoduleproject.web;
 
 import com.example.webmoduleproject.model.binding.AppointmentBindingModel;
 import com.example.webmoduleproject.model.service.AppointmentServiceModel;
-import com.example.webmoduleproject.model.view.AppointmentConfirmViewModel;
+import com.example.webmoduleproject.model.view.appointments.AppointmentConfirmViewModel;
 import com.example.webmoduleproject.model.view.MdViewModel;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.UserService;

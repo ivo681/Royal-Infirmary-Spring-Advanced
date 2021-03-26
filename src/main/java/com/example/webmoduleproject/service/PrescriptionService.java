@@ -1,7 +1,7 @@
 package com.example.webmoduleproject.service;
 
-import com.example.webmoduleproject.model.view.PrescriptionListAllViewModel;
-import com.example.webmoduleproject.model.view.PrescriptionViewModel;
+import com.example.webmoduleproject.model.view.prescriptions.PrescriptionListAllViewModel;
+import com.example.webmoduleproject.model.view.prescriptions.PrescriptionViewModel;
 
 import java.util.List;
 

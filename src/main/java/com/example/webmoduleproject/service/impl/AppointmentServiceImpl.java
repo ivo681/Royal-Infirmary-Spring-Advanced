@@ -6,7 +6,13 @@ import com.example.webmoduleproject.model.entities.enums.StatusEnum;
 import com.example.webmoduleproject.model.service.AppointmentServiceModel;
 import com.example.webmoduleproject.model.service.DoctorAppointmentsServiceModel;
 import com.example.webmoduleproject.model.service.PatientAppointmentsServiceModel;
-import com.example.webmoduleproject.model.view.*;
+import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientAmbulatoryListDetails;
+import com.example.webmoduleproject.model.view.appointments.AppointmentConfirmViewModel;
+import com.example.webmoduleproject.model.view.appointments.DoctorAppointmentViewModel;
+import com.example.webmoduleproject.model.view.appointments.PatientAppointmentViewModel;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientSickLeaveDetails;
 import com.example.webmoduleproject.repository.AppointmentRepository;
 import com.example.webmoduleproject.repository.UserRepository;
 import com.example.webmoduleproject.service.AppointmentService;
@@ -85,7 +91,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentDoctorViewModel> getTodaysAppointmentsForDoctor(String userEmail) {
+    public List<DoctorAppointmentViewModel> getTodaysAppointmentsForDoctor(String userEmail) {
                 List<DoctorAppointmentsServiceModel> doctorAppointmentsServiceModels = this.appointmentRepository.getTodaysAppointmentsForDoctor(userEmail,
                 LocalDate.now(), StatusEnum.CONFIRMED).stream().map(appointment -> {
             DoctorAppointmentsServiceModel serviceModel = this.modelMapper.map(appointment, DoctorAppointmentsServiceModel.class);
@@ -95,12 +101,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             return serviceModel;
         }).collect(Collectors.toList());
 
-        return doctorAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, AppointmentDoctorViewModel.class))
+        return doctorAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, DoctorAppointmentViewModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentDoctorViewModel> getPastAppointmentsForDoctor(String userEmail) {
+    public List<DoctorAppointmentViewModel> getPastAppointmentsForDoctor(String userEmail) {
         List<DoctorAppointmentsServiceModel> doctorAppointmentsServiceModels = this.appointmentRepository.getPastAppointmentsForDoctor(userEmail,
                 LocalDate.now(), StatusEnum.CLOSED).stream().map(appointment -> {
             DoctorAppointmentsServiceModel serviceModel = this.modelMapper.map(appointment, DoctorAppointmentsServiceModel.class);
@@ -110,12 +116,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             return serviceModel;
         }).collect(Collectors.toList());
 
-        return doctorAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, AppointmentDoctorViewModel.class))
+        return doctorAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, DoctorAppointmentViewModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentDoctorViewModel> getFutureAppointmentsForDoctor(String userEmail) {
+    public List<DoctorAppointmentViewModel> getFutureAppointmentsForDoctor(String userEmail) {
         List<DoctorAppointmentsServiceModel> doctorAppointmentsServiceModels = this.appointmentRepository.getFutureAppointmentsForDoctor(userEmail,
                 LocalDate.now(), StatusEnum.CONFIRMED).stream().map(appointment -> {
             DoctorAppointmentsServiceModel serviceModel = this.modelMapper.map(appointment, DoctorAppointmentsServiceModel.class);
@@ -125,12 +131,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             return serviceModel;
         }).collect(Collectors.toList());
 
-        return doctorAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, AppointmentDoctorViewModel.class))
+        return doctorAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, DoctorAppointmentViewModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentPatientViewModel> getPastAppointmentsForPatient(String userEmail) {
+    public List<PatientAppointmentViewModel> getPastAppointmentsForPatient(String userEmail) {
         List<PatientAppointmentsServiceModel> patientAppointmentsServiceModels = this.appointmentRepository.getPastAppointmentsForPatient(userEmail,
                 LocalDate.now(), StatusEnum.CLOSED).stream().map(appointment -> {
             PatientAppointmentsServiceModel serviceModel = this.modelMapper.map(appointment, PatientAppointmentsServiceModel.class);
@@ -140,12 +146,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             return serviceModel;
         }).collect(Collectors.toList());
 
-        return patientAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, AppointmentPatientViewModel.class))
+        return patientAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, PatientAppointmentViewModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<AppointmentPatientViewModel> getFutureAppointmentsForPatient(String userEmail) {
+    public List<PatientAppointmentViewModel> getFutureAppointmentsForPatient(String userEmail) {
         List<PatientAppointmentsServiceModel> patientAppointmentsServiceModels = this.appointmentRepository.getFutureAppointmentsForPatient(userEmail,
                 LocalDate.now(), StatusEnum.CONFIRMED).stream().map(appointment -> {
             PatientAppointmentsServiceModel serviceModel = this.modelMapper.map(appointment, PatientAppointmentsServiceModel.class);
@@ -155,28 +161,18 @@ public class AppointmentServiceImpl implements AppointmentService {
             return serviceModel;
         }).collect(Collectors.toList());
 
-        return patientAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, AppointmentPatientViewModel.class))
+        return patientAppointmentsServiceModels.stream().map(model -> this.modelMapper.map(model, PatientAppointmentViewModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MdDocumentViewModel getMdViewModelByAppointmentId(String id) {
-        return this.modelMapper.map(this.appointmentRepository.getMdByMdId(id).get(), MdDocumentViewModel.class);
+    public PatientAmbulatoryListDetails getPatientViewModelByAppointmentId(String id) {
+        return this.modelMapper.map(this.appointmentRepository.getPatientByPatientId(id).get(), PatientAmbulatoryListDetails.class);
     }
 
     @Override
-    public PatientAmbulatoryListViewModel getPatientViewModelByAppointmentId(String id) {
-        return this.modelMapper.map(this.appointmentRepository.getPatientByPatientId(id).get(), PatientAmbulatoryListViewModel.class);
-    }
-
-    @Override
-    public MdDocumentViewModel getMdDetailsByAppointmentId(String id) {
-        return this.modelMapper.map(this.appointmentRepository.getMdByMdId(id).get(), MdDocumentViewModel.class);
-    }
-
-    @Override
-    public PatientAmbulatoryListViewModel getPatientDetailsByAppointmentId(String id) {
-        return this.modelMapper.map(this.appointmentRepository.getPatientByPatientId(id).get(), PatientAmbulatoryListViewModel.class);
+    public MdDocumentDetails getMdDetailsByAppointmentId(String id) {
+        return this.modelMapper.map(this.appointmentRepository.getMdByMdId(id).get(), MdDocumentDetails.class);
     }
 
     @Override
@@ -195,17 +191,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public PatientPrescriptionViewModel getPatientPrescriptionViewModelByAppointmentId(String appointmentId) {
+    public PatientPrescriptionDetails getPatientPrescriptionViewModelByAppointmentId(String appointmentId) {
         return this.modelMapper.map(this.appointmentRepository.
                 getPatientByPatientId(appointmentId).get(),
-                PatientPrescriptionViewModel.class);
+                PatientPrescriptionDetails.class);
     }
 
     @Override
-    public PatientSickLeaveViewModel getSickPatientViewModelByAppointmentId(String appointmentId) {
+    public PatientSickLeaveDetails getSickPatientViewModelByAppointmentId(String appointmentId) {
         return this.modelMapper.map(this.appointmentRepository.
                         getPatientByPatientId(appointmentId).get(),
-                PatientSickLeaveViewModel.class);
+                PatientSickLeaveDetails.class);
     }
 
     @Override

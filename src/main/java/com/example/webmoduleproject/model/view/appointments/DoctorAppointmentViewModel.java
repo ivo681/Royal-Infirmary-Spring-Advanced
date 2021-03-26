@@ -1,13 +1,13 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.appointments;
 
 import com.example.webmoduleproject.model.view.commonDetails.AppointmentDetails;
 
-public class AppointmentDoctorViewModel extends AppointmentDetails {
+public class DoctorAppointmentViewModel extends AppointmentDetails {
     private String firstName;
     private String lastName;
     private String idNumber;
 
-    public AppointmentDoctorViewModel() {
+    public DoctorAppointmentViewModel() {
     }
 
     public String getFirstName() {

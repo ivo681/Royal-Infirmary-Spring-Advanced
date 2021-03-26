@@ -1,13 +1,12 @@
 package com.example.webmoduleproject.service.impl;
 
-import com.example.webmoduleproject.model.binding.AmbulatoryListBindingModel;
 import com.example.webmoduleproject.model.entities.AmbulatoryList;
-import com.example.webmoduleproject.model.view.AmbulatoryListAllViewModel;
-import com.example.webmoduleproject.model.view.AmbulatoryListViewModel;
+import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
+import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
+import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
 import com.example.webmoduleproject.repository.AmbulatoryListRepository;
 import com.example.webmoduleproject.service.AmbulatoryListService;
 import com.example.webmoduleproject.service.AppointmentService;
-import com.example.webmoduleproject.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +27,9 @@ public class AmbulatoryListServiceImpl implements AmbulatoryListService {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
-    public Long getAmbulatoryListNumber() {
-        return generateDocumentNumber();
-    }
-
-    @Override
-    public void createNewList(String appointmentId, AmbulatoryListBindingModel ambulatoryListBindingModel) {
-        AmbulatoryList ambulatoryList = this.modelMapper.map(ambulatoryListBindingModel, AmbulatoryList.class);
+    public void createNewList(String appointmentId, AmbulatoryListServiceModel ambulatoryListServiceModel) {
+        AmbulatoryList ambulatoryList = this.modelMapper.map(ambulatoryListServiceModel, AmbulatoryList.class);
         ambulatoryList.setDate(LocalDate.now());
         ambulatoryList.setMd(this.appointmentService.getMdByAppointmentId(appointmentId));
         ambulatoryList.setPatient(this.appointmentService.getPatientByAppointmentId(appointmentId));
@@ -44,7 +37,7 @@ public class AmbulatoryListServiceImpl implements AmbulatoryListService {
         ambulatoryList.setPatientTelephoneNumber(ambulatoryList.getPatient().getTelephone());
         ambulatoryList.setMdTelephoneNumber(ambulatoryList.getMd().getTelephone());
         ambulatoryList.setPatientHomeAddress(this.appointmentService.getPatientByAppointmentId(appointmentId).getAddress());
-        ambulatoryList.setMedicines(ambulatoryListBindingModel.getMedicines().trim());
+        ambulatoryList.setMedicines(ambulatoryListServiceModel.getMedicines().trim());
         ambulatoryList.setAppointment(this.appointmentService.getAppointmentById(appointmentId));
         this.ambulatoryListRepository.save(ambulatoryList);
     }

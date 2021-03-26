@@ -1,12 +1,12 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.buildBlocks;
 
 import com.example.webmoduleproject.model.view.commonDetails.MedicDetails;
 
-public class MdDocumentViewModel extends MedicDetails {
+public class MdDocumentDetails extends MedicDetails {
     private String telephone;
     private String email;
 
-    public MdDocumentViewModel(){}
+    public MdDocumentDetails(){}
 
     public String getTelephone() {
         return telephone;

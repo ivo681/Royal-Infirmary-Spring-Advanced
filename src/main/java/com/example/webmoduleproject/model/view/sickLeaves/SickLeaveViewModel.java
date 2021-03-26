@@ -1,18 +1,18 @@
-package com.example.webmoduleproject.model.view;
+package com.example.webmoduleproject.model.view.sickLeaves;
 
 import com.example.webmoduleproject.model.view.commonDetails.DocumentDetails;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class SickLeaveDetailsViewModel extends DocumentDetails {
+public class SickLeaveViewModel extends DocumentDetails {
     private LocalDate fromDate;
     private LocalDate toDate;
     private String patientEmployer;
     private String patientJob;
     private String reason;
 
-    public SickLeaveDetailsViewModel() {
+    public SickLeaveViewModel() {
     }
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")

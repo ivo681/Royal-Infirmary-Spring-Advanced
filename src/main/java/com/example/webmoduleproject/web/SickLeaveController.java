@@ -1,7 +1,10 @@
 package com.example.webmoduleproject.web;
 
 import com.example.webmoduleproject.model.binding.SickLeaveBindingModel;
-import com.example.webmoduleproject.model.view.*;
+import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientSickLeaveDetails;
+import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveViewModel;
+import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveListAllViewModel;
 import com.example.webmoduleproject.service.AmbulatoryListService;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.SickLeaveService;
@@ -44,8 +47,8 @@ public class SickLeaveController {
                 if (!model.containsAttribute("sickLeaveBindingModel")) {
                     model.addAttribute("sickLeaveBindingModel", new SickLeaveBindingModel());
                 }
-                MdDocumentViewModel mdViewModel = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
-                PatientSickLeaveViewModel patientViewModel = this.appointmentService.getSickPatientViewModelByAppointmentId(appointmentId);
+                MdDocumentDetails mdViewModel = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+                PatientSickLeaveDetails patientViewModel = this.appointmentService.getSickPatientViewModelByAppointmentId(appointmentId);
                 model.addAttribute("mdViewModel", mdViewModel);
                 patientViewModel.setDiagnosis(this.ambulatoryListService.getDiagnosisFromListByAppointmentId(appointmentId));
                 model.addAttribute("patientViewModel", patientViewModel);
@@ -95,17 +98,17 @@ public class SickLeaveController {
     public String ambulatoryListCreate(@PathVariable("id") String appointmentId,
                                              Model model) {
         if (this.sickLeaveService.existingSickLeaveByAppointmentId(appointmentId)) {
-            SickLeaveDetailsViewModel sickLeaveView = this.sickLeaveService.getSickLeaveByAppointmentId(appointmentId);
-            MdDocumentViewModel mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+            SickLeaveViewModel sickLeaveView = this.sickLeaveService.getSickLeaveByAppointmentId(appointmentId);
+            MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
             mdDetailsByAppointmentId.setTelephone(sickLeaveView.getMdTelephoneNumber());
-            PatientSickLeaveViewModel patientSickLeaveViewModel = this.appointmentService.
+            PatientSickLeaveDetails patientSickLeaveDetails = this.appointmentService.
                     getSickPatientViewModelByAppointmentId(appointmentId);
-            patientSickLeaveViewModel.setTelephone(sickLeaveView.getPatientTelephoneNumber());
-            patientSickLeaveViewModel.setJob(sickLeaveView.getPatientJob());
-            patientSickLeaveViewModel.setEmployer(sickLeaveView.getPatientEmployer());
-            patientSickLeaveViewModel.setAddress(sickLeaveView.getPatientAddress());
+            patientSickLeaveDetails.setTelephone(sickLeaveView.getPatientTelephoneNumber());
+            patientSickLeaveDetails.setJob(sickLeaveView.getPatientJob());
+            patientSickLeaveDetails.setEmployer(sickLeaveView.getPatientEmployer());
+            patientSickLeaveDetails.setAddress(sickLeaveView.getPatientAddress());
             model.addAttribute("sickLeaveView", sickLeaveView);
-            model.addAttribute("patientView", patientSickLeaveViewModel);
+            model.addAttribute("patientView", patientSickLeaveDetails);
             model.addAttribute("mdView", mdDetailsByAppointmentId);
             return "sick-leave-confirm";
             

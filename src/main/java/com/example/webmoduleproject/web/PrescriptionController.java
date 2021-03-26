@@ -1,6 +1,9 @@
 package com.example.webmoduleproject.web;
 
-import com.example.webmoduleproject.model.view.*;
+import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDetails;
+import com.example.webmoduleproject.model.view.prescriptions.PrescriptionListAllViewModel;
+import com.example.webmoduleproject.model.view.prescriptions.PrescriptionViewModel;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.PrescriptionService;
 import com.example.webmoduleproject.service.UserService;
@@ -33,9 +36,9 @@ public class PrescriptionController {
                                                 Model model) {
         if (this.prescriptionService.existingPrescriptionByAppointmentId(appointmentId)) {
             PrescriptionViewModel prescriptionViewModel = this.prescriptionService.getPrescriptionByAppointmentId(appointmentId);
-            MdDocumentViewModel mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+            MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
             mdDetailsByAppointmentId.setTelephone(prescriptionViewModel.getMdTelephoneNumber());
-            PatientPrescriptionViewModel patientViewModelByAppointmentId = this.appointmentService.getPatientPrescriptionViewModelByAppointmentId(appointmentId);
+            PatientPrescriptionDetails patientViewModelByAppointmentId = this.appointmentService.getPatientPrescriptionViewModelByAppointmentId(appointmentId);
             patientViewModelByAppointmentId.setAddress(prescriptionViewModel.getPatientAddress());
             model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
             model.addAttribute("patientViewModel", patientViewModelByAppointmentId);

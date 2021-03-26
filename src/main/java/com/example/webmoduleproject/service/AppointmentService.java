@@ -3,7 +3,13 @@ package com.example.webmoduleproject.service;
 import com.example.webmoduleproject.model.entities.Appointment;
 import com.example.webmoduleproject.model.entities.User;
 import com.example.webmoduleproject.model.service.AppointmentServiceModel;
-import com.example.webmoduleproject.model.view.*;
+import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientAmbulatoryListDetails;
+import com.example.webmoduleproject.model.view.appointments.AppointmentConfirmViewModel;
+import com.example.webmoduleproject.model.view.appointments.DoctorAppointmentViewModel;
+import com.example.webmoduleproject.model.view.appointments.PatientAppointmentViewModel;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDetails;
+import com.example.webmoduleproject.model.view.buildBlocks.PatientSickLeaveDetails;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,23 +31,19 @@ public interface AppointmentService {
 
     boolean checkForConfirmedAppointment(LocalDate date, String userEmail, String mdId);
 
-    List<AppointmentDoctorViewModel> getTodaysAppointmentsForDoctor(String userEmail);
+    List<DoctorAppointmentViewModel> getTodaysAppointmentsForDoctor(String userEmail);
 
-    List<AppointmentDoctorViewModel> getPastAppointmentsForDoctor(String userEmail);
+    List<DoctorAppointmentViewModel> getPastAppointmentsForDoctor(String userEmail);
 
-    List<AppointmentDoctorViewModel> getFutureAppointmentsForDoctor(String userEmail);
+    List<DoctorAppointmentViewModel> getFutureAppointmentsForDoctor(String userEmail);
 
-    List<AppointmentPatientViewModel> getPastAppointmentsForPatient(String userEmail);
+    List<PatientAppointmentViewModel> getPastAppointmentsForPatient(String userEmail);
 
-    List<AppointmentPatientViewModel> getFutureAppointmentsForPatient(String userEmail);
+    List<PatientAppointmentViewModel> getFutureAppointmentsForPatient(String userEmail);
 
-    MdDocumentViewModel getMdViewModelByAppointmentId(String id);
+    PatientAmbulatoryListDetails getPatientViewModelByAppointmentId(String id);
 
-    PatientAmbulatoryListViewModel getPatientViewModelByAppointmentId(String id);
-
-    MdDocumentViewModel getMdDetailsByAppointmentId(String id);
-
-    PatientAmbulatoryListViewModel getPatientDetailsByAppointmentId(String id);
+    MdDocumentDetails getMdDetailsByAppointmentId(String id);
 
     User getMdByAppointmentId(String id);
 
@@ -49,9 +51,9 @@ public interface AppointmentService {
 
     Appointment getAppointmentById(String appointmentId);
 
-    PatientPrescriptionViewModel getPatientPrescriptionViewModelByAppointmentId(String appointmentId);
+    PatientPrescriptionDetails getPatientPrescriptionViewModelByAppointmentId(String appointmentId);
 
-    PatientSickLeaveViewModel getSickPatientViewModelByAppointmentId(String appointmentId);
+    PatientSickLeaveDetails getSickPatientViewModelByAppointmentId(String appointmentId);
 
     void deleteUnconfirmedAndUnattendedAppointmentsFromDatabase();
 

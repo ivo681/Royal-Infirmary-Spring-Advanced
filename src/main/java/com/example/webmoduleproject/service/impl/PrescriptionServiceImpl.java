@@ -1,8 +1,8 @@
 package com.example.webmoduleproject.service.impl;
 
 import com.example.webmoduleproject.model.entities.Prescription;
-import com.example.webmoduleproject.model.view.PrescriptionListAllViewModel;
-import com.example.webmoduleproject.model.view.PrescriptionViewModel;
+import com.example.webmoduleproject.model.view.prescriptions.PrescriptionListAllViewModel;
+import com.example.webmoduleproject.model.view.prescriptions.PrescriptionViewModel;
 import com.example.webmoduleproject.repository.PrescriptionRepository;
 import com.example.webmoduleproject.service.AmbulatoryListService;
 import com.example.webmoduleproject.service.AppointmentService;
@@ -78,7 +78,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                     allViewModel.setFirstName(prescription.getMd().getFirstName());
                     allViewModel.setLastName(prescription.getMd().getLastName());
                     allViewModel.setJob(prescription.getMd().getJob());
-                    allViewModel.setHospitalId(prescription.getMd().getHospitalId());
+                    allViewModel.setIdNumber(String.valueOf(prescription.getMd().getHospitalId()));
                     allViewModel.setDiagnosis(this.ambulatoryListService.getDiagnosisFromListByAppointmentId(allViewModel.getAppointmentId()));
                     return allViewModel;
                 }
