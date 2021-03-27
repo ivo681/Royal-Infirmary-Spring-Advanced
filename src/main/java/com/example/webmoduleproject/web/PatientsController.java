@@ -41,7 +41,7 @@ public class PatientsController {
     }
 
     @GetMapping("/appointments")
-    public String viewPatientDetails(Model model) {
+    public String viewAppointmentNavigation(Model model) {
         model.addAttribute("enableMdSection", true);
         return "appointment-nav";
     }

@@ -30,4 +30,9 @@ public class LogServiceImpl implements LogService {
         logEntity.setDateTime(LocalDateTime.now());
         this.logRepository.save(logEntity);
     }
+
+    @Override
+    public void clearLogsFromDatabase() {
+        this.logRepository.deleteAll();
+    }
 }

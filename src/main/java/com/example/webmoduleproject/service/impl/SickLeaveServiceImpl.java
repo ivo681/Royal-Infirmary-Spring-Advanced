@@ -1,7 +1,9 @@
 package com.example.webmoduleproject.service.impl;
 
-import com.example.webmoduleproject.model.binding.SickLeaveBindingModel;
 import com.example.webmoduleproject.model.entities.SickLeave;
+import com.example.webmoduleproject.model.service.documents.SickLeaveBindingServiceModel;
+import com.example.webmoduleproject.model.service.documents.SickLeaveListAllServiceModel;
+import com.example.webmoduleproject.model.service.documents.SickLeaveServiceModel;
 import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveViewModel;
 import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveListAllViewModel;
 import com.example.webmoduleproject.repository.SickLeaveRepository;
@@ -35,8 +37,8 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     }
 
     @Override
-    public void createNewSickLeave(String appointmentId, SickLeaveBindingModel sickLeaveBindingModel) {
-        SickLeave sickLeave = this.modelMapper.map(sickLeaveBindingModel, SickLeave.class);
+    public void createNewSickLeave(String appointmentId, SickLeaveBindingServiceModel sickLeaveBindingServiceModel) {
+        SickLeave sickLeave = this.modelMapper.map(sickLeaveBindingServiceModel, SickLeave.class);
         sickLeave.setNumber(generateDocumentNumber());
         sickLeave.setMd(this.appointmentService.getMdByAppointmentId(appointmentId));
         sickLeave.setPatient(this.appointmentService.getPatientByAppointmentId(appointmentId));
@@ -58,18 +60,18 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     @Override
     public SickLeaveViewModel getSickLeaveByAppointmentId(String appointmentId) {
         SickLeave sickLeave = this.sickLeaveRepository.getSickLeaveByAppointmentId(appointmentId).get();
-        SickLeaveViewModel viewModel = this.modelMapper.map(sickLeave, SickLeaveViewModel.class);
-        viewModel.setPatientEmployer(sickLeave.getPatientEmployer());
-        viewModel.setPatientJob(sickLeave.getPatientJob());
-        viewModel.setPatientTelephoneNumber(sickLeave.getPatientTelephoneNumber());
-        viewModel.setPatientAddress(sickLeave.getPatientHomeAddress());
-        return viewModel;
+        SickLeaveServiceModel sickLeaveServiceModel = this.modelMapper.map(sickLeave, SickLeaveServiceModel.class);
+        sickLeaveServiceModel.setPatientEmployer(sickLeave.getPatientEmployer());
+        sickLeaveServiceModel.setPatientJob(sickLeave.getPatientJob());
+        sickLeaveServiceModel.setPatientTelephoneNumber(sickLeave.getPatientTelephoneNumber());
+        sickLeaveServiceModel.setPatientAddress(sickLeave.getPatientHomeAddress());
+        return this.modelMapper.map(sickLeaveServiceModel, SickLeaveViewModel.class);
     }
 
     @Override
     public List<SickLeaveListAllViewModel> getAllSickLeavesByMdName(String userEmail) {
-        return this.sickLeaveRepository.getAllByMdEmail(userEmail).stream().map(sickLeave -> {
-            SickLeaveListAllViewModel model = this.modelMapper.map(sickLeave, SickLeaveListAllViewModel.class);
+        List<SickLeaveListAllServiceModel> serviceModels = this.sickLeaveRepository.getAllByMdEmail(userEmail).stream().map(sickLeave -> {
+            SickLeaveListAllServiceModel model = this.modelMapper.map(sickLeave, SickLeaveListAllServiceModel.class);
             model.setFirstName(sickLeave.getPatient().getFirstName());
             model.setLastName(sickLeave.getPatient().getLastName());
             model.setJob(sickLeave.getPatientJob());
@@ -77,12 +79,15 @@ public class SickLeaveServiceImpl implements SickLeaveService {
             model.setAppointmentId(sickLeave.getAppointment().getId());
             return model;
         }).collect(Collectors.toList());
+
+        return serviceModels.stream().map(model -> this.modelMapper.map(model,
+                SickLeaveListAllViewModel.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<SickLeaveListAllViewModel> getOwnSickLeaves(String userEmail) {
-        return this.sickLeaveRepository.getAllByPatientEmail(userEmail).stream().map(sickLeave -> {
-            SickLeaveListAllViewModel model = this.modelMapper.map(sickLeave, SickLeaveListAllViewModel.class);
+        List<SickLeaveListAllServiceModel> serviceModels = this.sickLeaveRepository.getAllByPatientEmail(userEmail).stream().map(sickLeave -> {
+            SickLeaveListAllServiceModel model = this.modelMapper.map(sickLeave, SickLeaveListAllServiceModel.class);
             model.setFirstName(sickLeave.getMd().getFirstName());
             model.setLastName(sickLeave.getMd().getLastName());
             model.setJob(sickLeave.getMd().getJob());
@@ -90,6 +95,9 @@ public class SickLeaveServiceImpl implements SickLeaveService {
             model.setAppointmentId(sickLeave.getAppointment().getId());
             return model;
         }).collect(Collectors.toList());
+
+        return serviceModels.stream().map(model -> this.modelMapper.map(model,
+                SickLeaveListAllViewModel.class)).collect(Collectors.toList());
     }
 
     private Long generateDocumentNumber(){

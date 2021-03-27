@@ -3,9 +3,8 @@ package com.example.webmoduleproject.service.impl;
 import com.example.webmoduleproject.model.entities.Appointment;
 import com.example.webmoduleproject.model.entities.User;
 import com.example.webmoduleproject.model.entities.enums.StatusEnum;
-import com.example.webmoduleproject.model.service.AppointmentServiceModel;
-import com.example.webmoduleproject.model.service.DoctorAppointmentsServiceModel;
-import com.example.webmoduleproject.model.service.PatientAppointmentsServiceModel;
+import com.example.webmoduleproject.model.service.*;
+import com.example.webmoduleproject.model.service.documents.PatientPrescriptionDetailsServiceModel;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
 import com.example.webmoduleproject.model.view.buildBlocks.PatientAmbulatoryListDetails;
 import com.example.webmoduleproject.model.view.appointments.AppointmentConfirmViewModel;
@@ -88,7 +87,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public boolean checkAvailabilityForDateAndTime(LocalDate date, String timeSpan, String mdName) {
         return this.appointmentRepository.
-                findAllAppointmentsByDateAndTime(date, timeSpan, mdName) < 4;
+                findAllAppointmentsByDateAndTime(date, timeSpan, mdName, StatusEnum.CONFIRMED) < 4;
     }
 
     @Override
@@ -178,7 +177,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public MdDocumentDetails getMdDetailsByAppointmentId(String id) {
-        return this.modelMapper.map(this.appointmentRepository.getMdByMdId(id).get(), MdDocumentDetails.class);
+        MdDocumentDetailsServiceModel serviceModel = this.modelMapper.map(this.appointmentRepository.getMdByMdId(id).get(), MdDocumentDetailsServiceModel.class);
+        return this.modelMapper.map(serviceModel, MdDocumentDetails.class);
     }
 
     @Override
@@ -198,9 +198,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public PatientPrescriptionDetails getPatientPrescriptionViewModelByAppointmentId(String appointmentId) {
-        return this.modelMapper.map(this.appointmentRepository.
-                getPatientByPatientId(appointmentId).get(),
-                PatientPrescriptionDetails.class);
+        PatientPrescriptionDetailsServiceModel serviceModel = this.modelMapper.map(this.appointmentRepository.
+                        getPatientByPatientId(appointmentId).get(),
+                PatientPrescriptionDetailsServiceModel.class);
+        return this.modelMapper.map(serviceModel, PatientPrescriptionDetails.class);
     }
 
     @Override

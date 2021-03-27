@@ -1,7 +1,7 @@
 package com.example.webmoduleproject.service.impl;
 
 import com.example.webmoduleproject.model.entities.AmbulatoryList;
-import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
+import com.example.webmoduleproject.model.service.documents.AmbulatoryListServiceModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
 import com.example.webmoduleproject.repository.AmbulatoryListRepository;
@@ -49,8 +49,9 @@ public class AmbulatoryListServiceImpl implements AmbulatoryListService {
 
     @Override
     public AmbulatoryListViewModel getAmbulatoryListByAppointmentId(String appointmentId) {
-        return this.modelMapper.map(this.ambulatoryListRepository.findByAppointmentId(appointmentId).get(),
-                AmbulatoryListViewModel.class);
+        AmbulatoryListServiceModel serviceModel = this.modelMapper.map(this.ambulatoryListRepository.findByAppointmentId(appointmentId).get(),
+                AmbulatoryListServiceModel.class);
+        return this.modelMapper.map(serviceModel, AmbulatoryListViewModel.class);
     }
 
     @Override

@@ -25,8 +25,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
     Optional<Appointment> findUnconfirmedAppointmentById(String id, StatusEnum status);
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.date = :date AND a.timeSpan = :timeSpan" +
-            " AND concat(a.md.firstName, ' ', a.md.lastName) = :mdName AND a.md.hospitalId IS NOT NULL")
-    int findAllAppointmentsByDateAndTime(LocalDate date, String timeSpan, String mdName);
+            " AND concat(a.md.firstName, ' ', a.md.lastName) = :mdName " +
+            "AND a.md.hospitalId IS NOT NULL AND a.status = :confirmed")
+    int findAllAppointmentsByDateAndTime(LocalDate date, String timeSpan, String mdName, StatusEnum confirmed);
 
     @Query("SELECT a FROM Appointment a WHERE a.date = :date AND " +
             "a.status = :status AND a.md.id = :mdId AND a.patient.email = :userEmail")

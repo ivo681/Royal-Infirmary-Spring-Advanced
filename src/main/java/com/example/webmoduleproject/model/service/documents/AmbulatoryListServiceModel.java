@@ -1,6 +1,9 @@
-package com.example.webmoduleproject.model.service;
+package com.example.webmoduleproject.model.service.documents;
 
-public class AmbulatoryListServiceModel {
+import com.example.webmoduleproject.model.view.commonDetails.DocumentDetails;
+
+public class AmbulatoryListServiceModel extends DocumentDetails {
+    private String id;
     private String diagnosis;
     private String medicines;
 

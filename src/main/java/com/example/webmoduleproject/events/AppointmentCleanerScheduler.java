@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class UnconfirmedAppointmentScheduler {
+public class AppointmentCleanerScheduler {
     private final AppointmentService appointmentService;
 
-    public UnconfirmedAppointmentScheduler(AppointmentService appointmentService) {
+    public AppointmentCleanerScheduler(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
     }
 

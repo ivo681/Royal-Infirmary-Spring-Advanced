@@ -1,6 +1,6 @@
 package com.example.webmoduleproject.service;
 
-import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
+import com.example.webmoduleproject.model.service.documents.AmbulatoryListServiceModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
 

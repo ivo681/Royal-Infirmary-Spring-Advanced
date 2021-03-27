@@ -1,6 +1,7 @@
 package com.example.webmoduleproject.web;
 
 import com.example.webmoduleproject.model.binding.SickLeaveBindingModel;
+import com.example.webmoduleproject.model.service.documents.SickLeaveBindingServiceModel;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
 import com.example.webmoduleproject.model.view.buildBlocks.PatientSickLeaveDetails;
 import com.example.webmoduleproject.model.view.sickLeaves.SickLeaveViewModel;
@@ -9,6 +10,7 @@ import com.example.webmoduleproject.service.AmbulatoryListService;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.SickLeaveService;
 import com.example.webmoduleproject.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +31,14 @@ public class SickLeaveController {
     private final AmbulatoryListService ambulatoryListService;
     private final AppointmentService appointmentService;
     private final SickLeaveService sickLeaveService;
+    private final ModelMapper modelMapper;
 
-    public SickLeaveController(UserService userService, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, SickLeaveService sickLeaveService) {
+    public SickLeaveController(UserService userService, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, SickLeaveService sickLeaveService, ModelMapper modelMapper) {
         this.userService = userService;
         this.ambulatoryListService = ambulatoryListService;
         this.appointmentService = appointmentService;
         this.sickLeaveService = sickLeaveService;
+        this.modelMapper = modelMapper;
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
@@ -66,7 +70,7 @@ public class SickLeaveController {
 
     @PreAuthorize("hasRole('ROLE_MD')")
     @GetMapping("/create-{id}")
-    public String ambulatoryListCreate(@Valid @ModelAttribute("sickLeaveBindingModel") SickLeaveBindingModel
+    public String sickLeaveCreate(@Valid @ModelAttribute("sickLeaveBindingModel") SickLeaveBindingModel
                                                      sickLeaveBindingModel,
                                              BindingResult bindingResult, RedirectAttributes redirectAttributes,
                                              @PathVariable("id") String appointmentId,
@@ -85,7 +89,7 @@ public class SickLeaveController {
                     return "redirect:/sick-leaves/new/" + appointmentId;
                     
                 }
-                this.sickLeaveService.createNewSickLeave(appointmentId, sickLeaveBindingModel);
+                this.sickLeaveService.createNewSickLeave(appointmentId, this.modelMapper.map(sickLeaveBindingModel, SickLeaveBindingServiceModel.class));
             }
             return "redirect:/sick-leaves/details/" + appointmentId;
             

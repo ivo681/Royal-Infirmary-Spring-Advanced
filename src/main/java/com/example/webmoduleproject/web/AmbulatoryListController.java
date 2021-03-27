@@ -3,7 +3,7 @@ package com.example.webmoduleproject.web;
 import com.example.webmoduleproject.exceptions.DocumentExtractDetailError;
 import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.binding.AmbulatoryListBindingModel;
-import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
+import com.example.webmoduleproject.model.service.documents.AmbulatoryListServiceModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;

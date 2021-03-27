@@ -1,6 +1,8 @@
 package com.example.webmoduleproject.service.impl;
 
 import com.example.webmoduleproject.model.entities.Prescription;
+import com.example.webmoduleproject.model.service.documents.PrescriptionListAllServiceModel;
+import com.example.webmoduleproject.model.service.documents.PrescriptionServiceModel;
 import com.example.webmoduleproject.model.view.prescriptions.PrescriptionListAllViewModel;
 import com.example.webmoduleproject.model.view.prescriptions.PrescriptionViewModel;
 import com.example.webmoduleproject.repository.PrescriptionRepository;
@@ -50,15 +52,17 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public PrescriptionViewModel getPrescriptionByAppointmentId(String appointmentId) {
-        return this.modelMapper.map(this.prescriptionRepository.
-                findByAppointmentId(appointmentId).get(), PrescriptionViewModel.class);
+        PrescriptionServiceModel serviceModel = this.modelMapper.map(this.prescriptionRepository.
+                findByAppointmentId(appointmentId).get(), PrescriptionServiceModel.class);
+
+        return this.modelMapper.map(serviceModel, PrescriptionViewModel.class);
     }
 
     @Override
     public List<PrescriptionListAllViewModel> getAllPrescriptionsByMdEmail(String userEmail) {
-        return this.prescriptionRepository.findAllByMd_EmailOrderByDateDesc(userEmail).stream().map(
+        List<PrescriptionListAllServiceModel> serviceModels = this.prescriptionRepository.findAllByMd_EmailOrderByDateDesc(userEmail).stream().map(
                 prescription -> {
-                    PrescriptionListAllViewModel allViewModel = this.modelMapper.map(prescription, PrescriptionListAllViewModel.class);
+                    PrescriptionListAllServiceModel allViewModel = this.modelMapper.map(prescription, PrescriptionListAllServiceModel.class);
                     allViewModel.setAppointmentId(prescription.getAppointment().getId());
                     allViewModel.setFirstName(prescription.getPatient().getFirstName());
                     allViewModel.setLastName(prescription.getPatient().getLastName());
@@ -67,13 +71,17 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                     return allViewModel;
                 }
         ).collect(Collectors.toList());
+
+        return serviceModels.stream().map(model -> this.modelMapper.map(
+                model, PrescriptionListAllViewModel.class
+        )).collect(Collectors.toList());
     }
 
     @Override
     public List<PrescriptionListAllViewModel> getAllPrescriptionsByPatientEmail(String userEmail) {
-        return this.prescriptionRepository.findAllByPatient_EmailOrderByDateDesc(userEmail).stream().map(
+        List<PrescriptionListAllServiceModel> serviceModels = this.prescriptionRepository.findAllByPatient_EmailOrderByDateDesc(userEmail).stream().map(
                 prescription -> {
-                    PrescriptionListAllViewModel allViewModel = this.modelMapper.map(prescription, PrescriptionListAllViewModel.class);
+                    PrescriptionListAllServiceModel allViewModel = this.modelMapper.map(prescription, PrescriptionListAllServiceModel.class);
                     allViewModel.setAppointmentId(prescription.getAppointment().getId());
                     allViewModel.setFirstName(prescription.getMd().getFirstName());
                     allViewModel.setLastName(prescription.getMd().getLastName());
@@ -83,6 +91,10 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                     return allViewModel;
                 }
         ).collect(Collectors.toList());
+
+        return serviceModels.stream().map(model -> this.modelMapper.map(
+                model, PrescriptionListAllViewModel.class
+        )).collect(Collectors.toList());
     }
 
     private Long generateDocumentNumber(){
