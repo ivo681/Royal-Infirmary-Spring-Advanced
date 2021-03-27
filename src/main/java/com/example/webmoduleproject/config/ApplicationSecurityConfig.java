@@ -36,7 +36,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureForwardUrl("/users/login-error").and()
                 .logout().logoutUrl("/users/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/");
-//                .and().addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
     }
 
     @Override

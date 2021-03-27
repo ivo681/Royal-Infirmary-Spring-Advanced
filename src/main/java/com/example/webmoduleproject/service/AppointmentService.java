@@ -15,7 +15,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AppointmentService {
-    boolean doesAppointmentExistById(String id);
+    boolean doesAppointmentExistByIdAndMdEmail(String id, String userEmail);
+
+    boolean doesAppointmentExistByIdAndPatientEmail(String id, String userEmail);
 
     String appointmentCreate(AppointmentServiceModel model);
 

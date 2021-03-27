@@ -1,6 +1,7 @@
 package com.example.webmoduleproject.web;
 
 
+import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.binding.UserRegisterBindingModel;
 import com.example.webmoduleproject.model.service.UserRegisterServiceModel;
 import com.example.webmoduleproject.service.AppointmentService;
@@ -11,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -32,7 +36,13 @@ public class UsersController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest request, Model model) {
+        String restOfTheUrl = (String) request.getAttribute(
+                HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        System.out.println(restOfTheUrl);
+        if (restOfTheUrl.equalsIgnoreCase("/users/login?expired")){
+            model.addAttribute("session_timeout", true);
+        }
         return "login";
          
     }
@@ -46,6 +56,16 @@ public class UsersController {
         attributes.addFlashAttribute("username", username);
         return "redirect:/users/login";
          
+    }
+
+    @GetMapping("/expired_login")
+    public ModelAndView sessionTimeout(ModelAndView modelAndView) {
+        System.out.println("hi");
+        modelAndView.addObject("session_timeout", true);
+//        attributes.addFlashAttribute("username", username);
+        modelAndView.setViewName("login");
+        return modelAndView;
+
     }
 
     @GetMapping("/register")
@@ -134,11 +154,13 @@ public class UsersController {
 
     @GetMapping("/appointments/cancel-{id}")
     public String cancelFutureAppointment(@PathVariable("id") String id,
-                                                Model model) {
-        if (this.appointmentService.doesAppointmentExistById(id)) {
+                                                Principal principal) throws NotFoundError {
+        String userEmail = principal.getName();
+        if (this.appointmentService.doesAppointmentExistByIdAndPatientEmail(id, userEmail)) {
             this.appointmentService.cancelAppointmentById(id);
+            return "redirect:/users/appointments/future";
         }
-        return "redirect:/users/appointments/future";
+        throw new NotFoundError("Appointment not found with this id and patient email");
     }
 
 

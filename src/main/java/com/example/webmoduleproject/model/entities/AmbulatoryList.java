@@ -8,6 +8,7 @@ public class AmbulatoryList extends BaseDocumentEntity{
     private LocalDate date;
     private String diagnosis;
     private String medicines;
+    private Appointment appointment;
 
     public AmbulatoryList() {
     }
@@ -38,6 +39,15 @@ public class AmbulatoryList extends BaseDocumentEntity{
 
     public void setMedicines(String medicines) {
         this.medicines = medicines;
+    }
+
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
 }

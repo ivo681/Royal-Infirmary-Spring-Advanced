@@ -1,19 +1,15 @@
 package com.example.webmoduleproject.model.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "sick_leaves")
-public class SickLeave extends BaseEntity {
+public class SickLeave extends BaseDocumentEntity {
     private LocalDate fromDate;
     private LocalDate toDate;
-    private Long number;
-    private User md;
-    private User patient;
-    private String mdTelephoneNumber;
-    private String patientTelephoneNumber;
-    private String patientHomeAddress;
     private String patientEmployer;
     private String patientJob;
     private String diagnosis;
@@ -39,51 +35,6 @@ public class SickLeave extends BaseEntity {
 
     public void setToDate(LocalDate toDate) {
         this.toDate = toDate;
-    }
-
-    @Column(name = "number", nullable = false, unique = true)
-    public Long getNumber() {
-        return number;
-    }
-
-    public void setNumber(Long number) {
-        this.number = number;
-    }
-
-    @ManyToOne
-    public User getMd() {
-        return md;
-    }
-
-    public void setMd(User md) {
-        this.md = md;
-    }
-
-    @ManyToOne
-    public User getPatient() {
-        return patient;
-    }
-
-    public void setPatient(User patient) {
-        this.patient = patient;
-    }
-
-    @Column(name = "patient_telephone_number", nullable = false)
-    public String getMdTelephoneNumber() {
-        return mdTelephoneNumber;
-    }
-
-    public void setMdTelephoneNumber(String mdTelephoneNumber) {
-        this.mdTelephoneNumber = mdTelephoneNumber;
-    }
-
-    @Column(name = "patient_address", nullable = false)
-    public String getPatientHomeAddress() {
-        return patientHomeAddress;
-    }
-
-    public void setPatientHomeAddress(String patientHomeAddress) {
-        this.patientHomeAddress = patientHomeAddress;
     }
 
     @Column(name = "patient_employer", nullable = false)
@@ -122,7 +73,7 @@ public class SickLeave extends BaseEntity {
         this.reason = reason;
     }
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     public Appointment getAppointment() {
         return appointment;
     }
@@ -131,12 +82,4 @@ public class SickLeave extends BaseEntity {
         this.appointment = appointment;
     }
 
-    @Column(name = "patient_number", nullable = false)
-    public String getPatientTelephoneNumber() {
-        return patientTelephoneNumber;
-    }
-
-    public void setPatientTelephoneNumber(String patientTelephoneNumber) {
-        this.patientTelephoneNumber = patientTelephoneNumber;
-    }
 }

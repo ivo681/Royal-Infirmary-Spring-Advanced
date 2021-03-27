@@ -14,13 +14,13 @@ public class UnconfirmedAppointmentScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 50 23 * * *")
+    @Scheduled(cron = "0 7 0 * * *")
     public void updateNoShowAppointmentsStatus(){
         this.appointmentService.updateStatusofNoShowPatientsForAppointments();
     }
 
     @Transactional
-    @Scheduled(cron = "0 53 23 * * *")
+    @Scheduled(cron = "0 15 3 * * *")
     public void deleteUnconfirmedAndUnattendedAppointmentsToday(){
         this.appointmentService.deleteUnconfirmedAndUnattendedAppointmentsFromDatabase();
     }

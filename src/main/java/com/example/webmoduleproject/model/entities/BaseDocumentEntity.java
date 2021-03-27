@@ -1,9 +1,8 @@
 package com.example.webmoduleproject.model.entities;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @MappedSuperclass
@@ -14,7 +13,6 @@ public abstract class BaseDocumentEntity extends BaseEntity{
     private String mdTelephoneNumber;
     private String patientTelephoneNumber;
     private String patientHomeAddress;
-    private Appointment appointment;
 
     public BaseDocumentEntity(){
 
@@ -65,14 +63,6 @@ public abstract class BaseDocumentEntity extends BaseEntity{
         this.mdTelephoneNumber = mdTelephoneNumber;
     }
 
-    @OneToOne
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
 
     @Column(name = "patient_address", nullable = false)
     public String getPatientHomeAddress() {

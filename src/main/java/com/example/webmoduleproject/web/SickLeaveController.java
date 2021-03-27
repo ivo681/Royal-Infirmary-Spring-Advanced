@@ -42,7 +42,7 @@ public class SickLeaveController {
     public String sickLeaveBuildByAppointmentId(@PathVariable("id") String appointmentId,
                                                       Principal principal, Model model) {
         String userEmail = principal.getName();
-        if (this.appointmentService.doesAppointmentExistById(appointmentId) && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
+        if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId, userEmail) && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
             if (!this.sickLeaveService.existingSickLeaveByAppointmentIdMdCheck(appointmentId, userEmail)) {
                 if (!model.containsAttribute("sickLeaveBindingModel")) {
                     model.addAttribute("sickLeaveBindingModel", new SickLeaveBindingModel());
@@ -72,7 +72,7 @@ public class SickLeaveController {
                                              @PathVariable("id") String appointmentId,
                                              Principal principal) {
         String userEmail = principal.getName();
-        if (this.appointmentService.doesAppointmentExistById(appointmentId)
+        if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId,userEmail )
                 && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
             if (!this.sickLeaveService.existingSickLeaveByAppointmentIdMdCheck(appointmentId, userEmail)) {
                 if (bindingResult.hasErrors() || sickLeaveBindingModel.getFromDate() == null) {

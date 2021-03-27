@@ -39,17 +39,23 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean doesAppointmentExistById(String id) {
-        return this.appointmentRepository.findById(id).isPresent();
+    public boolean doesAppointmentExistByIdAndMdEmail(String id, String userEmail) {
+        return this.appointmentRepository.findByIdAndMd_Email(id, userEmail).isPresent();
+    }
+
+    @Override
+    public boolean doesAppointmentExistByIdAndPatientEmail(String id, String userEmail) {
+        return this.appointmentRepository.findByIdAndPatient_Email(id, userEmail).isPresent();
     }
 
     @Override
     public String appointmentCreate(AppointmentServiceModel model) {
         Appointment appointment = this.modelMapper.map(model, Appointment.class);
-        appointment.setMd(this.userRepository.findById(model.getMdId()).get());
-        appointment.setPatient(this.userRepository.findByEmail(model.getUserEmail()).get());
+        appointment.setMd(this.userRepository.findById(model.getMd_Id()).orElse(null));
+        appointment.setPatient(this.userRepository.findByEmail(model.getUserEmail()).orElse(null));
         appointment.setStatus(StatusEnum.UNCONFIRMED);
-        return this.appointmentRepository.save(appointment).getId();
+        Appointment saved = this.appointmentRepository.saveAndFlush(appointment);
+        return saved.getId();
     }
 
     @Override
@@ -206,8 +212,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void deleteUnconfirmedAndUnattendedAppointmentsFromDatabase() {
-        this.appointmentRepository.
-                deleteUnconfirmedAndUnattendedAppointmentsFromDataBase(StatusEnum.UNCONFIRMED, StatusEnum.NO_SHOW);
+        List<Appointment> unconfirmedAndUnattendedAppointmentsFromDataBase = this.appointmentRepository.
+                getUnconfirmedAndUnattendedAppointmentsFromDataBase(StatusEnum.UNCONFIRMED, StatusEnum.NO_SHOW);
+        this.appointmentRepository.deleteAll(unconfirmedAndUnattendedAppointmentsFromDataBase);
     }
 
     @Override

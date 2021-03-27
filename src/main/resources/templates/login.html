@@ -14,6 +14,9 @@
     <form class="form" th:action="@{/users/login}"
           method="POST">
       <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+      <h3 th:if="${session_timeout}"
+          class="text-light form-text bg-danger rounded">You have been logged out due to 5 minutes inactivity</h3>
+
       <h3 th:if="${bad_credentials}"
              class="text-light form-text bg-danger rounded">This email or password is incorrect, please try again</h3>
       <br>

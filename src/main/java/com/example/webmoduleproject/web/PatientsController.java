@@ -35,7 +35,7 @@ public class PatientsController {
     @PreAuthorize("hasRole('ROLE_GP')")
     @GetMapping("/details/{id}")
     public String viewPatientDetails(@PathVariable("id") String id,
-                                     Principal principal, Model model) {
+                                      Model model) {
         model.addAttribute("patient", this.userService.getPatientDetails(id));
         return "patient-details";
     }

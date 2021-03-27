@@ -1,5 +1,7 @@
 package com.example.webmoduleproject.web;
 
+import com.example.webmoduleproject.exceptions.DocumentExtractDetailError;
+import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.binding.AmbulatoryListBindingModel;
 import com.example.webmoduleproject.model.service.AmbulatoryListServiceModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
@@ -44,36 +46,34 @@ public class AmbulatoryListController {
     @PreAuthorize("hasRole('ROLE_MD')")
     @GetMapping("/new/{id}")
     public String ambulatoryListBuild(@PathVariable("id") String id,
-                                            Principal principal, Model model) {
+                                      Principal principal, Model model) throws NotFoundError {
         String userEmail = principal.getName();
-        if (this.userService.hasMdRole(userEmail)) {
-            if (this.appointmentService.doesAppointmentExistById(id)) {
-                if (!this.ambulatoryListService.existingListForAppointment(id)) {
-                    if (!model.containsAttribute("ambulatoryListBindingModel")) {
-                        model.addAttribute("ambulatoryListBindingModel", new AmbulatoryListBindingModel());
-                    }
-                    MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
-                    PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
-                    model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
-                    model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
-                    model.addAttribute("appId", id);
-                    model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
-                    return "ambulatory";
+        if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(id, userEmail)) {
+            if (!this.ambulatoryListService.existingListForAppointment(id)) {
+                if (!model.containsAttribute("ambulatoryListBindingModel")) {
+                    model.addAttribute("ambulatoryListBindingModel", new AmbulatoryListBindingModel());
                 }
-                return "redirect:/ambulatory-list/details/" + id;
+                MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
+                PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
+                model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
+                model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
+                model.addAttribute("appId", id);
+                model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                return "ambulatory";
             }
-            return "redirect:/error";
+            return "redirect:/ambulatory-list/details/" + id;
         }
-        return "redirect:/home";
+        throw new NotFoundError("Appointment not found with this id and md email");
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
     @GetMapping("/create-{id}")
     public String ambulatoryListCreate(@Valid @ModelAttribute("ambulatoryListBindingModel") AmbulatoryListBindingModel
-                                                     ambulatoryListBindingModel,
-                                             BindingResult bindingResult, RedirectAttributes redirectAttributes,
-                                             @PathVariable("id") String appointmentId) {
-        if (this.appointmentService.doesAppointmentExistById(appointmentId)) {
+                                               ambulatoryListBindingModel,
+                                       BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                       @PathVariable("id") String appointmentId, Principal principal) throws NotFoundError {
+        String userEmail = principal.getName();
+        if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId, userEmail)) {
             if (!this.ambulatoryListService.existingListForAppointment(appointmentId)) {
                 if (bindingResult.hasErrors()) {
                     redirectAttributes.addFlashAttribute("ambulatoryListBindingModel", ambulatoryListBindingModel);
@@ -88,28 +88,32 @@ public class AmbulatoryListController {
                 }
             }
             return "redirect:/ambulatory-list/details/" + appointmentId;
-             //make it return the confirmed ambulatory list
+            //make it return the confirmed ambulatory list
         }
-        return "redirect:/error";
+        throw new NotFoundError("Appointment not found with this id and md email");
     }
 
     @GetMapping("/details/{id}")
-    public String getExistingAmbulatoryList(@PathVariable("id") String id, Model model) {
+    public String getExistingAmbulatoryList(@PathVariable("id") String id, Model model) throws NotFoundError, DocumentExtractDetailError {
         if (this.ambulatoryListService.existingListForAppointment(id)) {
-            AmbulatoryListViewModel ambulatoryListByAppointmentId = this.ambulatoryListService.getAmbulatoryListByAppointmentId(id);
-            MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
-            mdDetailsByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getMdTelephoneNumber());
-            PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
-            patientViewModelByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getPatientTelephoneNumber());
-            model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
-            model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
-            model.addAttribute("ambulatoryList", ambulatoryListByAppointmentId);
-            model.addAttribute("patientEmployed", this.userService.isPatientEmployedByEmail(patientViewModelByAppointmentId.getEmail()));
-            model.addAttribute("givePrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
-            model.addAttribute("showButtons", LocalDate.now().equals(ambulatoryListByAppointmentId.getDate()));
+            try {
+                AmbulatoryListViewModel ambulatoryListByAppointmentId = this.ambulatoryListService.getAmbulatoryListByAppointmentId(id);
+                MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
+                PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
+                mdDetailsByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getMdTelephoneNumber());
+                patientViewModelByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getPatientTelephoneNumber());
+                model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
+                model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
+                model.addAttribute("ambulatoryList", ambulatoryListByAppointmentId);
+                model.addAttribute("patientEmployed", this.userService.isPatientEmployedByEmail(patientViewModelByAppointmentId.getEmail()));
+                model.addAttribute("givePrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
+                model.addAttribute("showButtons", LocalDate.now().equals(ambulatoryListByAppointmentId.getDate()));
+            } catch (Exception e){
+                throw new DocumentExtractDetailError("Details for existing ambulatory list could not be extracted properly");
+            }
             return "ambulatory-confirm";
         }
-        return "redirect:/error";
+        throw new NotFoundError("Ambulatory list not found with this appointment id");
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")

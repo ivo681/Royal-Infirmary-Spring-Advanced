@@ -15,6 +15,12 @@ import java.util.Optional;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, String> {
 
+    @Query("SELECT a FROM Appointment a WHERE a.id= :id AND a.md.email = :userEmail")
+    Optional<Appointment>findByIdAndMd_Email(String id, String userEmail);
+
+    @Query("SELECT a FROM Appointment a WHERE a.id= :id AND a.patient.email = :userEmail")
+    Optional<Appointment>findByIdAndPatient_Email(String id, String userEmail);
+
     @Query("SELECT a FROM Appointment  a WHERE a.id = :id AND a.status = :status")
     Optional<Appointment> findUnconfirmedAppointmentById(String id, StatusEnum status);
 
@@ -52,9 +58,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
     @Query("SELECT a.patient FROM Appointment a WHERE a.id = :id")
     Optional<User> getPatientByPatientId(String id);
 
-    @Modifying
-    @Query("DELETE FROM Appointment a WHERE a.status = :unconfirmed OR a.status = :noShow")
-    void deleteUnconfirmedAndUnattendedAppointmentsFromDataBase(StatusEnum unconfirmed, StatusEnum noShow);
+    @Query("SELECT a FROM Appointment a WHERE a.status = :unconfirmed OR a.status = :noShow")
+    List<Appointment> getUnconfirmedAndUnattendedAppointmentsFromDataBase(StatusEnum unconfirmed, StatusEnum noShow);
 
     @Modifying
     @Query("UPDATE Appointment a SET a.status= :closed WHERE " +
@@ -63,7 +68,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
 
     @Modifying
     @Query("UPDATE Appointment a SET a.status= :noshow WHERE " +
-            "a.status = :confirmed AND a.date = :today AND a.id NOT IN (SELECT list.id FROM AmbulatoryList list)")
+            "a.status = :confirmed AND a.date = :today AND a.id NOT IN (SELECT list.appointment.id FROM AmbulatoryList list)")
     void updateStatusOfNoShows(StatusEnum confirmed, StatusEnum noshow, LocalDate today);
 
 }

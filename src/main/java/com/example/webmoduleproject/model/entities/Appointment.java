@@ -1,7 +1,6 @@
 package com.example.webmoduleproject.model.entities;
 
 import com.example.webmoduleproject.model.entities.enums.StatusEnum;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -14,6 +13,9 @@ public class Appointment extends BaseEntity{
     private String reason;
     private String timeSpan;
     private StatusEnum status;
+    private AmbulatoryList ambulatoryList;
+    private Prescription prescription;
+    private SickLeave sickLeave;
 
     public Appointment() {
     }
@@ -71,5 +73,35 @@ public class Appointment extends BaseEntity{
 
     public void setStatus(StatusEnum status) {
         this.status = status;
+    }
+
+    @OneToOne(mappedBy = "appointment", targetEntity = SickLeave.class,
+            cascade = CascadeType.REMOVE, orphanRemoval = true)
+    public SickLeave getSickLeave() {
+        return sickLeave;
+    }
+
+    public void setSickLeave(SickLeave sickLeave) {
+        this.sickLeave = sickLeave;
+    }
+
+    @OneToOne(mappedBy = "appointment", targetEntity = Prescription.class,
+            cascade = CascadeType.REMOVE, orphanRemoval = true)
+    public Prescription getPrescription() {
+        return prescription;
+    }
+
+    public void setPrescription(Prescription prescription) {
+        this.prescription = prescription;
+    }
+
+    @OneToOne(mappedBy = "appointment", targetEntity = AmbulatoryList.class,
+            cascade = CascadeType.REMOVE, orphanRemoval = true)
+    public AmbulatoryList getAmbulatoryList() {
+        return ambulatoryList;
+    }
+
+    public void setAmbulatoryList(AmbulatoryList ambulatoryList) {
+        this.ambulatoryList = ambulatoryList;
     }
 }

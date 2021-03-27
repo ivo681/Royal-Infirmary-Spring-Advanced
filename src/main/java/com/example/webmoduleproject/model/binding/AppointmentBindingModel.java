@@ -1,7 +1,5 @@
 package com.example.webmoduleproject.model.binding;
 
-import com.example.webmoduleproject.model.entities.User;
-import com.example.webmoduleproject.model.entities.enums.StatusEnum;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,7 +8,7 @@ import java.time.LocalDate;
 
 public class AppointmentBindingModel {
     private String userEmail;
-    private String mdId;
+    private String md_Id;
     private LocalDate date;
     private String reason;
     private String timeSpan;
@@ -26,12 +24,12 @@ public class AppointmentBindingModel {
         this.userEmail = userEmail;
     }
 
-    public String getMdId() {
-        return mdId;
+    public String getMd_Id() {
+        return md_Id;
     }
 
-    public void setMdId(String mdId) {
-        this.mdId = mdId;
+    public void setMd_Id(String mdId) {
+        this.md_Id = mdId;
     }
 
     @NotNull(message = "Please select a date for your appointment")

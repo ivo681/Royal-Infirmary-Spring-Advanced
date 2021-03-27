@@ -87,12 +87,12 @@ public class AppointmentsController {
                     bindingResult);
             return "redirect:/appointments/book/" + id;
         }
-        appointmentBindingModel.setUserEmail(userEmail);
-        appointmentBindingModel.setMdId(id);
-
-        String newAppointmentId = this.appointmentService.appointmentCreate(this.modelMapper
-                .map(appointmentBindingModel, AppointmentServiceModel.class));
-        return "redirect:/appointments/confirm/" + newAppointmentId;
+        AppointmentServiceModel appointmentServiceModel = this.modelMapper
+                .map(appointmentBindingModel, AppointmentServiceModel.class);
+        appointmentServiceModel.setUserEmail(userEmail);
+        appointmentServiceModel.setMd_Id(id);
+        String newAppointmentId = this.appointmentService.appointmentCreate(appointmentServiceModel);
+        return String.format("redirect:/appointments/confirm/%s", newAppointmentId);
     }
 
     @GetMapping("/confirm/{id}")
@@ -104,7 +104,7 @@ public class AppointmentsController {
             model.addAttribute("unconfirmedAppointmentById", unconfirmedAppointmentById);
             return "appointmentconfirm";
         }
-        return "redirect:/home";
+        return "redirect:/patients/all/";
     }
 
     @PostMapping("/confirm/{id}")

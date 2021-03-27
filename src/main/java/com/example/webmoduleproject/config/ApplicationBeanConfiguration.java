@@ -1,5 +1,7 @@
 package com.example.webmoduleproject.config;
 
+//import com.example.webmoduleproject.interceptors.SessionTimeOutInterceptor;
+import com.example.webmoduleproject.interceptors.SessionTimeOutInterceptor;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -56,6 +58,11 @@ public class ApplicationBeanConfiguration {
     @Bean
     public Random createNewRandom(){
         return new Random();
+    }
+
+    @Bean
+    public SessionTimeOutInterceptor createNewInterceptor(){
+        return new SessionTimeOutInterceptor();
     }
 
 }

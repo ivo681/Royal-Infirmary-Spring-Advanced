@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class AppointmentServiceModel {
     private String userEmail;
-    private String mdId;
+    private String md_Id;
     private String mdFullName;
     private LocalDate date;
     private String reason;
@@ -21,12 +21,12 @@ public class AppointmentServiceModel {
         this.userEmail = userEmail;
     }
 
-    public String getMdId() {
-        return mdId;
+    public String getMd_Id() {
+        return md_Id;
     }
 
-    public void setMdId(String mdId) {
-        this.mdId = mdId;
+    public void setMd_Id(String md_Id) {
+        this.md_Id = md_Id;
     }
 
     public String getMdFullName() {

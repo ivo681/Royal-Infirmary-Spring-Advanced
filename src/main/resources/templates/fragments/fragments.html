@@ -46,6 +46,9 @@
                     <a class="nav-link" th:href="@{/users/register}">Register</a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
+                    <a class="nav-link" th:href="@{/users/update-details}">Edit profile</a>
+                </li>
+                <li sec:authorize="isAuthenticated()" class="nav-item">
                     <form th:action="@{/users/logout}" method="POST">
                         <a onclick="this.parentNode.submit()" class="nav-link" type="submit">Logout</a>
                     </form>

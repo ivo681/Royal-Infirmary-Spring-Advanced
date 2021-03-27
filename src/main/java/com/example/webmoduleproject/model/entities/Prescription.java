@@ -1,5 +1,7 @@
 package com.example.webmoduleproject.model.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -80,7 +82,7 @@ public class Prescription extends BaseEntity{
         this.mdTelephoneNumber = mdTelephoneNumber;
     }
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     public Appointment getAppointment() {
         return appointment;
     }
