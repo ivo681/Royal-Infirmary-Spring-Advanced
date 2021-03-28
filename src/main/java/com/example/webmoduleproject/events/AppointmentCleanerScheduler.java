@@ -20,13 +20,13 @@ public class AppointmentCleanerScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 15 3 * * *")
+    @Scheduled(cron = "0 3 0 * * *")
     public void deleteUnconfirmedAndUnattendedAppointmentsToday(){
         this.appointmentService.deleteUnconfirmedAndUnattendedAppointmentsFromDatabase();
     }
 
     @Transactional
-    @Scheduled(cron = "0 55 23 * * *")
+    @Scheduled(cron = "0 6 0 * * *")
     public void updateCompletedAppointmentsStatus(){
         this.appointmentService.changeStatusOfCompletedAppointmentsForTheDay();
     }

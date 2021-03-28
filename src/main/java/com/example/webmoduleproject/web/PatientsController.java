@@ -36,8 +36,8 @@ public class PatientsController {
     @GetMapping("/details/{id}")
     public String viewPatientDetails(@PathVariable("id") String id,
                                       Model model) {
-        model.addAttribute("patient", this.userService.getPatientDetails(id));
-        return "patient-details";
+        model.addAttribute("person", this.userService.getPatientDetails(id));
+        return "person-details";
     }
 
     @GetMapping("/appointments")

@@ -1,20 +1,15 @@
 package com.example.webmoduleproject.model.view;
 
-import com.example.webmoduleproject.model.entities.User;
-import com.example.webmoduleproject.model.entities.UserRole;
-import com.example.webmoduleproject.model.view.commonDetails.PatientBasicDetails;
+import com.example.webmoduleproject.model.view.commonDetails.UserBasicDetails;
 
-import java.time.LocalDate;
-import java.util.List;
-
-public class PatientDetailsViewModel extends PatientBasicDetails {
+public class UserDetailsViewModel extends UserBasicDetails {
     private String email;
     private String job;
     private String idNumber;
     private String employer;
     private String address;
 
-    public PatientDetailsViewModel() {
+    public UserDetailsViewModel() {
     }
 
     public String getEmail() {

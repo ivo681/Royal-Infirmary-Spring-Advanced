@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div id="date-div"></div>
+            <div>
+                <h1 class="header-home">Admin Panel</h1>
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-3 p-2">
+                        <div class="card align-items-center">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View all patients</h5>
+                                <a th:href="@{/admin/patients}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 p-2">
+                        <div class="card align-items-center">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View all personnel</h5>
+                                <a th:href="@{/admin/personnel}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 p-2">
+                        <div class="card align-items-center">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">View daily logs</h5>
+                                <a th:href="@{/admin/logs}" class="btn btn-success">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+</body>
+
+</html>

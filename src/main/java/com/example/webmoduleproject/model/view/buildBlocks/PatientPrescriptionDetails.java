@@ -1,11 +1,8 @@
 package com.example.webmoduleproject.model.view.buildBlocks;
 
-import com.example.webmoduleproject.model.view.commonDetails.PatientBasicDetails;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.example.webmoduleproject.model.view.commonDetails.UserBasicDetails;
 
-import java.time.LocalDate;
-
-public class PatientPrescriptionDetails extends PatientBasicDetails {
+public class PatientPrescriptionDetails extends UserBasicDetails {
 
     public PatientPrescriptionDetails() {
     }

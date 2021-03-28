@@ -306,9 +306,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PatientDetailsViewModel getPatientDetails(String id) {
+    public UserDetailsViewModel getPatientDetails(String id) {
         PatientDetailsServiceModel model = this.modelMapper.map(this.userRepository.findById(id).get(), PatientDetailsServiceModel.class);
-        return this.modelMapper.map(model, PatientDetailsViewModel.class);
+        return this.modelMapper.map(model, UserDetailsViewModel.class);
     }
 
     //DONE
@@ -376,6 +376,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(String id) {
         return this.userRepository.findById(id).get();
+    }
+
+    @Override
+    public List<PatientListViewModel> getPatientList() {
+        List<PatientListServiceModel> patientListServiceModels = this.userRepository.getAllPatients().
+                stream().map(patient -> {
+            PatientListServiceModel model = this.modelMapper.map(patient, PatientListServiceModel.class);
+            int age = Period.between(patient.getDateOfBirth(), LocalDate.now()).getYears();
+            model.setAge(age);
+            return model;
+        }).collect(Collectors.toList());
+
+        return patientListServiceModels.stream().map(
+                serviceModel -> this.modelMapper.map(serviceModel, PatientListViewModel.class)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MdViewModel> getPersonnelList() {
+        List<MdServiceModel> mdServiceModels = this.userRepository.getAllHospitalPersonnel().stream()
+                .map(md -> {
+                    MdServiceModel map = this.modelMapper.map(md, MdServiceModel.class);
+                    int age = Period.between(md.getDateOfBirth(), LocalDate.now()).getYears();
+                    map.setAge(age);
+                    return map;
+                }).collect(Collectors.toList());
+
+        return mdServiceModels.stream()
+                .map(model -> this.modelMapper.map(model, MdViewModel.class))
+                .collect(Collectors.toList());
     }
 
     private Long generateHospitalId() {

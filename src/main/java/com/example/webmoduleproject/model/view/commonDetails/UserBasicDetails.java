@@ -4,14 +4,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public abstract class PatientBasicDetails {
+public abstract class UserBasicDetails {
     private String firstName;
     private String lastName;
     private String telephone;
     private LocalDate dateOfBirth;
     private String address;
 
-    public PatientBasicDetails() {
+    public UserBasicDetails() {
     }
 
     public String getFirstName() {

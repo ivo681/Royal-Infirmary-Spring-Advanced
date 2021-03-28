@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div class="table-responsive form">
+                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+                <h1 th:if="${personnelView}" class="header-home">All hospital personnel</h1>
+                <h1 th:if="${patientsView}" class="header-home">All hospital patients</h1>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)" class="text-center">ID</th>
+                            <th onclick="sortTable(1)" class="text-center">First name</th>
+                            <th onclick="sortTable(2)" class="text-center">Last name</th>
+                            <th onclick="sortTable(3)" class="text-center">Age</th>
+                            <th onclick="sortTable(4)" class="text-center">Address</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tr th:if="${patientsView}" th:each="p : ${patients}" th:object="${p}">
+                        <td th:text="*{idNumber}" class="text-center"></td>
+                        <td th:text="*{firstName}" class="text-center"></td>
+                        <td th:text="*{lastName}" class="text-center"></td>
+                        <td th:text="*{age}" class="text-center"></td>
+                        <td th:text="*{address}" class="text-center"></td>
+                        <td class="text-center"><a th:href="@{/users/details/{id}(id = *{id})}"
+                                class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>
+                    </tr>
+                    <tr th:if="${personnelView}"  th:each="md : ${mds}" th:object="${md}">
+                        <td th:text="*{hospitalId}" class="text-center"></td>
+                        <td th:text="*{firstName}" class="text-center"></td>
+                        <td th:text="*{lastName}" class="text-center"></td>
+                        <td th:text="*{job}" class="text-center"></td>
+                        <td th:text="*{age}" class="text-center"></td>
+                        <td class="text-center"><a th:href="@{/users/details/{id}(id = *{id})}"
+                                                  class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+
+    </main>
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

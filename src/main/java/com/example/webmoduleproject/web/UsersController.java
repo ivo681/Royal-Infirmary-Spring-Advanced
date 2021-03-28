@@ -7,6 +7,7 @@ import com.example.webmoduleproject.model.service.UserRegisterServiceModel;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -163,6 +164,14 @@ public class UsersController {
         throw new NotFoundError("Appointment not found with this id and patient email");
     }
 
+
+    @GetMapping("/details/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String getUserDetailsForAdmin(@PathVariable("id") String id,
+                                         Model model){
+        model.addAttribute("person", this.userService.getPatientDetails(id));
+        return "person-details";
+    }
 
 }
 

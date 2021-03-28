@@ -1,8 +1,8 @@
 package com.example.webmoduleproject.model.view.buildBlocks;
 
-import com.example.webmoduleproject.model.view.commonDetails.PatientBasicDetails;
+import com.example.webmoduleproject.model.view.commonDetails.UserBasicDetails;
 
-public class PatientSickLeaveDetails extends PatientBasicDetails {
+public class PatientSickLeaveDetails extends UserBasicDetails {
     private String job;
     private String idNumber;
     private String employer;

@@ -1,6 +1,5 @@
 package com.example.webmoduleproject.service;
 
-import com.example.webmoduleproject.model.binding.CompleteProfileBindingModel;
 import com.example.webmoduleproject.model.entities.User;
 import com.example.webmoduleproject.model.entities.UserRole;
 import com.example.webmoduleproject.model.service.CompleteProfileServiceModel;
@@ -47,7 +46,7 @@ public interface UserService {
 
     List<PatientListViewModel> getPatientListByGpEmail(String userEmail);
 
-    PatientDetailsViewModel getPatientDetails(String id);
+    UserDetailsViewModel getPatientDetails(String id);
 
     String getGpIdByUserEmail(String email);
 
@@ -64,4 +63,8 @@ public interface UserService {
     User findByEmail(String userEmail);
 
     User findById(String id);
+
+    List<PatientListViewModel> getPatientList();
+
+    List<MdViewModel> getPersonnelList();
 }

@@ -37,27 +37,27 @@ public class PatientsControllerTest {
     @Test
     @WithMockUser(username = "mandrazhiiski@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testAppointmentsPastPage() throws Exception {
-        this.mockMvc.perform(get("/patients/appointments"))
+        this.mockMvc.perform(get("/patients/appointments/past"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("appointment-nav"))
-                .andExpect(model().attribute("enableMdSection", true));
+                .andExpect(view().name("appointment-list"))
+                .andExpect(model().attribute("past", true));
     }
 
     @Test
     @WithMockUser(username = "mandrazhiiski@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testAppointmentsTodayPage() throws Exception {
-        this.mockMvc.perform(get("/patients/appointments"))
+        this.mockMvc.perform(get("/patients/appointments/today"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("appointment-nav"))
-                .andExpect(model().attribute("enableMdSection", true));
+                .andExpect(view().name("appointment-list"))
+                .andExpect(model().attribute("today", true));
     }
 
     @Test
     @WithMockUser(username = "mandrazhiiski@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testAppointmentsFutureNavPage() throws Exception {
-        this.mockMvc.perform(get("/patients/appointments"))
+        this.mockMvc.perform(get("/patients/appointments/future"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("appointment-nav"))
-                .andExpect(model().attribute("enableMdSection", true));
+                .andExpect(view().name("appointment-list"))
+                .andExpect(model().attribute("future", true));
     }
 }
