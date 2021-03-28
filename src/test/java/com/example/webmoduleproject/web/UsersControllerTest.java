@@ -99,17 +99,17 @@ public class UsersControllerTest {
     }
 
 
-    @Test
-    public void testLoginErrorPage() throws Exception {
-        RequestBuilder requestBuilder = post("/users/login")
-                .param("username", "abcd@abv.bg")
-                .param("password", "1234");
-
-        this.mockMvc.perform(requestBuilder)
-                .andDo(print())
-                .andExpect(status().is4xxClientError())
-                .andExpect(view().name("login-error"));
-    }
+//    @Test
+//    public void testLoginErrorPage() throws Exception {
+//        RequestBuilder requestBuilder = post("/users/login")
+//                .param("username", "abcd@abv.bg")
+//                .param("password", "1234");
+//
+//        this.mockMvc.perform(requestBuilder)
+//                .andDo(print())
+//                .andExpect(status().is4xxClientError())
+//                .andExpect(view().name("login-error"));
+//    }
 
     @Test
     @WithMockUser(username = "mandrazhiiski@abv.bg", roles = {"PATIENT", "MD", "GP"})

@@ -60,14 +60,14 @@ public class AppointmentsController {
             model.addAttribute("confirmedAppointment", false);
             model.addAttribute("appointmentBindingModel", appointmentBindingModel);
         }
-        return "bookappointment2";
+        return "bookappointmenttwo";
     }
 
     @PostMapping("/book/{id}")
     public String appointmentCreate(@Valid @ModelAttribute("appointmentBindingModel") AppointmentBindingModel appointmentBindingModel,
                                     BindingResult bindingResult, @PathVariable("id") String id,
                                      Principal principal, @RequestParam(name="md", required=true) String mdName,
-                                     RedirectAttributes redirectAttributes, Model model) {
+                                     RedirectAttributes redirectAttributes) {
         String userEmail = principal.getName();
         boolean availabilityForDateAndTime = this.appointmentService.checkAvailabilityForDateAndTime(appointmentBindingModel.getDate(),
                 appointmentBindingModel.getTimeSpan(), mdName);

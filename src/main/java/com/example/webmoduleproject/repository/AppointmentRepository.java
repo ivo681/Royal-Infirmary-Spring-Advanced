@@ -33,6 +33,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
             "a.status = :status AND a.md.id = :mdId AND a.patient.email = :userEmail")
     Optional<Appointment> findConfirmedAppointmentForUser(LocalDate date, String userEmail, String mdId, StatusEnum status);
 
+    @Query("SELECT a FROM Appointment a WHERE a.date = :date AND " +
+            "a.status = :status AND a.md.id = :mdId AND a.patient.email = :userEmail")
+    List<Appointment> findUnconfirmedAppointmentForUser(LocalDate date, String userEmail, String mdId, StatusEnum status);
+
+
     @Query("SELECT a FROM Appointment a WHERE a.patient.email = :userEmail" +
             " AND a.date < :date AND a.status = :status")
     List<Appointment> getPastAppointmentsForPatient(String userEmail, LocalDate date, StatusEnum status);
