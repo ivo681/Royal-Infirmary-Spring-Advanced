@@ -19,8 +19,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -33,12 +35,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureTestDatabase
+@Transactional
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@TestPropertySource(properties = {
+//        "spring.datasource.url=jdbc:hsqldb:mem:${random.uuid}"
+//})
+
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class AppointmentControllerTest {
-    //private User user1;
-//    private User md;
+    private String appointmentId;
     private String mdId;
 
     @Autowired
@@ -125,10 +131,65 @@ public class AppointmentControllerTest {
 
         List<Appointment> unconfirmedAppointmentsForUser = appointmentRepository.findUnconfirmedAppointmentForUser(
                 LocalDate.now().plusDays(2), userEmail, mdId, StatusEnum.UNCONFIRMED);
-        Assertions.assertTrue(!unconfirmedAppointmentsForUser.isEmpty());
+        Assertions.assertFalse(unconfirmedAppointmentsForUser.isEmpty());
     }
 
-    @BeforeAll
+    @Test
+    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    @Transactional
+    void testConfirmAppointment() throws Exception {
+        String userEmail = "firstmail@abv.bg";
+        userService.loadUserByUsername(userEmail);
+        mockMvc.perform(MockMvcRequestBuilders.post(
+                "/appointments/confirm/{id}", appointmentId)
+                .param("action", "confirm")
+                .param("date", String.valueOf(LocalDate.now().plusDays(1)))
+                .param("timeSpan", "9:00 to 10:00")
+                .param("md", "Misho Shisho")
+        .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/home"));
+
+        Appointment confirmedAppointment = appointmentRepository.findById(appointmentId).get();
+        Assertions.assertEquals(StatusEnum.CONFIRMED, confirmedAppointment.getStatus());
+    }
+
+    @Test
+    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    @Transactional
+    void testCancelAppointment() throws Exception {
+        String userEmail = "firstmail@abv.bg";
+        userService.loadUserByUsername(userEmail);
+        mockMvc.perform(MockMvcRequestBuilders.post(
+                "/appointments/confirm/{id}", appointmentId)
+                .param("action", "cancel")
+                .param("date", String.valueOf(LocalDate.now().plusDays(1)))
+                .param("timeSpan", "9:00 to 10:00")
+                .param("md", "Misho Shisho")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/appointments/book"));
+
+        Optional<Appointment> confirmedAppointment = appointmentRepository.findById(appointmentId);
+        Assertions.assertTrue(confirmedAppointment.isEmpty());
+    }
+
+    @Test
+    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    void testUnconfirmedAppointmentShow() throws Exception {
+        String userEmail = "firstmail@abv.bg";
+        userService.loadUserByUsername(userEmail);
+        mockMvc.perform(MockMvcRequestBuilders.get(
+                "/appointments/confirm/{id}", appointmentId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("appointmentconfirm"))
+                .andExpect(model().attributeExists("unconfirmedAppointmentById"));
+
+        Appointment confirmedAppointment = appointmentRepository.findById(appointmentId).get();
+        Assertions.assertEquals(StatusEnum.UNCONFIRMED, confirmedAppointment.getStatus());
+    }
+
+    @BeforeEach
     public void setUp() {
         userService = new UserDetailsService(userRepository);
 //        appointmentRepository.deleteAll();
@@ -180,5 +241,15 @@ public class AppointmentControllerTest {
         user1.setGp(md);
         user1.setRoles(List.of(mockPatient));
         user1 = userRepository.save(user1);
+
+        Appointment appointment = new Appointment();
+        appointment.setMd(md);
+        appointment.setPatient(user1);
+        appointment.setDate(LocalDate.now().plusDays(1));
+        appointment.setReason("Test check");
+        appointment.setTimeSpan("9:00 to 10:00");
+        appointment.setStatus(StatusEnum.UNCONFIRMED);
+        appointment = appointmentRepository.save(appointment);
+        appointmentId = appointment.getId();
     }
 }

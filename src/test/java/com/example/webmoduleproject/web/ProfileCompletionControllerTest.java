@@ -12,7 +12,10 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,8 +27,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureTestDatabase
+@Transactional
+//@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@TestPropertySource(properties = {
+//        "spring.datasource.url=jdbc:hsqldb:mem:${random.uuid}"
+//})
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ProfileCompletionControllerTest {
 
@@ -40,7 +47,7 @@ public class ProfileCompletionControllerTest {
     private UserRoleRepository userRoleRepository;
 
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
         userService = new UserDetailsService(userRepository);
 //        userRepository.deleteAll();
@@ -110,6 +117,7 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    //@Order(1)
     public void testCompleteProfilePage() throws Exception {
         userService.loadUserByUsername("firstmail@abv.bg");
 
@@ -121,6 +129,7 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+//    @Order(2)
     public void testCompleteProfileInvalidDataPage() throws Exception {
         userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(post("/complete-profile")
@@ -137,6 +146,7 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+//    @Order(3)
     public void testCompleteProfileValidData() throws Exception {
         userService.loadUserByUsername("firstmail@abv.bg");
 
@@ -156,6 +166,8 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "MD"})
+//    @Order(5)
+    @Transactional
     public void testChooseGpConfirmPage() throws Exception {
         userService.loadUserByUsername("thirdmail@abv.bg");
 
@@ -168,8 +180,13 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "MD"})
+//    @Order(4)
     public void testChooseGpPage() throws Exception {
+        User user = userRepository.findByEmail("thirdmail@abv.bg").get();
+        user.setGp(null);
+        userRepository.saveAndFlush(user);
         userService.loadUserByUsername("thirdmail@abv.bg");
+        System.out.println(userRepository.findByEmail("thirdmail@abv.bg").get().getGp() == null);
 
         this.mockMvc.perform(get("/choose-gp"))
                 .andExpect(status().isOk())
@@ -179,6 +196,7 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "MD"})
+//    @Order(6)
     public void testChooseJobPage() throws Exception {
         User user = userRepository.findByEmail("thirdmail@abv.bg").get();
         user.setGp(userRepository.findByHospitalId(1L).get());
@@ -194,6 +212,8 @@ public class ProfileCompletionControllerTest {
 
     @Test
     @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "MD"})
+//    @Order(7)
+    @Transactional
     public void testChooseJobConfirmPage() throws Exception {
         User user = userRepository.findByEmail("thirdmail@abv.bg").get();
         user.setGp(userRepository.findByHospitalId(1L).get());
