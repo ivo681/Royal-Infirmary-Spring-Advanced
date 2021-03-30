@@ -39,7 +39,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public void createNewPrescription(String appointmentId, String medicines) {
         Prescription prescription = new Prescription();
-        prescription.setDate(LocalDate.now());
+//        prescription.setDate(LocalDate.now());
+        prescription.setDate(this.appointmentService.getAppointmentById(appointmentId).getDate());
         prescription.setMd(this.appointmentService.getMdByAppointmentId(appointmentId));
         prescription.setPatient(this.appointmentService.getPatientByAppointmentId(appointmentId));
         prescription.setNumber(generateDocumentNumber());

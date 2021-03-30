@@ -18,4 +18,6 @@ public interface SickLeaveService {
     List<SickLeaveListAllViewModel> getAllSickLeavesByMdName(String userEmail);
 
     List<SickLeaveListAllViewModel> getOwnSickLeaves(String userEmail);
+
+    void createSickLeaveFromSeededAppointments(String appointmentId, String diagnosis);
 }

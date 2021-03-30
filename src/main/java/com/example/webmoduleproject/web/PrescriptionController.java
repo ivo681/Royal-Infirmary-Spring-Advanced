@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.web;
 
+import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
 import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDetails;
 import com.example.webmoduleproject.model.view.prescriptions.PrescriptionListAllViewModel;
@@ -33,7 +34,7 @@ public class PrescriptionController {
 
     @GetMapping("/details/{id}")
     public String getExistingPrescription(@PathVariable("id") String appointmentId,
-                                                Model model) {
+                                                Model model) throws NotFoundError {
         if (this.prescriptionService.existingPrescriptionByAppointmentId(appointmentId)) {
             PrescriptionViewModel prescriptionViewModel = this.prescriptionService.getPrescriptionByAppointmentId(appointmentId);
             MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
@@ -45,7 +46,8 @@ public class PrescriptionController {
             model.addAttribute("prescription", prescriptionViewModel);
             return "prescription";
         }
-        return "redirect:/home";
+        throw new NotFoundError("Prescription was not found with this appointment id");
+//        return "redirect:/home";
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")

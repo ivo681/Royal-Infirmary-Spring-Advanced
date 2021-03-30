@@ -6,6 +6,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Array;
@@ -29,11 +30,10 @@ public class LogAspect {
     @After("appointmentCreateTrack()")
     public void afterAdvice(JoinPoint joinPoint){
         Object[] args = joinPoint.getArgs();
-        AppointmentBindingModel model = (AppointmentBindingModel) args[0];
-        String userEmail = model.getUserEmail();
+        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) args[3];
+        String userEmail = token.getName();
         String mdId = (String) args[2];
         String action = joinPoint.getSignature().getName();
         logService.createLog(userEmail, mdId, action);
-        System.out.println(args);
     }
 }

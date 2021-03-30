@@ -30,8 +30,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> getAllGps();
 
     @Query("SELECT u FROM User u WHERE u.hospitalId is not null" +
-            " AND u.job = 'General Practitioner' AND u.id <> :id")
-    List<User> getAllGpsExceptCurrent(String id);
+            " AND u.job = 'General Practitioner' AND u.id <> :id" +
+            " AND u.email <> :userEmail")
+    List<User> getAllGpsExceptCurrent(String id, String userEmail);
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.gp.id = :id")
     Long getNumberOfPatients(String id);

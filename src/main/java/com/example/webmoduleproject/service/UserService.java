@@ -56,7 +56,7 @@ public interface UserService {
 
     String getFullNameByUserEmail(String userEmail);
 
-    List<GpViewModel> getAllGpsExcept(String mdId);
+    List<GpViewModel> getAllGpsExcept(String mdId, String userEmail);
 
     boolean isPatientEmployedByEmail(String userEmail);
 

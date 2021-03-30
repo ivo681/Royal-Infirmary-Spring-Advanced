@@ -38,12 +38,12 @@ public class UsersController {
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
-        String restOfTheUrl = (String) request.getAttribute(
-                HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        System.out.println(restOfTheUrl);
-        if (restOfTheUrl.equalsIgnoreCase("/users/login?expired")){
-            model.addAttribute("session_timeout", true);
-        }
+//        String restOfTheUrl = (String) request.getAttribute(
+//                HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+//        System.out.println(restOfTheUrl);
+//        if (restOfTheUrl.equalsIgnoreCase("/users/login?expired")){
+//            model.addAttribute("session_timeout", true);
+//        }
         return "login";
          
     }
@@ -56,18 +56,18 @@ public class UsersController {
         attributes.addFlashAttribute("bad_credentials", true);
         attributes.addFlashAttribute("username", username);
         return "redirect:/users/login";
-         
-    }
-
-    @GetMapping("/expired_login")
-    public ModelAndView sessionTimeout(ModelAndView modelAndView) {
-        System.out.println("hi");
-        modelAndView.addObject("session_timeout", true);
-//        attributes.addFlashAttribute("username", username);
-        modelAndView.setViewName("login");
-        return modelAndView;
 
     }
+
+//    @GetMapping("/expired_login")
+//    public ModelAndView sessionTimeout(ModelAndView modelAndView) {
+//        System.out.println("hi");
+//        modelAndView.addObject("session_timeout", true);
+////        attributes.addFlashAttribute("username", username);
+//        modelAndView.setViewName("login");
+//        return modelAndView;
+//
+//    }
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -166,7 +166,7 @@ public class UsersController {
 
 
     @GetMapping("/details/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_GP')")
     public String getUserDetailsForAdmin(@PathVariable("id") String id,
                                          Model model){
         model.addAttribute("person", this.userService.getPatientDetails(id));

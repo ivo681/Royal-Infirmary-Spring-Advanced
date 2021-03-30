@@ -11,6 +11,7 @@ import com.example.webmoduleproject.model.view.appointments.PatientAppointmentVi
 import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDetails;
 import com.example.webmoduleproject.model.view.buildBlocks.PatientSickLeaveDetails;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -62,4 +63,6 @@ public interface AppointmentService {
     void changeStatusOfCompletedAppointmentsForTheDay();
 
     void updateStatusofNoShowPatientsForAppointments();
+
+    void seedAppointments() throws IOException;
 }

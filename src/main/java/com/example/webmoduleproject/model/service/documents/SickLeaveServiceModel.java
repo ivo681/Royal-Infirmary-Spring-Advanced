@@ -7,8 +7,8 @@ import java.time.LocalDate;
 public class SickLeaveServiceModel extends DocumentDetails {
     private LocalDate fromDate;
     private LocalDate toDate;
-    private String patientEmployer;
-    private String patientJob;
+    private String patientCurrentEmployer;
+    private String patientCurrentJob;
     private String reason;
 
     public SickLeaveServiceModel() {
@@ -30,27 +30,27 @@ public class SickLeaveServiceModel extends DocumentDetails {
         this.toDate = toDate;
     }
 
-    public String getPatientEmployer() {
-        return patientEmployer;
-    }
-
-    public void setPatientEmployer(String patientEmployer) {
-        this.patientEmployer = patientEmployer;
-    }
-
-    public String getPatientJob() {
-        return patientJob;
-    }
-
-    public void setPatientJob(String patientJob) {
-        this.patientJob = patientJob;
-    }
-
     public String getReason() {
         return reason;
     }
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getPatientCurrentEmployer() {
+        return patientCurrentEmployer;
+    }
+
+    public void setPatientCurrentEmployer(String patientCurrentEmployer) {
+        this.patientCurrentEmployer = patientCurrentEmployer;
+    }
+
+    public String getPatientCurrentJob() {
+        return patientCurrentJob;
+    }
+
+    public void setPatientCurrentJob(String patientCurrentJob) {
+        this.patientCurrentJob = patientCurrentJob;
     }
 }

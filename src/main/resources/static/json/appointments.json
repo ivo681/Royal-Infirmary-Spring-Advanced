@@ -1,0 +1,524 @@
+[
+	{
+		"patient": "rmccree22@51.la",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-02-09",
+		"medicines": "Aspirin",
+		"diagnosis": "Hypertension"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Immunisation",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-01-07",
+		"medicines": "Nurofen",
+		"diagnosis": "Hypertension"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-02-23",
+		"medicines": "Syrup",
+		"diagnosis": "Hyperlipidemia"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-03-21",
+		"medicines": "Ecomer",
+		"diagnosis": "Hyperlipidemia"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-04-24",
+		"medicines": "Trahizan",
+		"diagnosis": "Diabetes"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-01-24",
+		"medicines": "Espumizan",
+		"diagnosis": "Diabetes"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-02-18",
+		"medicines": "Vitamin D",
+		"diagnosis": "Back pain"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "katardiev@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-03-01",
+		"medicines": "Vitamin C",
+		"diagnosis": "Back pain"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-01-25",
+		"medicines": "Herbalite",
+		"diagnosis": "Anxiety"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-01-08",
+		"medicines": "Aspirin",
+		"diagnosis": "Anxiety"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-05-10",
+		"medicines": "Nurofen",
+		"diagnosis": "Obesity"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-05-11",
+		"medicines": "Syrup",
+		"diagnosis": "Obesity"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-04-08",
+		"medicines": "Ecomer",
+		"diagnosis": "Allergic rhinitis"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "katardiev@abv.bg",
+		"reason": "Immunisation",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-04-07",
+		"medicines": "Trahizan",
+		"diagnosis": "Allergic rhinitis"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-03-30",
+		"medicines": "Espumizan",
+		"diagnosis": "Reflux esophagitis"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-04-25",
+		"medicines": "Vitamin D",
+		"diagnosis": "Reflux esophagitis"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-03-08",
+		"medicines": "Vitamin C",
+		"diagnosis": "Respiratory problems"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-05-07",
+		"medicines": "Herbalite",
+		"diagnosis": "Respiratory problems"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-05-07",
+		"medicines": "Aspirin",
+		"diagnosis": "Hypothyroidism"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "katardiev@abv.bg",
+		"reason": "Immunisation",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-05-10",
+		"medicines": "Nurofen",
+		"diagnosis": "Hypothyroidism"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-05-10",
+		"medicines": "Syrup",
+		"diagnosis": "Visual refractive errors"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-03-18",
+		"medicines": "Ecomer",
+		"diagnosis": "Visual refractive errors"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-01-20",
+		"medicines": "Trahizan",
+		"diagnosis": "Osteoarthritis"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-04-16",
+		"medicines": "Espumizan",
+		"diagnosis": "Osteoarthritis"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-04-13",
+		"medicines": "Vitamin D",
+		"diagnosis": "Fibromyalgia myositis"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Sore throat",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-05-29",
+		"medicines": "Vitamin C",
+		"diagnosis": "Fibromyalgia myositis"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-02-19",
+		"medicines": "Herbalite",
+		"diagnosis": "Malaise and fatigue"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-04-23",
+		"medicines": "Aspirin",
+		"diagnosis": "Malaise and fatigue"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-04-11",
+		"medicines": "Nurofen",
+		"diagnosis": "Pain in joint"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-01-02",
+		"medicines": "Syrup",
+		"diagnosis": "Pain in joint"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-04-11",
+		"medicines": "Ecomer",
+		"diagnosis": "Acute laryngopharyngitis"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "katardiev@abv.bg",
+		"reason": "Immunisation",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-04-17",
+		"medicines": "Trahizan",
+		"diagnosis": "Acute laryngopharyngitis"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-03-11",
+		"medicines": "Espumizan",
+		"diagnosis": "Acute maxillary sinusitis"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-04-11",
+		"medicines": "Vitamin D",
+		"diagnosis": "Acute maxillary sinusitis"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-04-11",
+		"medicines": "Vitamin C",
+		"diagnosis": "Major depressive disorder"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-04-11",
+		"medicines": "Herbalite",
+		"diagnosis": "Major depressive disorder"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-01-21",
+		"medicines": "Aspirin",
+		"diagnosis": "Acute bronchitis"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "katardiev@abv.bg",
+		"reason": "Immunisation",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-04-11",
+		"medicines": "Nurofen",
+		"diagnosis": "Acute bronchitis"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-03-19",
+		"medicines": "Syrup",
+		"diagnosis": "Asthma"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-04-11",
+		"medicines": "Ecomer",
+		"diagnosis": "Asthma"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-04-11",
+		"medicines": "Trahizan",
+		"diagnosis": "Depressive disorder"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-04-11",
+		"medicines": "Espumizan",
+		"diagnosis": "Depressive disorder"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-04-11",
+		"medicines": "Vitamin D",
+		"diagnosis": "Nail fungus"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "katardiev@abv.bg",
+		"reason": "Sore throat",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-04-15",
+		"medicines": "Vitamin C",
+		"diagnosis": "Nail fungus"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-04-17",
+		"medicines": "Herbalite",
+		"diagnosis": "Coronary atherosclerosis"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-03-19",
+		"medicines": "Aspirin",
+		"diagnosis": "Coronary atherosclerosis"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-04-11",
+		"medicines": "Nurofen",
+		"diagnosis": "Urinary tract infection"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "14:00 to 15:00",
+		"date": "2021-03-18",
+		"medicines": "Syrup",
+		"diagnosis": "Urinary tract infection"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-05-09",
+		"medicines": "Ecomer",
+		"diagnosis": "Hypertension"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Muscle pain",
+		"timeSpan": "8:00 to 9:00",
+		"date": "2021-03-10",
+		"medicines": "Trahizan",
+		"diagnosis": "Hypertension"
+	},
+	{
+		"patient": "dmcshee3m@tinypic.com",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-03-21",
+		"medicines": "Espumizan",
+		"diagnosis": "Hyperlipidemia"
+	},
+	{
+		"patient": "jduchasteau20@wisc.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "9:00 to 10:00",
+		"date": "2021-04-11",
+		"medicines": "Vitamin D",
+		"diagnosis": "Hyperlipidemia"
+	},
+	{
+		"patient": "bloudwell3e@xinhuanet.com",
+		"md": "katardiev@abv.bg",
+		"reason": "Throwing up",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-05-02",
+		"medicines": "Vitamin C",
+		"diagnosis": "Diabetes"
+	},
+	{
+		"patient": "gtuckie5f@umn.edu",
+		"md": "yordan@abv.bg",
+		"reason": "Fever",
+		"timeSpan": "10:00 to 11:00",
+		"date": "2021-02-20",
+		"medicines": "Herbalite",
+		"diagnosis": "Diabetes"
+	},
+	{
+		"patient": "fmcneachtain1t@nyu.edu",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "Regular check up",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-04-11",
+		"medicines": "Aspirin",
+		"diagnosis": "Back pain"
+	},
+	{
+		"patient": "rlobe3d@mozilla.org",
+		"md": "katardiev@abv.bg",
+		"reason": "Muscle pain",
+		"timeSpan": "11:00 to 12:00",
+		"date": "2021-03-08",
+		"medicines": "Nurofen",
+		"diagnosis": "Back pain"
+	},
+	{
+		"patient": "rmccree22@51.la",
+		"md": "yordan@abv.bg",
+		"reason": "Not feeling well",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-04-11",
+		"medicines": "Syrup",
+		"diagnosis": "Anxiety"
+	},
+	{
+		"patient": "jshouler3o@typepad.com",
+		"md": "mandrazhiiski@abv.bg",
+		"reason": "High temperature",
+		"timeSpan": "13:00 to 14:00",
+		"date": "2021-04-11",
+		"medicines": "Ecomer",
+		"diagnosis": "Anxiety"
+	}
+]

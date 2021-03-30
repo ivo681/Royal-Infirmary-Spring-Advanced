@@ -110,7 +110,7 @@ public class ProfileCompletionController {
             return "redirect:/choose-gp";
         }
         String gpIdByUserEmail = this.userService.getGpIdByUserEmail(userEmail);
-        List<GpViewModel> allGps = this.userService.getAllGpsExcept(gpIdByUserEmail);
+        List<GpViewModel> allGps = this.userService.getAllGpsExcept(gpIdByUserEmail, userEmail);
         model.addAttribute("allGps", allGps);
         model.addAttribute("changing", true);
         return "choosegp";

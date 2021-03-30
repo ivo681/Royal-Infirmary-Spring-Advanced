@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.init;
 
+import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.UserRoleService;
 import com.example.webmoduleproject.service.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Component;
 public class DataInit implements CommandLineRunner {
     private final UserRoleService userRoleService;
     private final UserService userService;
+    private final AppointmentService appointmentService;
 
-    public DataInit(UserRoleService userRoleService, UserService userService) {
+    public DataInit(UserRoleService userRoleService, UserService userService, AppointmentService appointmentService) {
         this.userRoleService = userRoleService;
         this.userService = userService;
+        this.appointmentService = appointmentService;
     }
 
     @Override
@@ -21,5 +24,6 @@ public class DataInit implements CommandLineRunner {
         this.userService.seedGps();
         this.userService.seedMds();
         this.userService.seedPatients();
+        this.appointmentService.seedAppointments();
     }
 }

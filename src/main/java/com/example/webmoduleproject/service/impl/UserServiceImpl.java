@@ -227,6 +227,8 @@ public class UserServiceImpl implements UserService {
                     user.setEmployer(profileServiceModel.getEmployer());
                 }
             }
+        } else {
+            user.setEmployer("Royal Infirmary St. Sofia");
         }
         this.userRepository.save(user);
     }
@@ -346,8 +348,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<GpViewModel> getAllGpsExcept(String mdId) {
-        List<GpServiceModel> gpServiceModels = this.userRepository.getAllGpsExceptCurrent(mdId).stream().map(doctor -> {
+    public List<GpViewModel> getAllGpsExcept(String mdId, String userEmail) {
+        List<GpServiceModel> gpServiceModels = this.userRepository.getAllGpsExceptCurrent(mdId, userEmail).stream().map(doctor -> {
             GpServiceModel gpServiceModel = this.modelMapper.map(doctor, GpServiceModel.class);
             gpServiceModel.setAge((long) Period.between(doctor.getDateOfBirth(), LocalDate.now()).getYears());
             gpServiceModel.setNumberPatients(this.userRepository.getNumberOfPatients(doctor.getId()));

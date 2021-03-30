@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.service.impl;
 
+import com.example.webmoduleproject.model.entities.Appointment;
 import com.example.webmoduleproject.model.entities.SickLeave;
 import com.example.webmoduleproject.model.service.documents.SickLeaveBindingServiceModel;
 import com.example.webmoduleproject.model.service.documents.SickLeaveListAllServiceModel;
@@ -13,6 +14,7 @@ import com.example.webmoduleproject.service.SickLeaveService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -23,12 +25,14 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     private final AmbulatoryListService ambulatoryListService;
     private final AppointmentService appointmentService;
     private final ModelMapper modelMapper;
+    private final Random random;
 
-    public SickLeaveServiceImpl(SickLeaveRepository sickLeaveRepository, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, ModelMapper modelMapper) {
+    public SickLeaveServiceImpl(SickLeaveRepository sickLeaveRepository, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, ModelMapper modelMapper, Random random) {
         this.sickLeaveRepository = sickLeaveRepository;
         this.ambulatoryListService = ambulatoryListService;
         this.appointmentService = appointmentService;
         this.modelMapper = modelMapper;
+        this.random = random;
     }
 
     @Override
@@ -61,8 +65,8 @@ public class SickLeaveServiceImpl implements SickLeaveService {
     public SickLeaveViewModel getSickLeaveByAppointmentId(String appointmentId) {
         SickLeave sickLeave = this.sickLeaveRepository.getSickLeaveByAppointmentId(appointmentId).get();
         SickLeaveServiceModel sickLeaveServiceModel = this.modelMapper.map(sickLeave, SickLeaveServiceModel.class);
-        sickLeaveServiceModel.setPatientEmployer(sickLeave.getPatientEmployer());
-        sickLeaveServiceModel.setPatientJob(sickLeave.getPatientJob());
+        sickLeaveServiceModel.setPatientCurrentEmployer(sickLeave.getPatientEmployer());
+        sickLeaveServiceModel.setPatientCurrentJob(sickLeave.getPatientJob());
         sickLeaveServiceModel.setPatientTelephoneNumber(sickLeave.getPatientTelephoneNumber());
         sickLeaveServiceModel.setPatientAddress(sickLeave.getPatientHomeAddress());
         return this.modelMapper.map(sickLeaveServiceModel, SickLeaveViewModel.class);
@@ -100,8 +104,27 @@ public class SickLeaveServiceImpl implements SickLeaveService {
                 SickLeaveListAllViewModel.class)).collect(Collectors.toList());
     }
 
+    @Override
+    public void createSickLeaveFromSeededAppointments(String appointmentId, String diagnosis) {
+        SickLeave sickLeave = new SickLeave();
+        sickLeave.setNumber(generateDocumentNumber());
+        Appointment appointmentById = this.appointmentService.getAppointmentById(appointmentId);
+        sickLeave.setMd(appointmentById.getMd());
+        sickLeave.setPatient(appointmentById.getPatient());
+        sickLeave.setAppointment(appointmentById);
+        sickLeave.setMdTelephoneNumber(appointmentById.getMd().getTelephone());
+        sickLeave.setPatientTelephoneNumber(appointmentById.getPatient().getTelephone());
+        sickLeave.setPatientEmployer(appointmentById.getPatient().getEmployer());
+        sickLeave.setPatientJob(appointmentById.getPatient().getJob());
+        sickLeave.setPatientHomeAddress(appointmentById.getPatient().getAddress());
+        sickLeave.setDiagnosis(diagnosis);
+        sickLeave.setFromDate(appointmentById.getDate());
+        sickLeave.setToDate(appointmentById.getDate().plusDays(random.nextInt(10) + 1));
+        sickLeave.setReason("Unable to work due to " + diagnosis);
+        this.sickLeaveRepository.save(sickLeave);
+    }
+
     private Long generateDocumentNumber(){
-        Random random = new Random();
         long documentNumber = (long) (100000000 + random.nextInt(900000000));
         while (this.sickLeaveRepository.findByNumber(documentNumber).isPresent()){
             documentNumber = (long) (100000000 + random.nextInt(900000000));

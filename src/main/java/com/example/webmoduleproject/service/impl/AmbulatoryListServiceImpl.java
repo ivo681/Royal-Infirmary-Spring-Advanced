@@ -1,6 +1,7 @@
 package com.example.webmoduleproject.service.impl;
 
 import com.example.webmoduleproject.model.entities.AmbulatoryList;
+import com.example.webmoduleproject.model.entities.Appointment;
 import com.example.webmoduleproject.model.service.documents.AmbulatoryListServiceModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAllViewModel;
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
@@ -25,6 +26,23 @@ public class AmbulatoryListServiceImpl implements AmbulatoryListService {
         this.ambulatoryListRepository = ambulatoryListRepository;
         this.appointmentService = appointmentService;
         this.modelMapper = modelMapper;
+    }
+
+    @Override
+    public void seedLists(String appointmentId, String medicines, String diagnosis) {
+        Appointment appointmentById = this.appointmentService.getAppointmentById(appointmentId);
+        AmbulatoryList ambulatoryList = new AmbulatoryList();
+        ambulatoryList.setDate(appointmentById.getDate());
+        ambulatoryList.setMd(appointmentById.getMd());
+        ambulatoryList.setPatient(appointmentById.getPatient());
+        ambulatoryList.setNumber(generateDocumentNumber());
+        ambulatoryList.setPatientTelephoneNumber(appointmentById.getPatient().getTelephone());
+        ambulatoryList.setMdTelephoneNumber(appointmentById.getMd().getTelephone());
+        ambulatoryList.setPatientHomeAddress(appointmentById.getPatient().getAddress());
+        ambulatoryList.setMedicines(medicines);
+        ambulatoryList.setDiagnosis(diagnosis);
+        ambulatoryList.setAppointment(appointmentById);
+        this.ambulatoryListRepository.save(ambulatoryList);
     }
 
     @Override

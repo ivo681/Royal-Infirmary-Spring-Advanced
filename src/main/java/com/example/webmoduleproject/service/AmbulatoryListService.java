@@ -19,4 +19,6 @@ public interface AmbulatoryListService {
     List<AmbulatoryListAllViewModel> getAllListsByPatientEmail(String userEmail);
 
     String getDiagnosisFromListByAppointmentId(String appointmentId);
+
+    void seedLists(String appointmentId, String medicines, String diagnosis);
 }

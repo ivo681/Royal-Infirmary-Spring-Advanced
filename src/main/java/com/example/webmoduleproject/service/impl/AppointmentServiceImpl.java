@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.service.impl;
 
+import com.example.webmoduleproject.model.dtos.AppointmentSeedDto;
 import com.example.webmoduleproject.model.entities.Appointment;
 import com.example.webmoduleproject.model.entities.User;
 import com.example.webmoduleproject.model.entities.enums.StatusEnum;
@@ -14,27 +15,46 @@ import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDe
 import com.example.webmoduleproject.model.view.buildBlocks.PatientSickLeaveDetails;
 import com.example.webmoduleproject.repository.AppointmentRepository;
 import com.example.webmoduleproject.repository.UserRepository;
-import com.example.webmoduleproject.service.AppointmentService;
-import com.example.webmoduleproject.service.UserService;
+import com.example.webmoduleproject.service.*;
+import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
+    private final static String APPOINTMENTS_PATH = "src/main/resources/static/json/appointments.json";
     private final UserRepository userRepository;
     private final UserService userService;
     private final AppointmentRepository appointmentRepository;
+    private final AmbulatoryListService ambulatoryListService;
+    private final PrescriptionService prescriptionService;
+    private final SickLeaveService sickLeaveService;
     private final ModelMapper modelMapper;
+    private final Gson gson;
 
-    public AppointmentServiceImpl(UserRepository userRepository, UserService userService, AppointmentRepository appointmentRepository, ModelMapper modelMapper) {
+    public AppointmentServiceImpl(UserRepository userRepository, UserService userService,
+                                  AppointmentRepository appointmentRepository,
+                                  @NonNull @Lazy AmbulatoryListService ambulatoryListService,
+                                  @NonNull @Lazy PrescriptionService prescriptionService,
+                                  @NonNull @Lazy SickLeaveService sickLeaveService,
+                                  ModelMapper modelMapper, Gson gson) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.appointmentRepository = appointmentRepository;
+        this.ambulatoryListService = ambulatoryListService;
+        this.prescriptionService = prescriptionService;
+        this.sickLeaveService = sickLeaveService;
         this.modelMapper = modelMapper;
+        this.gson = gson;
     }
 
     @Override
@@ -228,6 +248,38 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void updateStatusofNoShowPatientsForAppointments() {
         this.appointmentRepository.updateStatusOfNoShows(StatusEnum.CONFIRMED, StatusEnum.NO_SHOW, LocalDate.now());
+    }
+
+    @Override
+    public void seedAppointments() throws IOException {
+        if (this.appointmentRepository.count() == 0){
+            String content = String.join("", Files.readAllLines(Path.of(APPOINTMENTS_PATH)));
+
+            AppointmentSeedDto[] appointmentSeedDtos = this.gson.fromJson(content, AppointmentSeedDto[].class);
+            for (AppointmentSeedDto appointmentSeedDto : appointmentSeedDtos) {
+                Appointment appointment = this.modelMapper.map(appointmentSeedDto, Appointment.class);
+                appointment.setMd(this.userRepository.findByEmail(appointmentSeedDto.getMd()).get());
+                appointment.setPatient(this.userRepository.findByEmail(appointmentSeedDto.getPatient()).get());
+                if (LocalDate.now().compareTo(appointmentSeedDto.getDate()) > 0){
+                    appointment.setStatus(StatusEnum.CLOSED);
+                    appointment = this.appointmentRepository.save(appointment);
+                    this.ambulatoryListService.seedLists(appointment.getId(),
+                            appointmentSeedDto.getMedicines(), appointmentSeedDto.getDiagnosis());
+                    this.prescriptionService.createNewPrescription(appointment.getId(),
+                            appointmentSeedDto.getMedicines());
+                    this.sickLeaveService.createSickLeaveFromSeededAppointments(appointment.getId(),
+                            appointmentSeedDto.getDiagnosis());
+                } else{
+                    if (LocalDate.now().compareTo(appointmentSeedDto.getDate()) < 0){
+                        appointment.setStatus(StatusEnum.CONFIRMED);
+                    } else {
+                        appointment.setStatus(StatusEnum.CONFIRMED);
+                    }
+                    this.appointmentRepository.save(appointment);
+                }
+            }
+        }
+
     }
 
 }
