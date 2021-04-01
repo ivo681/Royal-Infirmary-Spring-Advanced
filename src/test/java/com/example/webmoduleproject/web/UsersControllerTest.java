@@ -27,8 +27,7 @@ import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -84,7 +83,7 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testChangeGpPage() throws Exception {
-        this.mockMvc.perform(get("/change-gp"))
+        this.mockMvc.perform(get("/users/change-gp"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("choosegp"))
                 .andExpect(model().attributeExists("allGps"));
@@ -98,7 +97,8 @@ public class UsersControllerTest {
                 get().getGp().getId(), gp1Id
         );
 
-        this.mockMvc.perform(get("/users/change-gp/{id}", gp2Id))
+        this.mockMvc.perform(patch("/users/change-gp/{id}", gp2Id)
+                .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name( "redirect:/home"));
 
@@ -140,7 +140,9 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testCancelExistingAppointment() throws Exception {
-        this.mockMvc.perform(get("/users/appointments/cancel-{id}", confirmedAppointmentId))
+        this.mockMvc.perform(delete("/users/appointments/cancel-{id}",
+                confirmedAppointmentId)
+                .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/users/appointments/future"));
     }
@@ -149,7 +151,9 @@ public class UsersControllerTest {
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testCancelAppointmentInvalidId() throws Exception {
         userService.loadUserByUsername("firstmail@abv.bg");
-        this.mockMvc.perform(get("/users/appointments/cancel-{id}", "Invalid"))
+        this.mockMvc.perform(delete("/users/appointments/cancel-{id}",
+                "Invalid")
+                .with(csrf()))
                 .andExpect(status().isNotFound());
     }
 
@@ -179,7 +183,7 @@ public class UsersControllerTest {
         Assertions.assertNotEquals(this.userRepository.findByEmail("thirdmail@abv.bg").get()
         .getTelephone(), "8888855555");
 
-        this.mockMvc.perform(post("/users/edit-profile-contacts")
+        this.mockMvc.perform(patch("/users/edit-profile-contacts")
                 .param("newTelephone" , "8888855555")
                 .param("newAddress", "Test address")
                 .with(csrf())
@@ -196,7 +200,7 @@ public class UsersControllerTest {
         String currTelephone = this.userRepository.findByEmail("thirdmail@abv.bg").get()
                 .getTelephone();
 
-        this.mockMvc.perform(post("/users/edit-profile-contacts")
+        this.mockMvc.perform(patch("/users/edit-profile-contacts")
                 .param("newTelephone" , "8888855555888888888888888")
                 .param("newAddress", "")
                 .with(csrf())
@@ -213,7 +217,7 @@ public class UsersControllerTest {
         String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
                 .getJob();
 
-        this.mockMvc.perform(post("/users/edit-profile-employment")
+        this.mockMvc.perform(patch("/users/edit-profile-employment")
                 .param("newEmployer" , "")
                 .param("newJob", "   Freelancer  ")
                 .with(csrf())
@@ -227,10 +231,7 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testUserEditProfileEmploymentEmptyDataPost() throws Exception {
-        String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
-                .getJob();
-
-        this.mockMvc.perform(post("/users/edit-profile-employment")
+        this.mockMvc.perform(patch("/users/edit-profile-employment")
                 .param("newEmployer" , "")
                 .param("newJob", "")
                 .with(csrf())
@@ -247,7 +248,7 @@ public class UsersControllerTest {
         String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
                 .getJob();
 
-        this.mockMvc.perform(post("/users/edit-profile-employment")
+        this.mockMvc.perform(patch("/users/edit-profile-employment")
                 .param("newEmployer" , "New employer")
                 .param("newJob", "New job")
                 .with(csrf())
@@ -270,7 +271,7 @@ public class UsersControllerTest {
         String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
                 .getJob();
 
-        this.mockMvc.perform(post("/users/edit-profile-employment")
+        this.mockMvc.perform(patch("/users/edit-profile-employment")
                 .param("newEmployer" , "")
                 .param("newJob", "")
                 .with(csrf())

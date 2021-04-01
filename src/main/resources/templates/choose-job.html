@@ -20,7 +20,10 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 th:text="${j}" th:value="${j}" class="card-title"></h5>
-                                <a th:href="@{/choose-job/{id}(id = *{j})}" class="btn btn-success">Select</a>
+                                <form th:action="@{/choose-job/{id}(id = *{j})}" th:method="patch">
+                                    <button class="btn btn-success" type="submit"><span class="glyphicon "></span>
+                                        Select</button>
+                                </form>
                             </div>
                         </div>
                     </div>

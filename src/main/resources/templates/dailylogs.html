@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+    </header>
+    <main>
+        <section class="py-5 container">
+            <div class="row justify-content-center">
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Appointments created</h5>
+                            <h5 th:text="${appointmentsCreated}" class="card-title"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Appointments confirmed</h5>
+                            <h5 th:text="${appointmentsConfirmed}" class="card-title"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Appointments cancelled</h5>
+                            <h5 th:text="${appointmentsCancelled}"class="card-title"></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Ambulatory lists created</h5>
+                            <h5 th:text="${ambulatoryListsCreated}" class="card-title"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Prescriptions created</h5>
+                            <h5 th:text="${prescriptionsCreated}" class="card-title"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 p-2">
+                    <div class="card align-items-center">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Sick leaves created</h5>
+                            <h5 th:text="${sickLeavesCreated}" class="card-title"></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="table-responsive form">
+                <h1 class="header-home">Daily logs</h1>
+                <table id="myTable" class="table table-striped custab container table-sm">
+                    <thead>
+                    <tr>
+                        <th onclick="sortTable(0)" class="text-center">ID</th>
+                        <th onclick="sortTable(1)" class="text-center">Email</th>
+                        <th onclick="sortTable(2)" class="text-center">Action</th>
+                        <th onclick="sortTable(3)" class="text-center">Date & Time</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="l : ${logs}" th:object="${l}">
+                        <td th:text="${lStat.index + 1}" class="text-center"></td>
+                        <td th:text="*{userEmail}" class="text-center"></td>
+                        <td th:text="*{action}" class="text-center"></td>
+                        <td th:text="${#temporals.format(l.dateTime, 'yyyy-MM-dd HH:mm')}" class="text-center"></td>
+                    </tr>
+                </table>
+                <!-- </div> -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').dataTable();
+        });
+    </script>
+
+</body>
+
+</html>

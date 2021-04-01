@@ -14,7 +14,6 @@ import com.example.webmoduleproject.service.SickLeaveService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -68,7 +67,7 @@ public class SickLeaveServiceImpl implements SickLeaveService {
         sickLeaveServiceModel.setPatientCurrentEmployer(sickLeave.getPatientEmployer());
         sickLeaveServiceModel.setPatientCurrentJob(sickLeave.getPatientJob());
         sickLeaveServiceModel.setPatientTelephoneNumber(sickLeave.getPatientTelephoneNumber());
-        sickLeaveServiceModel.setPatientAddress(sickLeave.getPatientHomeAddress());
+        sickLeaveServiceModel.setPatientHomeAddress(sickLeave.getPatientHomeAddress());
         return this.modelMapper.map(sickLeaveServiceModel, SickLeaveViewModel.class);
     }
 

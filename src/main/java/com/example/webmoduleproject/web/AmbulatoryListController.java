@@ -67,7 +67,7 @@ public class AmbulatoryListController {
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
-    @GetMapping("/create-{id}")
+    @PostMapping("/create-{id}")
     public String ambulatoryListCreate(@Valid @ModelAttribute("ambulatoryListBindingModel") AmbulatoryListBindingModel
                                                ambulatoryListBindingModel,
                                        BindingResult bindingResult, RedirectAttributes redirectAttributes,
@@ -94,7 +94,9 @@ public class AmbulatoryListController {
     }
 
     @GetMapping("/details/{id}")
-    public String getExistingAmbulatoryList(@PathVariable("id") String id, Model model) throws NotFoundError, DocumentExtractDetailError {
+    public String getExistingAmbulatoryList(@PathVariable("id") String id, Model model, Principal principal)
+            throws NotFoundError, DocumentExtractDetailError {
+        String userEmail = principal.getName();
         if (this.ambulatoryListService.existingListForAppointment(id)) {
             try {
                 AmbulatoryListViewModel ambulatoryListByAppointmentId = this.ambulatoryListService.getAmbulatoryListByAppointmentId(id);
@@ -102,13 +104,20 @@ public class AmbulatoryListController {
                 PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
                 mdDetailsByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getMdTelephoneNumber());
                 patientViewModelByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getPatientTelephoneNumber());
+                patientViewModelByAppointmentId.setAddress(ambulatoryListByAppointmentId.getPatientHomeAddress());
                 model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
                 model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
                 model.addAttribute("ambulatoryList", ambulatoryListByAppointmentId);
-                model.addAttribute("patientEmployed", this.userService.isPatientEmployedByEmail(patientViewModelByAppointmentId.getEmail()));
-                model.addAttribute("givePrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
-                model.addAttribute("showButtons", LocalDate.now().equals(ambulatoryListByAppointmentId.getDate()));
-            } catch (Exception e){
+                if (this.appointmentService.isUserTheMdInAppointment(userEmail, id)) {
+                    model.addAttribute("patientEmployed", this.userService.isPatientEmployedByEmail(patientViewModelByAppointmentId.getEmail()));
+                    model.addAttribute("givePrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
+                    model.addAttribute("showButtons", LocalDate.now().equals(ambulatoryListByAppointmentId.getDate()));
+                } else {
+                    model.addAttribute("patientEmployed", false);
+                    model.addAttribute("givePrescription", false);
+                    model.addAttribute("showButtons", false);
+                }
+            } catch (Exception e) {
                 throw new DocumentExtractDetailError("Details for existing ambulatory list could not be extracted properly");
             }
             return "ambulatory-confirm";

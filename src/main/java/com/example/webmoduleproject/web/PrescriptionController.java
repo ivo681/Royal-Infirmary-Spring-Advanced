@@ -40,7 +40,7 @@ public class PrescriptionController {
             MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
             mdDetailsByAppointmentId.setTelephone(prescriptionViewModel.getMdTelephoneNumber());
             PatientPrescriptionDetails patientViewModelByAppointmentId = this.appointmentService.getPatientPrescriptionViewModelByAppointmentId(appointmentId);
-            patientViewModelByAppointmentId.setAddress(prescriptionViewModel.getPatientAddress());
+            patientViewModelByAppointmentId.setAddress(prescriptionViewModel.getPatientHomeAddress());
             model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
             model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
             model.addAttribute("prescription", prescriptionViewModel);

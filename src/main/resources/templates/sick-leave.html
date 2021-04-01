@@ -132,13 +132,14 @@
                             </div>
                         </div>
                         <form id="sickLeaveSpecs" th:action="@{/sick-leaves/create-{id}(id = ${appId})}"
-                              th:object="${sickLeaveBindingModel}" method="GET">
+                              th:object="${sickLeaveBindingModel}" th:method="post">
                             <div class="col-md-12 p-1">
                                 <div class="form-group">
                                     <label class="control-label">Reason for absence</label>
                                     <input th:field="*{reason}" th:errorclass="is-invalid"
-                                           name="reason" type="text" placeholder="Sickness"
-                                           class="form-control input-md">
+                                           name="reason" type="text" placeholder="Can't attend due to..."
+                                           minlength="3"
+                                           class="form-control input-md" required autofocus>
                                     <small id="reasonError" th:each="e : ${#fields.errors('reason')}"
                                            th:text="${e}"
                                            class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
@@ -154,7 +155,7 @@
                                         <label class="control-label">from</label>
                                         <label>
                                             <input th:field="*{fromDate}" th:errorclass="is-invalid" type="date"
-                                                   max="9999-12-31" name="fromDate" required>
+                                                   max="9999-12-31" name="fromDate" required autofocus>
                                             <small id="fromDateError" th:each="e : ${#fields.errors('fromDate')}"
                                                    th:text="${e}"
                                                    class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
@@ -163,7 +164,7 @@
                                         &nbsp
                                         <label>
                                             <input th:field="*{toDate}" th:errorclass="is-invalid" type="date"
-                                                   max="9999-12-31" name="toDate" required>
+                                                   max="9999-12-31" name="toDate" required autofocus>
                                             <small id="toDateError" th:each="e : ${#fields.errors('toDate')}"
                                                    th:text="${e}"
                                                    class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>

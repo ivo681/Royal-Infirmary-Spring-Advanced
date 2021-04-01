@@ -23,7 +23,7 @@
       <label for="email" class="visually-hidden">Email address</label>
       <input th:value="${username}" type="email" id="email" name="username" class="form-control" placeholder="Email address" required autofocus>
       <label for="password" class="visually-hidden">Password</label>
-      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required autofocus>
         <button class="w-100 btn btn-lg btn-success" type="submit">Sign in</button>
         <p class="message">Not registered? <a th:href="@{/users/register}">Create an account</a></p>
     </form>

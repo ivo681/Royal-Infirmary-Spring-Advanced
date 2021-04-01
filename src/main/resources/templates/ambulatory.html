@@ -121,12 +121,13 @@
                 <div class="well-block">
                     <div class="row">
                         <form id="ambulatorySpecs" th:object="${ambulatoryListBindingModel}"
-                              th:action="@{/ambulatory-list/create-{id}(id = ${appId})}" method="GET">
+                              th:action="@{/ambulatory-list/create-{id}(id = ${appId})}" th:method="post">
                             <div class="col-md-12 p-1">
                                 <div class="form-group">
                                     <label class="control-label">Diagnosis</label>
                                     <textarea th:field="*{diagnosis}" th:errorclass="is-invalid"
-                                              class="form-control" id="diagnosis" name="diagnosis" rows="3"></textarea>
+                                              class="form-control" id="diagnosis" name="diagnosis"
+                                              rows="3" required autofocus></textarea>
                                     <small id="diagnosisError" th:each="e : ${#fields.errors('diagnosis')}"
                                            th:text="${e}"
                                            class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
@@ -140,7 +141,7 @@
                                     <label class="control-label">Medicines prescribed</label>
                                     <textarea th:field="*{medicines}"
                                               class="form-control" id="medicines" name="medicines"
-                                              rows="3"></textarea>
+                                              rows="3" required autofocus></textarea>
                                 </div>
                             </div>
                             <div class="col-md-12">

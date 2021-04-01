@@ -13,6 +13,8 @@
 
     <main>
         <section class="py-5" th:object="${person}">
+            <br>
+            <br>
             <h1 class="h3 mb-3 fw-normal">User details</h1>
             <table id="myTable" class="table table-bordered table-striped custab container table-sm form">
                 <tr>
@@ -58,24 +60,24 @@
             <br>
             <div class="row px-5">
                 <form class="form col-md-4" th:object="${contactDetailsBindingModel}"
-                      th:action="@{/users/edit-profile-contacts}" method="POST">
+                      th:action="@{/users/edit-profile-contacts}" th:method="patch">
                     <h1 class="h3 mb-3 fw-normal">Change contact details</h1>
                     <small th:each="e : ${contactErrors}"
                            style="white-space: pre-line" th:utext="${e} + '<br/>'"
                            class="text-light form-text bg-danger rounded"></small>
                     <label class="visually-hidden">Telephone</label>
                     <input th:field="*{newTelephone}" type="text" name="telephone" class="form-control" placeholder="Telephone"
-                           required autofocus>
+                           minlength="10" required autofocus>
 
                     <label class="visually-hidden">Address</label>
                     <input th:field="*{newAddress}" type="text" name="address" class="form-control" placeholder="Address"
-                           required>
+                           minlength="3" required autofocus>
                     <button class="w-100 btn btn-lg btn-success" type="submit">Submit new contact details</button>
                 </form>
 
                 <form th:if="!${#authorization.expression('hasRole(''ROLE_MD'')')}" class="form col-md-4"
                       th:object="${employmentDetailsBindingModel}"
-                      th:action="@{/users/edit-profile-employment}" method="POST">
+                      th:action="@{/users/edit-profile-employment}" th:method="patch">
                     <h1 class="h3 mb-3 fw-normal">Change employment details</h1>
                     <label>IMPORTANT: If you submit empty fields your employment status will be changed to unemployed</label>
                     <small th:each="e : ${employmentErrors}"

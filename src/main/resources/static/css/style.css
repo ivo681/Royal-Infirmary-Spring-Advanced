@@ -217,7 +217,7 @@ footer {
 }
 
 .form {
-  z-index: 1;
+  /*z-index: 1;*/
   background: #FFFFFF;
   /* max-width: 100%; */
   margin: 0 auto 50px;
@@ -349,10 +349,22 @@ input:valid{
   border: lawngreen solid 2px;
 }
 
+select:valid{
+  border: lawngreen solid 2px;
+}
+
 input:invalid{
   border: red solid 2px;
 }
 
+select:invalid{
+  border: red solid 2px;
+}
+
 input:invalid:required{
+  background-image: linear-gradient(lightgrey, lightgrey);
+}
+
+select:invalid:required{
   background-image: linear-gradient(lightgrey, lightgrey);
 }

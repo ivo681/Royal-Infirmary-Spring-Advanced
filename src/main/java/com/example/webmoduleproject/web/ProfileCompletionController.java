@@ -50,7 +50,7 @@ public class ProfileCompletionController {
         return "complete-profile";
     }
 
-    @GetMapping("/choose-gp/{id}")
+    @PatchMapping("/choose-gp/{id}")
     public String chooseGp(@PathVariable("id") String id, Principal principal) {
         String userEmail = principal.getName();
         this.userService.setGpById(userEmail, id);
@@ -61,7 +61,7 @@ public class ProfileCompletionController {
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
-    @GetMapping("/choose-job/{job}")
+    @PatchMapping("/choose-job/{job}")
     public String chooseJob(@PathVariable("job") String job, Principal principal) {
         String userEmail = principal.getName();
         if (this.userService.hasJob(userEmail)) {
@@ -71,7 +71,7 @@ public class ProfileCompletionController {
         return "redirect:/home";
     }
 
-    @PostMapping("/complete-profile")
+    @PatchMapping("/complete-profile")
     public String completeProfile(@Valid @ModelAttribute("completeProfileBindingModel") CompleteProfileBindingModel completeProfileBindingModel,
                                   BindingResult bindingResult, RedirectAttributes redirectAttributes, Principal principal) {
         String userEmail = principal.getName();
@@ -98,22 +98,6 @@ public class ProfileCompletionController {
             return "choosegp";
         }
         return "redirect:/home";
-    }
-
-    @GetMapping("/change-gp")
-    public String changeGp(Principal principal, Model model) {
-        String userEmail = principal.getName();
-        if (!this.userService.hasTelephone(userEmail)) {
-            return "redirect:/complete-profile";
-        }
-        if (!this.userService.hasGp(userEmail)) {
-            return "redirect:/choose-gp";
-        }
-        String gpIdByUserEmail = this.userService.getGpIdByUserEmail(userEmail);
-        List<GpViewModel> allGps = this.userService.getAllGpsExcept(gpIdByUserEmail, userEmail);
-        model.addAttribute("allGps", allGps);
-        model.addAttribute("changing", true);
-        return "choosegp";
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")

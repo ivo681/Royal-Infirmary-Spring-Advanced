@@ -6,72 +6,66 @@
 </head>
 
 <body>
-    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you wish to select this GP?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Save changes</button>
-                </div>
-            </div>
+<header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+</header>
+<main>
+    <section class="py-5 container">
+        <div class="table-responsive form well-block">
+            <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
+            <h1 class="header-home">Choose your General Practitioner</h1>
+            <input id='myInput' onkeyup='searchTable()' type='text' placeholder="Search...">
+            <table id="myTable" class="table table-striped custab container table-sm">
+                <thead>
+                <tr>
+                    <th onclick="sortTable(0)" class="text-center">Doctor ID</th>
+                    <th onclick="sortTable(1)" class="text-center">First name</th>
+                    <th onclick="sortTable(2)" class="text-center">Last name</th>
+                    <th onclick="sortTable(3)" class="text-center">Age</th>
+                    <th onclick="sortTable(4)" class="text-center">Number of patients</th>
+                    <th class="text-center"></th>
+                </tr>
+                </thead>
+                <tr th:each="gp : ${allGps}" th:object="${gp}">
+                    <td th:text="*{hospitalId}" class="text-center"></td>
+                    <td th:text="*{firstName}" class="text-center"></td>
+                    <td th:text="*{lastName}" class="text-center">Zorova</td>
+                    <td th:text="*{age}" class="text-center">51</td>
+                    <td th:text="*{numberPatients}" class="text-center">1981</td>
+                    <td th:if="${!changing}" class="text-center">
+                        <form th:action="@{/choose-gp/{id}(id = *{id})}"
+                              th:method="patch">
+                            <button class="btn btn-success btn-xs" onclick="ConfirmSelection()"
+                                    type="submit"><span class="glyphicon "></span>
+                                Select
+                            </button>
+                        </form>
+                    </td>
+                    <td th:if="${changing}" class="text-center">
+                        <form th:action="@{/users/change-gp/{id}(id = *{id})}"
+                              th:method="patch">
+                            <button class="btn btn-success btn-xs" onclick="ConfirmSelection()"
+                                    type="submit"><span class="glyphicon "></span>
+                                Select
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <!-- </div> -->
         </div>
-    </div>
-    <header>
-        <nav th:replace="fragments/fragments::navigation">
-        </nav>
-    </header>
-    <main>
-        <section class="py-5 container">
-            <div class="table-responsive form well-block">
-                <!-- <div class="row col-md-6 col-md-offset-2 custyle"> -->
-                <h1 class="header-home">Choose your General Practitioner</h1>
-                <input id='myInput' onkeyup='searchTable()' type='text' placeholder="Search...">
-                <table id="myTable" class="table table-striped custab container table-sm">
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable(0)" class="text-center">Doctor ID</th>
-                            <th onclick="sortTable(1)" class="text-center">First name</th>
-                            <th onclick="sortTable(2)" class="text-center">Last name</th>
-                            <th onclick="sortTable(3)" class="text-center">Age</th>
-                            <th onclick="sortTable(4)" class="text-center">Number of patients</th>
-                            <th class="text-center"></th>
-                        </tr>
-                    </thead>
-                    <tr th:each="gp : ${allGps}" th:object="${gp}">
-                        <td th:text="*{hospitalId}" class="text-center"></td>
-                        <td th:text="*{firstName}" class="text-center"></td>
-                        <td th:text="*{lastName}" class="text-center">Zorova</td>
-                        <td th:text="*{age}" class="text-center">51</td>
-                        <td th:text="*{numberPatients}" class="text-center">1981</td>
-                        <td th:if="${!changing}" class="text-center"><a th:href="@{/choose-gp/{id}(id = *{id})}" onclick="ConfirmSelection()" type="submit"
-                                class="btn btn-success btn-xs"><span class="glyphicon "></span> Select</a></td>
-                        <td th:if="${changing}" class="text-center"><a th:href="@{/users/change-gp/{id}(id = *{id})}" onclick="ConfirmSelection()" type="submit"
-                                                   class="btn btn-success btn-xs"><span class="glyphicon "></span> Select</a></td>
-                    </tr>
-                </table>
-                <!-- </div> -->
-            </div>
-        </section>
-    
-    
-<!--    <script>-->
-<!--        $(document).ready(function () {-->
-<!--            $('#myTable').dataTable();-->
-<!--        });-->
-<!--    </script>-->
-    </main>
-    <footer th:replace="fragments/fragments::footer">
-      </footer>
+    </section>
+
+
+    <!--    <script>-->
+    <!--        $(document).ready(function () {-->
+    <!--            $('#myTable').dataTable();-->
+    <!--        });-->
+    <!--    </script>-->
+</main>
+<footer th:replace="fragments/fragments::footer">
+</footer>
 </body>
 
 </html>

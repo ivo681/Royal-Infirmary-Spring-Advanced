@@ -6,51 +6,56 @@
 </head>
 
 <body>
-    <header>
-        <nav th:replace="fragments/fragments::navigation">
-        </nav>
-    </header>
-    <main>
-        <section class="py-5 container">
+<header>
+    <nav th:replace="fragments/fragments::navigation">
+    </nav>
+</header>
+<main>
+    <section class="py-5 container">
         <div class="table-responsive form">
             <input id='myInput' onkeyup='searchTable()' type='text' placeholder="Search...">
             <h1 th:if="${past}" class="header-home">My Past Appointments</h1>
             <h1 th:if="${future}" class="header-home">My Future Appointments</h1>
             <table id="myTable" class="table table-striped custab container table-sm">
                 <thead>
-                    <tr>
-                        <th onclick="sortTable(0)" class="text-center sortable">Date</th>
-                        <th onclick="sortByTime(1)" class="text-center sortable">Time slot</th>
-                        <th onclick="sortByText(2)" class="text-center sortable">Doctor</th>
-                        <th onclick="sortByText(3)" class="text-center sortable">Job</th>
-                        <th onclick="sortById(4)" class="text-center sortable">Hospital ID</th>
-                        <th onclick="sortByText(5)" class="text-center sortable">Reason</th>
-                        <th th:unless="${future}" class="text-center"></th>
-                        <th th:if="${future}" class="text-center"></th>
-                    </tr>
+                <tr>
+                    <th onclick="sortTable(0)" class="text-center sortable">Date</th>
+                    <th onclick="sortByTime(1)" class="text-center sortable">Time slot</th>
+                    <th onclick="sortByText(2)" class="text-center sortable">Doctor</th>
+                    <th onclick="sortByText(3)" class="text-center sortable">Job</th>
+                    <th onclick="sortById(4)" class="text-center sortable">Hospital ID</th>
+                    <th onclick="sortByText(5)" class="text-center sortable">Reason</th>
+                    <th th:unless="${future}" class="text-center"></th>
+                    <th th:if="${future}" class="text-center"></th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="a : ${appointments}" th:object="${a}">
-                        <td th:text="*{date}"  class="text-center"></td>
-                        <td th:text="*{timeSpan}"  class="text-center"></td>
-                        <td th:text="*{doctor}"  class="text-center"></td>
-                        <td th:text="*{job}"  class="text-center"></td>
-                        <td th:text="*{hospitalId}"  class="text-center"></td>
-                        <td th:text="*{reason}"  class="text-center"></td>
-                        <td class="text-center">
-                            <a th:if="${currDate} < *{date}" th:href="@{/users/appointments/cancel-{id}(id = *{id})}" class="btn btn-danger btn-xs"><span class="glyphicon "></span>
-                                Cancel</a>
-                            <a th:if="${currDate} > *{date}" th:href="@{/ambulatory-list/details/{id}(id = *{id})}" class="btn btn-primary btn-xs"><span class="glyphicon "></span>
-                                Details</a></td>
-                    </tr>
+                <tr th:each="a : ${appointments}" th:object="${a}">
+                    <td th:text="*{date}" class="text-center"></td>
+                    <td th:text="*{timeSpan}" class="text-center"></td>
+                    <td th:text="*{doctor}" class="text-center"></td>
+                    <td th:text="*{job}" class="text-center"></td>
+                    <td th:text="*{hospitalId}" class="text-center"></td>
+                    <td th:text="*{reason}" class="text-center"></td>
+                    <td class="text-center">
+                        <form th:if="${currDate} < *{date}" th:action="@{/users/appointments/cancel-{id}(id = *{id})}"
+                              th:method="delete">
+                            <button class="btn btn-danger btn-xs" type="submit"><span class="glyphicon "></span>
+                                Cancel
+                            </button>
+                        </form>
+                        <a th:if="${currDate} > *{date}" th:href="@{/ambulatory-list/details/{id}(id = *{id})}"
+                           class="btn btn-primary btn-xs"><span class="glyphicon "></span>
+                            Details</a></td>
+                </tr>
                 </tbody>
             </table>
             <!-- </div> -->
         </div>
-        </section>
-    </main>
-    <footer th:replace="fragments/fragments::footer">
-    </footer>
+    </section>
+</main>
+<footer th:replace="fragments/fragments::footer">
+</footer>
 <!--    <script>-->
 <!--        $(document).ready(function () {-->
 <!--            $('#myTable').dataTable();-->

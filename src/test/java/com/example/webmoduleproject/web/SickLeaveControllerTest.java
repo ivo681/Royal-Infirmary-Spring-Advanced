@@ -106,7 +106,7 @@ public class SickLeaveControllerTest {
     @Test
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testCreateSickLeavePost() throws Exception {
-        this.mockMvc.perform(get("/sick-leaves/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/sick-leaves/create-{id}", mockAppointmentId)
                 .param("reason", "Test reason")
                 .param("fromDate", String.valueOf(LocalDate.now()))
                 .param("toDate", String.valueOf(LocalDate.now().plusDays(2)))
@@ -119,7 +119,7 @@ public class SickLeaveControllerTest {
     @Test
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testCreateSickLeaveWithInvalidData() throws Exception {
-        this.mockMvc.perform(get("/sick-leaves/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/sick-leaves/create-{id}", mockAppointmentId)
                 .param("reason", "Test reason")
                 .param("fromDate", String.valueOf(LocalDate.now().plusDays(2)))
                 .param("toDate", String.valueOf(LocalDate.now()))

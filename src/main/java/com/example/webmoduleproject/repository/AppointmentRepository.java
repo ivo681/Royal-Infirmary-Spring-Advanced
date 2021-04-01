@@ -77,4 +77,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
             "a.status = :confirmed AND a.date = :today AND a.id NOT IN (SELECT list.appointment.id FROM AmbulatoryList list)")
     void updateStatusOfNoShows(StatusEnum confirmed, StatusEnum noshow, LocalDate today);
 
+    @Query("SELECT a FROM Appointment a WHERE a.id = :id AND " +
+            "a.md.email = :userEmail")
+    Optional<Appointment> isUserTheMdInAppointment(String userEmail, String id);
 }

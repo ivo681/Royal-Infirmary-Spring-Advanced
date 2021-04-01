@@ -96,7 +96,7 @@ public class AppointmentsController {
     }
 
     @GetMapping("/confirm/{id}")
-    public String appointmentConfirm(@PathVariable("id") String id,
+    public String appointmentConfirmPage(@PathVariable("id") String id,
                                    Principal principal, Model model) {
         if (this.appointmentService.isAppointmentUnconfirmed(id)){
             AppointmentConfirmViewModel unconfirmedAppointmentById = this.appointmentService.getUnconfirmedAppointmentById(id);
@@ -108,12 +108,11 @@ public class AppointmentsController {
     }
 
     @PostMapping("/confirm/{id}")
-    public String appointmentProcess(@PathVariable("id") String id,
+    public String appointmentConfirm(@PathVariable("id") String id,
                                      @RequestParam(value="action", required=true) String action,
                                      @RequestParam(name="date", required=true) String dateStr,
                                      @RequestParam(name="timeSpan", required=true) String timeSpan,
-                                     @RequestParam(name="md", required=true) String mdName,
-                                           Model model){
+                                     @RequestParam(name="md", required=true) String mdName){
         LocalDate date = LocalDate.parse(dateStr);
         if (action.equals("cancel")) {
             this.appointmentService.cancelAppointmentById(id);

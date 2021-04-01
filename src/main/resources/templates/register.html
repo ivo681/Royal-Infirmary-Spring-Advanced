@@ -13,8 +13,8 @@
         <div class="form-register">
             <form th:object="${userRegisterBindingModel}" class="form" th:action="@{/users/register}" method="POST">
                 <h1 class="h3 mb-3 fw-normal">Register a new patient</h1>
-                <small th:if="${userExistsError}"
-                       class="text-light form-text bg-danger rounded">This email is already used by another patient</small>
+                <h3 th:each="e : ${#fields.errors('email')}" th:text="${e}"
+                    class="text-light form-text bg-danger rounded"></h3>
                 <input th:field="*{firstName}" th:errorclass="is-invalid" type="text" name="firstName"
                        placeholder="First name" required minlength="3"/>
                 <small id="firstNameError" th:each="e : ${#fields.errors('firstName')}" th:text="${e}"
@@ -24,14 +24,18 @@
                 <small id="lastNameError" th:each="e : ${#fields.errors('lastName')}" th:text="${e}"
                        class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                 <input th:field="*{email}" th:errorclass="is-invalid" type="email" name="email" placeholder="Email" required />
-                <input th:field="*{password}" th:errorclass="is-invalid" type="password" name="password" placeholder="Password" required />
+                <input th:field="*{password}" th:errorclass="is-invalid" type="password" name="password"
+                       placeholder="Password" minlength="8" pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@!#$%^&+=])(?=\S+$).{8,}"
+                       title="Password must be at least 8 characters long, including: 1 uppercase, 1 lowercase, 1 number, 1 special character" required />
                 <small id="passwordError" th:each="e : ${#fields.errors('password')}" th:text="${e}"
                        class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
-                <input th:field="*{confirmPassword}" th:errorclass="is-invalid" type="password" name="confirmPassword" placeholder="Confirm password" required />
+                <input th:field="*{confirmPassword}" th:errorclass="is-invalid" type="password" name="confirmPassword"
+                       placeholder="Confirm password" pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@!#$%^&+=])(?=\S+$).{8,}"
+                       title="Password must be at least 8 characters long, including: 1 uppercase, 1 lowercase, 1 number, 1 special character" required />
                 <small id="confirmPasswordError" th:each="e : ${#fields.errors('confirmPassword')}" th:text="${e}"
                        class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                 <label>Date of birth</label>
-                <input th:field="*{dateOfBirth}" th:errorclass="is-invalid" type="date" max="9999-12-31" name="dateOfBirth" required />
+                <input th:field="*{dateOfBirth}" th:errorclass="is-invalid" type="date" min="1900-01-01" max="9999-12-31" name="dateOfBirth" required />
                 <small id="dateOfBirthError" th:each="e : ${#fields.errors('dateOfBirth')}" th:text="${e}"
                        class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                 <h3>I am a:</h3>

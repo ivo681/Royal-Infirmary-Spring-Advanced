@@ -6,6 +6,7 @@
 </head>
 
 <body class="logged-in">
+
 <header>
     <nav th:replace="fragments/fragments::navigation">
     </nav>
@@ -33,7 +34,7 @@
                         <td th:text="*{lastName}" class="text-center"></td>
                         <td th:text="*{job}" class="text-center"></td>
                         <td th:text="*{age}" class="text-center"></td>
-                        <td class="text-center"><a th:href="@{/appointments/book/{id}(id = *{id})}" onclick="ConfirmSelection()" type="submit"
+                        <td class="text-center"><a th:href="@{/appointments/book/{id}(id = *{id})}" onclick="ConfirmSpecialistSelection()" type="submit"
                                 class="btn btn-success btn-xs"><span class="glyphicon "></span> Select</a></td>
                     </tr>
                 </table>

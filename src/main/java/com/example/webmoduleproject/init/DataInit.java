@@ -6,6 +6,8 @@ import com.example.webmoduleproject.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.rmi.ServerError;
+
 @Component
 public class DataInit implements CommandLineRunner {
     private final UserRoleService userRoleService;
@@ -25,5 +27,6 @@ public class DataInit implements CommandLineRunner {
         this.userService.seedMds();
         this.userService.seedPatients();
         this.appointmentService.seedAppointments();
+
     }
 }

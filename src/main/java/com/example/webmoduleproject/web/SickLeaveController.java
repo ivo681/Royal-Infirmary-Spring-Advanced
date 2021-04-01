@@ -69,7 +69,7 @@ public class SickLeaveController {
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
-    @GetMapping("/create-{id}")
+    @PostMapping("/create-{id}")
     public String sickLeaveCreate(@Valid @ModelAttribute("sickLeaveBindingModel") SickLeaveBindingModel
                                                      sickLeaveBindingModel,
                                              BindingResult bindingResult, RedirectAttributes redirectAttributes,
@@ -79,7 +79,8 @@ public class SickLeaveController {
         if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId,userEmail )
                 && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
             if (!this.sickLeaveService.existingSickLeaveByAppointmentIdMdCheck(appointmentId, userEmail)) {
-                if (bindingResult.hasErrors() || sickLeaveBindingModel.getFromDate() == null) {
+                if (bindingResult.hasErrors() || sickLeaveBindingModel.getFromDate() == null ||
+                !sickLeaveBindingModel.getFromDate().equals(LocalDate.now())) {
                     if (!sickLeaveBindingModel.getFromDate().equals(LocalDate.now())) {
                         bindingResult.rejectValue("fromDate", "error.sickLeaveBindingModel", "The start date must be today");
                     }
@@ -110,7 +111,7 @@ public class SickLeaveController {
             patientSickLeaveDetails.setTelephone(sickLeaveView.getPatientTelephoneNumber());
             patientSickLeaveDetails.setJob(sickLeaveView.getPatientJob());
             patientSickLeaveDetails.setEmployer(sickLeaveView.getPatientEmployer());
-            patientSickLeaveDetails.setAddress(sickLeaveView.getPatientAddress());
+            patientSickLeaveDetails.setAddress(sickLeaveView.getPatientHomeAddress());
             model.addAttribute("sickLeaveView", sickLeaveView);
             model.addAttribute("patientView", patientSickLeaveDetails);
             model.addAttribute("mdView", mdDetailsByAppointmentId);

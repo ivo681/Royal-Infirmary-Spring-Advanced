@@ -23,8 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -82,7 +81,7 @@ public class ProfileCompletionControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testCompleteProfileInvalidDataPage() throws Exception {
-        this.mockMvc.perform(post("/complete-profile")
+        this.mockMvc.perform(patch("/complete-profile")
                 .param("idNumber", "")
                 .param("telephone", "333")
                 .param("address", "Sofia")
@@ -97,7 +96,7 @@ public class ProfileCompletionControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testCompleteProfileValidData() throws Exception {
-        this.mockMvc.perform(post("/complete-profile")
+        this.mockMvc.perform(patch("/complete-profile")
                 .param("idNumber", "9010100001")
                 .param("telephone", "3333444422")
                 .param("address", "Sofia")
@@ -115,7 +114,8 @@ public class ProfileCompletionControllerTest {
     @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "MD"})
     @Transactional
     public void testChooseGpConfirmPage() throws Exception {
-        this.mockMvc.perform(get("/choose-gp/{id}", gpId))
+        this.mockMvc.perform(patch("/choose-gp/{id}", gpId)
+                .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/choose-job"));
         User loggedUser = userRepository.findByEmail("thirdmail@abv.bg").get();
@@ -150,15 +150,18 @@ public class ProfileCompletionControllerTest {
 
 
     @Test
-    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "MD"})
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"MD", "PATIENT"})
     @Transactional
     public void testChooseJobConfirmPage() throws Exception {
         User user = userRepository.findByEmail("thirdmail@abv.bg").get();
         user.setGp(userRepository.findByHospitalId(1L).get());
-        userRepository.saveAndFlush(user);
+        user = userRepository.saveAndFlush(user);
         String position = "General Practitioner";
+        Assertions.assertNull(user.getJob());
 
-        this.mockMvc.perform(get("/choose-job/{job}", position))
+        userService.loadUserByUsername("thirdmail@abv.bg");
+        this.mockMvc.perform(patch("/choose-job/{job}", position)
+                .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/home"));
         User loggedUser = userRepository.findByEmail("thirdmail@abv.bg").get();

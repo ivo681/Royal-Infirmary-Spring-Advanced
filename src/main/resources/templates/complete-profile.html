@@ -22,7 +22,7 @@
                             <h1>Complete your profile</h1>
                         </div>
                         <form th:object="${completeProfileBindingModel}"
-                              th:action="@{/complete-profile}" method="POST">
+                              th:action="@{/complete-profile}" th:method="patch">
                             <div sec:authorize="hasRole('ROLE_MD')" class="row">
                                 <div class="col-md-6" style="float:none;margin:auto;">
                                     <div class="form-group">
@@ -68,13 +68,15 @@
                                 <div class="col-md-12x" sec:authorize="!hasRole('ROLE_MD')" >
                                     <h6 class="d-flex align-items-center justify-content-center">Currently I am:</h6>
                                     <div class="form-check d-flex align-items-center justify-content-center">
-                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="enableEmployeeDetails()">
+                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="enableEmployeeDetails()"
+                                        required autofocus>
                                         <label class="form-check-label">
                                             Employed
                                         </label>
                                     </div>
                                     <div class="form-check d-flex align-items-center justify-content-center">
-                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="disableEmployeeDetails()">
+                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="disableEmployeeDetails()"
+                                               autofocus>
                                         <label class="form-check-label">
                                             Unemployed/Self-employed/Student/Pensioner
                                         </label>
@@ -83,8 +85,8 @@
                                 <div class="col-md-6" sec:authorize="!hasRole('ROLE_MD')">
                                     <div class="form-group">
                                         <label class="control-label">Job description</label>
-                                        <input th:field="*{job}" id="job" name="job" type="text"
-                                               class="form-control input-md" readonly>
+                                        <input th:field="*{job}" id="jobComplete" name="job" type="text"
+                                               class="form-control input-md" readonly autofocus>
 
                                     </div>
                                 </div>
@@ -92,8 +94,8 @@
                                 <div class="col-md-6" sec:authorize="!hasRole('ROLE_MD')">
                                     <div class="form-group">
                                         <label class="control-label">Employer</label>
-                                        <input th:field="*{employer}" id="employer" name="employer" type="text"
-                                               class="form-control input-md" readonly>
+                                        <input th:field="*{employer}" id="employerComplete" name="employer" type="text"
+                                               class="form-control input-md" readonly autofocus>
                                     </div>
                                 </div><!-- Text input-->
 
@@ -106,70 +108,6 @@
                                 </div>
                             </div>
                         </form>
-<!--                        <form sec:authorize="hasRole('ROLE_PATIENT')" th:object="${completePatientBindingModel}"-->
-<!--                              th:action="@{/complete-profile-patient}" method="POST">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-md-6">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label class="control-label">Personal ID</label>-->
-<!--                                        <input th:field="*{idNumber}" name="idNumber" type="text" class="form-control input-md">-->
-<!--                                        <small th:each="e : ${#fields.errors('idNumber')}" th:text="${e}"-->
-<!--                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; Text input&ndash;&gt;-->
-<!--                                <div class="col-md-6">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label class="control-label">Telephone</label>-->
-<!--                                        <input th:field="*{telephone}" name="telephone" type="text" placeholder="0888665544"-->
-<!--                                               class="form-control input-md">-->
-<!--                                        <small th:each="e : ${#fields.errors('telephone')}" th:text="${e}"-->
-<!--                                               class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <p>-->
-<!--                                <div class="col-md-12x" >-->
-<!--                                    <h6 class="d-flex align-items-center justify-content-center">Currently I am:</h6>-->
-<!--                                    <div class="form-check d-flex align-items-center justify-content-center">-->
-<!--                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="enableEmployeeDetails()">-->
-<!--                                        <label class="form-check-label">-->
-<!--                                          Employed-->
-<!--                                        </label>-->
-<!--                                      </div>-->
-<!--                                      <div class="form-check d-flex align-items-center justify-content-center">-->
-<!--                                        <input class="form-check-input" type="radio" name="socialStatus" onclick="disableEmployeeDetails()">-->
-<!--                                        <label class="form-check-label">-->
-<!--                                          Unemployed/Self-employed/Student/Pensioner-->
-<!--                                        </label>-->
-<!--                                      </div>-->
-<!--                                </div>-->
-<!--                                <div class="col-md-6">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label class="control-label">Job description</label>-->
-<!--                                        <input th:field="*{job}" id="job" name="job" type="text"-->
-<!--                                            class="form-control input-md" readonly>-->
-
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; Text input&ndash;&gt;-->
-<!--                                <div class="col-md-6">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label class="control-label">Employer</label>-->
-<!--                                        <input th:field="*{employer}" id="employer" name="employer" type="text"-->
-<!--                                            class="form-control input-md" readonly>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-
-<!--                                <div class="col-md-12">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <br>-->
-<!--                                        <button id="singlebutton" name="singlebutton"-->
-<!--                                            class="btn btn-primary">Next</button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </form>-->
-                        <!-- form end -->
                     </div>
                 </div>
 

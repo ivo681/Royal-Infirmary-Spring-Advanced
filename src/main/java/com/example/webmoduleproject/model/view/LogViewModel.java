@@ -1,28 +1,23 @@
-package com.example.webmoduleproject.model.entities;
+package com.example.webmoduleproject.model.view;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "logs")
-public class LogEntity extends BaseEntity{
-    private User user;
+public class LogViewModel {
+    private String userEmail;
     private String action;
     private LocalDateTime dateTime;
 
-    public LogEntity() {
+    public LogViewModel() {
     }
 
-    @ManyToOne
-    public User getUser() {
-        return user;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
-    @Column(name = "action", nullable = false)
     public String getAction() {
         return action;
     }
@@ -31,7 +26,6 @@ public class LogEntity extends BaseEntity{
         this.action = action;
     }
 
-    @Column(name = "date_time", nullable = false)
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -39,5 +33,4 @@ public class LogEntity extends BaseEntity{
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
     }
-
 }

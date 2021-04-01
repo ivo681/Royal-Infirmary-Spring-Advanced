@@ -56,6 +56,16 @@ public class AdminControllerTest {
                 .andExpect(model().attributeExists("mds"));
     }
 
+    @Test
+    @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP", "ADMIN"})
+    public void testDailyLogsPage() throws Exception {
+        this.mockMvc.perform(get("/admin/daily-logs"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dailylogs"))
+                .andExpect(model().attributeExists("appointmentsCreated"))
+                .andExpect(model().attributeExists("logs"));
+    }
+
     @BeforeEach
     public void setUp() {
         dataSetup = new DataSetup(userRepository, userRoleRepository);

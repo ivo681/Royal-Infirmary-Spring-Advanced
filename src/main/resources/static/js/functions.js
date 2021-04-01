@@ -252,17 +252,23 @@ async function downloadTableWithPdf() {
 }
 
 function enableEmployeeDetails(){
-  document.getElementById('job').readOnly = false;
-  document.getElementById('employer').readOnly = false;
+  let job = document.getElementById('jobComplete');
+  let employer = document.getElementById('employerComplete');
+  job.readOnly = false;
+  employer.readOnly = false;
+  job.required = true;
+  employer.required = true;
 }
 
 function disableEmployeeDetails(){
-  let job = document.getElementById('job');
-  let employer = document.getElementById('employer');
+  let job = document.getElementById('jobComplete');
+  let employer = document.getElementById('employerComplete');
   job.readOnly = true;
   employer.readOnly = true;
   job.value = null;
   employer.value = null;
+  job.required = false;
+  employer.required = false;
 }
 
 function ConfirmSelection()
@@ -271,6 +277,18 @@ function ConfirmSelection()
   if (r !== true) {
     event.preventDefault();
   }
+}
+
+function ConfirmSpecialistSelection()
+{
+  let r = confirm("Are you sure you wish to select this specialist?");
+  if (r !== true) {
+    event.preventDefault();
+  }
+}
+
+function fireIvo(){
+  document.getElementById("dialogWindow").showModal();
 }
 
 

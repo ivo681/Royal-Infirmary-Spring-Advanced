@@ -18,8 +18,11 @@ import com.example.webmoduleproject.repository.UserRepository;
 import com.example.webmoduleproject.service.*;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -32,6 +35,7 @@ import java.util.stream.Collectors;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     private final static String APPOINTMENTS_PATH = "src/main/resources/static/json/appointments.json";
+    private static Logger LOGGER = LoggerFactory.getLogger(AppointmentServiceImpl.class);
     private final UserRepository userRepository;
     private final UserService userService;
     private final AppointmentRepository appointmentRepository;
@@ -250,9 +254,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         this.appointmentRepository.updateStatusOfNoShows(StatusEnum.CONFIRMED, StatusEnum.NO_SHOW, LocalDate.now());
     }
 
+    @Async
     @Override
     public void seedAppointments() throws IOException {
         if (this.appointmentRepository.count() == 0){
+            LOGGER.info("Starting to seed appointments");
             String content = String.join("", Files.readAllLines(Path.of(APPOINTMENTS_PATH)));
 
             AppointmentSeedDto[] appointmentSeedDtos = this.gson.fromJson(content, AppointmentSeedDto[].class);
@@ -278,8 +284,14 @@ public class AppointmentServiceImpl implements AppointmentService {
                     this.appointmentRepository.save(appointment);
                 }
             }
+            LOGGER.info("End of seeding appointments");
         }
 
     }
 
+    @Override
+    public boolean isUserTheMdInAppointment(String userEmail, String id) {
+        return this.appointmentRepository.
+                isUserTheMdInAppointment(userEmail, id).isPresent();
+    }
 }

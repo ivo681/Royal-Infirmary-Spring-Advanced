@@ -1,12 +1,10 @@
 package com.example.webmoduleproject.model.view.commonDetails;
 
-import java.time.LocalDate;
-
 public abstract class DocumentDetails {
     private Long number;
     private String mdTelephoneNumber;
     private String patientTelephoneNumber;
-    private String patientAddress;
+    private String patientHomeAddress;
     private String diagnosis;
 
     public DocumentDetails() {
@@ -28,12 +26,12 @@ public abstract class DocumentDetails {
         this.mdTelephoneNumber = mdTelephoneNumber;
     }
 
-    public String getPatientAddress() {
-        return patientAddress;
+    public String getPatientHomeAddress() {
+        return patientHomeAddress;
     }
 
-    public void setPatientAddress(String patientAddress) {
-        this.patientAddress = patientAddress;
+    public void setPatientHomeAddress(String patientHomeAddress) {
+        this.patientHomeAddress = patientHomeAddress;
     }
 
     public String getDiagnosis() {

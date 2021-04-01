@@ -65,4 +65,6 @@ public interface AppointmentService {
     void updateStatusofNoShowPatientsForAppointments();
 
     void seedAppointments() throws IOException;
+
+    boolean isUserTheMdInAppointment(String userEmail, String id);
 }

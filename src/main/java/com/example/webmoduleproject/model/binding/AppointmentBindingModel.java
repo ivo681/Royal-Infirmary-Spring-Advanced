@@ -53,7 +53,7 @@ public class AppointmentBindingModel {
         this.reason = reason;
     }
 
-    @NotBlank(message = "You must select a time span to visit")
+    @NotBlank(message = "You must select a time span to visit in")
     public String getTimeSpan() {
         return timeSpan;
     }

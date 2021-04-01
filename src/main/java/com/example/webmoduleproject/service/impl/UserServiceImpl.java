@@ -13,6 +13,7 @@ import com.example.webmoduleproject.service.UserDetailsService;
 import com.example.webmoduleproject.service.UserService;
 import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +56,6 @@ public class UserServiceImpl implements UserService {
         this.random = random;
     }
 
-    //DONE
     @Override
     public void seedGps() throws IOException {
         if (this.userRepository.count() == 0) {
@@ -96,7 +96,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //DONE
     @Override
     public void seedMds() throws IOException {
         if (this.userRepository.count() == 8) {
@@ -129,7 +128,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //DONE
     @Override
     public void seedPatients() throws IOException {
         if (this.userRepository.count() == 72) {

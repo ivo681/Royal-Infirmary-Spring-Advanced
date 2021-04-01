@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
@@ -106,7 +107,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testCreateNewAmbulatoryList() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
         .param("diagnosis", "Test diagnosis")
         .param("medicines", "")
                 .with(csrf())
@@ -121,7 +122,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testCreateNewAmbulatoryListInvalidData() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
                 .param("diagnosis", "Te")
                 .param("medicines", "")
                 .with(csrf())
@@ -138,7 +139,7 @@ public class AmbulatoryListControllerTest {
         //userService.loadUserByUsername("secondmail@abv.bg");
         Assertions.assertTrue(prescriptionRepository.findByAppointmentId(mockAppointmentId).isEmpty());
 
-        this.mockMvc.perform(get("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
                 .param("diagnosis", "Test diagnosis")
                 .param("medicines", "Aspirin")
                 .with(csrf())
@@ -155,7 +156,7 @@ public class AmbulatoryListControllerTest {
         //userService.loadUserByUsername("secondmail@abv.bg");
         Assertions.assertTrue(prescriptionRepository.findByAppointmentId(mockAppointmentId).isEmpty());
 
-        this.mockMvc.perform(get("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
                 .param("diagnosis", "Test diagnosis")
                 .param("medicines", "         ")
                 .with(csrf())

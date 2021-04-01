@@ -9,6 +9,7 @@ import com.example.webmoduleproject.model.binding.UserRegisterBindingModel;
 import com.example.webmoduleproject.model.service.ContactDetailsServiceModel;
 import com.example.webmoduleproject.model.service.EmploymentDetailsServiceModel;
 import com.example.webmoduleproject.model.service.UserRegisterServiceModel;
+import com.example.webmoduleproject.model.view.GpViewModel;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -50,14 +51,7 @@ public class UsersController {
 
     @GetMapping("/login")
     public String login(HttpServletRequest request, Model model) {
-//        String restOfTheUrl = (String) request.getAttribute(
-//                HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-//        System.out.println(restOfTheUrl);
-//        if (restOfTheUrl.equalsIgnoreCase("/users/login?expired")){
-//            model.addAttribute("session_timeout", true);
-//        }
         return "login";
-
     }
 
     @PostMapping("/login-error")
@@ -71,21 +65,10 @@ public class UsersController {
 
     }
 
-//    @GetMapping("/expired_login")
-//    public ModelAndView sessionTimeout(ModelAndView modelAndView) {
-//        System.out.println("hi");
-//        modelAndView.addObject("session_timeout", true);
-////        attributes.addFlashAttribute("username", username);
-//        modelAndView.setViewName("login");
-//        return modelAndView;
-//
-//    }
-
     @GetMapping("/register")
     public String register(Model model) {
         if (!model.containsAttribute("userRegisterBindingModel")) {
             model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
-            model.addAttribute("userExistsError", false);
         }
         return "register";
 
@@ -109,7 +92,7 @@ public class UsersController {
 
         if (this.userService.emailExists(userRegisterBindingModel.getEmail())) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
-            redirectAttributes.addFlashAttribute("userExistsError", true);
+            bindingResult.rejectValue("email", "userExistsError", "This email is already used by another user");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
             return "register";
@@ -122,13 +105,28 @@ public class UsersController {
 
     }
 
-    @GetMapping("/change-gp/{id}")
-    public String changeGp(@PathVariable("id") String id, Principal principal,
-                           Model model) {
+    @PatchMapping("/change-gp/{id}")
+    public String changeGp(@PathVariable("id") String id, Principal principal) {
         String userEmail = principal.getName();
         this.userService.setGpById(userEmail, id);
         return "redirect:/home";
 
+    }
+
+    @GetMapping("/change-gp")
+    public String changeGpPage(Principal principal, Model model) {
+        String userEmail = principal.getName();
+        if (!this.userService.hasTelephone(userEmail)) {
+            return "redirect:/complete-profile";
+        }
+        if (!this.userService.hasGp(userEmail)) {
+            return "redirect:/choose-gp";
+        }
+        String gpIdByUserEmail = this.userService.getGpIdByUserEmail(userEmail);
+        List<GpViewModel> allGps = this.userService.getAllGpsExcept(gpIdByUserEmail, userEmail);
+        model.addAttribute("allGps", allGps);
+        model.addAttribute("changing", true);
+        return "choosegp";
     }
 
 
@@ -165,7 +163,7 @@ public class UsersController {
 
     }
 
-    @GetMapping("/appointments/cancel-{id}")
+    @DeleteMapping("/appointments/cancel-{id}")
     public String cancelFutureAppointment(@PathVariable("id") String id,
                                           Principal principal) throws NotFoundError {
         String userEmail = principal.getName();
@@ -191,29 +189,32 @@ public class UsersController {
                                       Principal principal,
                                       Model model, HttpServletRequest request) {
         String userEmail = principal.getName();
-        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
-        if (inputFlashMap != null) {
-            if (inputFlashMap.containsKey("contactErrors")) {
-                model.addAttribute("contactErrors", (List<String>) inputFlashMap.get("contactErrors"));
-            } else {
-                model.addAttribute("employmentErrors", (List<String>) inputFlashMap.get("employmentErrors"));
+        if (this.userService.hasTelephone(userEmail)) {
+            Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+            if (inputFlashMap != null) {
+                if (inputFlashMap.containsKey("contactErrors")) {
+                    model.addAttribute("contactErrors", (List<String>) inputFlashMap.get("contactErrors"));
+                } else {
+                    model.addAttribute("employmentErrors", (List<String>) inputFlashMap.get("employmentErrors"));
+                }
             }
+            if (!model.containsAttribute("person")) {
+                model.addAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
+            }
+            if (!model.containsAttribute("employmentDetailsBindingModel") || employmentDetailsBindingModel == null) {
+                model.addAttribute("employmentDetailsBindingModel", new EmploymentDetailsBindingModel());
+            }
+            if (!model.containsAttribute("contactDetailsBindingModel") || contactDetailsBindingModel == null) {
+                model.addAttribute("contactDetailsBindingModel", new ContactDetailsBindingModel());
+            }
+            return "edit-person-details";
         }
-        if (!model.containsAttribute("person")) {
-            model.addAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
-        }
-        if (!model.containsAttribute("employmentDetailsBindingModel") || employmentDetailsBindingModel == null) {
-            model.addAttribute("employmentDetailsBindingModel", new EmploymentDetailsBindingModel());
-        }
-        if (!model.containsAttribute("contactDetailsBindingModel") || contactDetailsBindingModel == null) {
-            model.addAttribute("contactDetailsBindingModel", new ContactDetailsBindingModel());
-        }
-        return "edit-person-details";
+        return "redirect:/home";
     }
 
 
-    @PostMapping("/edit-profile-contacts")
-    public RedirectView changeUserContactDetailsPost(@Valid @ModelAttribute("contactDetailsBindingModel")
+    @PatchMapping("/edit-profile-contacts")
+    public RedirectView changeUserContactDetails(@Valid @ModelAttribute("contactDetailsBindingModel")
                                                              ContactDetailsBindingModel contactDetailsBindingModel,
                                                      BindingResult bindingResult, RedirectAttributes redirectAttributes,
                                                      Principal principal, Model model
@@ -235,8 +236,8 @@ public class UsersController {
         return new RedirectView("/home");
     }
 
-    @PostMapping("/edit-profile-employment")
-    public RedirectView changeUserEmploymentDetailsPost(@Valid @ModelAttribute("employmentDetailsBindingModel")
+    @PatchMapping("/edit-profile-employment")
+    public RedirectView changeUserEmploymentDetails(@Valid @ModelAttribute("employmentDetailsBindingModel")
                                                                 EmploymentDetailsBindingModel employmentDetailsBindingModel,
                                                         BindingResult bindingResult, RedirectAttributes redirectAttributes,
                                                         Principal principal

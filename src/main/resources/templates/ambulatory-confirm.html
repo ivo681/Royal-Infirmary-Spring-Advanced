@@ -152,7 +152,7 @@
                     <button name="downloadButton" class="btn btn-success"
                             onclick="downloadTableWithPdf()">Download</button>
                     <a th:if="${givePrescription && showButtons}" th:href="@{/prescriptions/details/{id}(id = ${id})}" class="btn btn-success" type="submit">Open Prescription</a>
-                    <a th:if="${patientEmployed && showButtons}" th:href="@{/sick-leaves/new/{id}(id = ${id})}" name="prescriptionButton" class="btn btn-success">Give Sick leave certificate</a>
+                    <a sec:authorize="hasRole('ROLE_MD')" th:if="${patientEmployed && showButtons}" th:href="@{/sick-leaves/new/{id}(id = ${id})}" name="prescriptionButton" class="btn btn-success">Give Sick leave certificate</a>
                 </div>
             </div>
         </section>

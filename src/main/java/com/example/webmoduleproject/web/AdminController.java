@@ -41,4 +41,16 @@ public class AdminController {
         model.addAttribute("mds", this.userService.getPersonnelList());
         return "adminviewlist";
     }
+
+    @GetMapping("/daily-logs")
+    public String viewDailyLogs(Model model){
+        model.addAttribute("logs", this.logService.getLogList());
+        model.addAttribute("appointmentsCreated", this.logService.countByAction("appointmentCreate"));
+        model.addAttribute("appointmentsConfirmed", this.logService.countByAction("confirmAppointmentById"));
+        model.addAttribute("appointmentsCancelled", this.logService.countByAction("cancelFutureAppointment"));
+        model.addAttribute("ambulatoryListsCreated", this.logService.countByAction("createNewList"));
+        model.addAttribute("prescriptionsCreated", this.logService.countByAction("createNewPrescription"));
+        model.addAttribute("sickLeavesCreated", this.logService.countByAction("createNewSickLeave"));
+        return "dailylogs";
+    }
 }
