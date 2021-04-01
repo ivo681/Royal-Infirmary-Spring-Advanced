@@ -68,4 +68,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT u FROM User u WHERE u.hospitalId IS NOT NULL")
     List<User> getAllHospitalPersonnel();
+
+    @Query("SELECT u FROM User u WHERE u.hospitalId IS NOT NULL AND u.email = :userEmail")
+    Optional<User> getUserByEmailIfHospitalEmployee(String userEmail);
 }

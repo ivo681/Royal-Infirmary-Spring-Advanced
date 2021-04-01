@@ -221,11 +221,17 @@ public class UserServiceImpl implements UserService {
         user.setTelephone(profileServiceModel.getTelephone());
         user.setAddress(profileServiceModel.getAddress());
         if (user.getHospitalId() == null) {
-            if (profileServiceModel.getJob() != null && profileServiceModel.getEmployer() == null) {
-                if (!profileServiceModel.getEmployer().isBlank() && !profileServiceModel.getJob().isBlank()) {
+            if (profileServiceModel.getJob() != null && profileServiceModel.getEmployer() != null) {
+                if (!profileServiceModel.getEmployer().trim().isBlank() && !profileServiceModel.getJob().trim().isBlank()) {
                     user.setJob(profileServiceModel.getJob());
                     user.setEmployer(profileServiceModel.getEmployer());
+                } else {
+                    user.setJob(null);
+                    user.setEmployer(null);
                 }
+            } else {
+                user.setJob(null);
+                user.setEmployer(null);
             }
         } else {
             user.setEmployer("Royal Infirmary St. Sofia");
@@ -410,6 +416,39 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public UserDetailsViewModel getPatientDetailsByEmail(String userEmail) {
+        PatientDetailsServiceModel model = this.modelMapper.map(this.userRepository.findByEmail(userEmail).get(), PatientDetailsServiceModel.class);
+        return this.modelMapper.map(model, UserDetailsViewModel.class);
+    }
+
+    @Override
+    public void changeContactDetails(String userEmail, ContactDetailsServiceModel serviceModel) {
+        User user = this.userRepository.findByEmail(userEmail).get();
+        user.setTelephone(serviceModel.getNewTelephone());
+        user.setAddress(serviceModel.getNewAddress());
+        this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void changeEmploymentDetails(String userEmail, EmploymentDetailsServiceModel serviceModel) {
+        User user = this.userRepository.findByEmail(userEmail).get();
+        if (serviceModel.getNewEmployer() != null && !serviceModel.getNewEmployer().trim().isBlank()
+        && !serviceModel.getNewJob().trim().isBlank()){
+            user.setEmployer(serviceModel.getNewEmployer().trim());
+            user.setJob(serviceModel.getNewJob().trim());
+        } else {
+            user.setEmployer(null);
+            user.setJob(null);
+        }
+        this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public boolean isUserEmployedInHospital(String userEmail) {
+        return this.userRepository.getUserByEmailIfHospitalEmployee(userEmail).isPresent();
+    }
+
     private Long generateHospitalId() {
         long hospitalId = (long) (100000 + this.random.nextInt(900000));
         while (takenHospitalId(hospitalId)) {
@@ -421,6 +460,8 @@ public class UserServiceImpl implements UserService {
     private int getRandomGpIndex(int length) {
         return this.random.nextInt(length);
     }
+
+
 
 
 }

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/fragments::header">
+</head>
+
+<body>
+    <header>
+        <nav th:replace="fragments/fragments::navigation">
+        </nav>
+    </header>
+
+    <main>
+        <section class="py-5" th:object="${person}">
+            <h1 class="h3 mb-3 fw-normal">User details</h1>
+            <table id="myTable" class="table table-bordered table-striped custab container table-sm form">
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">First name</td>
+                    <td th:text="*{firstName}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Last name</td>
+                    <td th:text="*{lastName}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">ID Number</td>
+                    <td th:text="*{idNumber}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Date of birth</td>
+                    <td th:text="*{dateOfBirth}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Email address</td>
+                    <td th:text="*{email}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Telephone number</td>
+                    <td th:text="*{telephone}" class="text-center">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Address</td>
+                    <td th:text="*{address}" class="text-center">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Employer</td>
+                    <td th:text="*{employer}" class="text-center"></td>
+                </tr>
+                <tr>
+                    <td class="text-center bg-info" style="font-weight:bold">Job position</td>
+                    <td th:text="*{job}" class="text-center"></td>
+
+                </tr>
+            </table>
+            <br>
+            <div class="row px-5">
+                <form class="form col-md-4" th:object="${contactDetailsBindingModel}"
+                      th:action="@{/users/edit-profile-contacts}" method="POST">
+                    <h1 class="h3 mb-3 fw-normal">Change contact details</h1>
+                    <small th:each="e : ${contactErrors}"
+                           style="white-space: pre-line" th:utext="${e} + '<br/>'"
+                           class="text-light form-text bg-danger rounded"></small>
+                    <label class="visually-hidden">Telephone</label>
+                    <input th:field="*{newTelephone}" type="text" name="telephone" class="form-control" placeholder="Telephone"
+                           required autofocus>
+
+                    <label class="visually-hidden">Address</label>
+                    <input th:field="*{newAddress}" type="text" name="address" class="form-control" placeholder="Address"
+                           required>
+                    <button class="w-100 btn btn-lg btn-success" type="submit">Submit new contact details</button>
+                </form>
+
+                <form th:if="!${#authorization.expression('hasRole(''ROLE_MD'')')}" class="form col-md-4"
+                      th:object="${employmentDetailsBindingModel}"
+                      th:action="@{/users/edit-profile-employment}" method="POST">
+                    <h1 class="h3 mb-3 fw-normal">Change employment details</h1>
+                    <label>IMPORTANT: If you submit empty fields your employment status will be changed to unemployed</label>
+                    <small th:each="e : ${employmentErrors}"
+                           style="white-space: pre-line" th:utext="${e} + '<br/>'"
+                           class="text-light form-text bg-danger rounded"></small>
+                    <label class="visually-hidden">Employer</label>
+                    <input th:field="*{newEmployer}" type="text" name="employer" class="form-control" placeholder="Employer">
+                    <label class="visually-hidden">Job position</label>
+                    <input th:field="*{newJob}" type="text" name="job" class="form-control" placeholder="Job position">
+                    <button class="w-100 btn btn-lg btn-success" type="submit">Submit new employment details</button>
+                </form>
+            </div>
+
+        </section>
+    </main>
+
+    <footer th:replace="fragments/fragments::footer">
+    </footer>
+
+</body>
+
+</html>

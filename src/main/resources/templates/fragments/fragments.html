@@ -46,7 +46,7 @@
                     <a class="nav-link" th:href="@{/users/register}">Register</a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
-                    <a class="nav-link" th:href="@{/users/update-details}">Edit profile</a>
+                    <a class="nav-link" th:href="@{/users/edit-profile}">Edit profile</a>
                 </li>
                 <li sec:authorize="isAuthenticated()" class="nav-item">
                     <form th:action="@{/users/logout}" method="POST">

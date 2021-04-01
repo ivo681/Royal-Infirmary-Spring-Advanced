@@ -24,7 +24,6 @@ public class LogAspect {
     @Pointcut("execution(* com.example.webmoduleproject.web." +
             "AppointmentsController.appointmentCreate(..))")
     public void appointmentCreateTrack(){
-
     }
 
     @After("appointmentCreateTrack()")

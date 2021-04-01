@@ -3,6 +3,8 @@ package com.example.webmoduleproject.service;
 import com.example.webmoduleproject.model.entities.User;
 import com.example.webmoduleproject.model.entities.UserRole;
 import com.example.webmoduleproject.model.service.CompleteProfileServiceModel;
+import com.example.webmoduleproject.model.service.ContactDetailsServiceModel;
+import com.example.webmoduleproject.model.service.EmploymentDetailsServiceModel;
 import com.example.webmoduleproject.model.service.UserRegisterServiceModel;
 import com.example.webmoduleproject.model.view.*;
 
@@ -67,4 +69,12 @@ public interface UserService {
     List<PatientListViewModel> getPatientList();
 
     List<MdViewModel> getPersonnelList();
+
+    UserDetailsViewModel getPatientDetailsByEmail(String userEmail);
+
+    void changeContactDetails(String userEmail, ContactDetailsServiceModel serviceModel);
+
+    void changeEmploymentDetails(String userEmail, EmploymentDetailsServiceModel map);
+
+    boolean isUserEmployedInHospital(String userEmail);
 }

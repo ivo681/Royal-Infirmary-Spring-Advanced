@@ -2,11 +2,17 @@ package com.example.webmoduleproject.web;
 
 
 import com.example.webmoduleproject.exceptions.NotFoundError;
+import com.example.webmoduleproject.exceptions.PermissionError;
+import com.example.webmoduleproject.model.binding.ContactDetailsBindingModel;
+import com.example.webmoduleproject.model.binding.EmploymentDetailsBindingModel;
 import com.example.webmoduleproject.model.binding.UserRegisterBindingModel;
+import com.example.webmoduleproject.model.service.ContactDetailsServiceModel;
+import com.example.webmoduleproject.model.service.EmploymentDetailsServiceModel;
 import com.example.webmoduleproject.model.service.UserRegisterServiceModel;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
@@ -15,13 +21,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/users")
@@ -45,13 +57,13 @@ public class UsersController {
 //            model.addAttribute("session_timeout", true);
 //        }
         return "login";
-         
+
     }
 
     @PostMapping("/login-error")
     public String failedLogin(@ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
-                                            String username,
-                                    RedirectAttributes attributes) {
+                                      String username,
+                              RedirectAttributes attributes) {
 
         attributes.addFlashAttribute("bad_credentials", true);
         attributes.addFlashAttribute("username", username);
@@ -76,12 +88,12 @@ public class UsersController {
             model.addAttribute("userExistsError", false);
         }
         return "register";
-         
+
     }
 
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("userRegisterBindingModel") UserRegisterBindingModel userRegisterBindingModel,
-                                 BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+                           BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors() ||
                 (Period.between(userRegisterBindingModel.getDateOfBirth(), LocalDate.now()).getYears() < 18)) {
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
@@ -92,7 +104,7 @@ public class UsersController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
             return "register";
-             
+
         }
 
         if (this.userService.emailExists(userRegisterBindingModel.getEmail())) {
@@ -101,22 +113,22 @@ public class UsersController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
             return "register";
-             
+
         }
 
         UserRegisterServiceModel userRegisterServiceModel = this.modelMapper.map(userRegisterBindingModel, UserRegisterServiceModel.class);
         this.userService.registerAndLoginUser(userRegisterServiceModel);
         return "redirect:/complete-profile";
-         
+
     }
 
     @GetMapping("/change-gp/{id}")
     public String changeGp(@PathVariable("id") String id, Principal principal,
-                                 Model model) {
+                           Model model) {
         String userEmail = principal.getName();
         this.userService.setGpById(userEmail, id);
         return "redirect:/home";
-         
+
     }
 
 
@@ -125,7 +137,7 @@ public class UsersController {
         model.addAttribute("enableMdSection", false);
         model.addAttribute("enablePatientSection", true);
         return "appointment-nav";
-         
+
     }
 
     @GetMapping("/appointments/past")
@@ -137,7 +149,7 @@ public class UsersController {
                 this.appointmentService.
                         getPastAppointmentsForPatient(userEmail));
         return "appointment-list-patients";
-         
+
     }
 
     @GetMapping("/appointments/future")
@@ -150,12 +162,12 @@ public class UsersController {
                 this.appointmentService.
                         getFutureAppointmentsForPatient(userEmail));
         return "appointment-list-patients";
-         
+
     }
 
     @GetMapping("/appointments/cancel-{id}")
     public String cancelFutureAppointment(@PathVariable("id") String id,
-                                                Principal principal) throws NotFoundError {
+                                          Principal principal) throws NotFoundError {
         String userEmail = principal.getName();
         if (this.appointmentService.doesAppointmentExistByIdAndPatientEmail(id, userEmail)) {
             this.appointmentService.cancelAppointmentById(id);
@@ -168,9 +180,88 @@ public class UsersController {
     @GetMapping("/details/{id}")
     @PreAuthorize("hasRole('ROLE_GP')")
     public String getUserDetailsForAdmin(@PathVariable("id") String id,
-                                         Model model){
+                                         Model model) {
         model.addAttribute("person", this.userService.getPatientDetails(id));
         return "person-details";
+    }
+
+    @GetMapping("/edit-profile")
+    public String loadEditProfilePage(@ModelAttribute("contactDetailsBindingModel") ContactDetailsBindingModel contactDetailsBindingModel,
+                                      @ModelAttribute("employmentDetailsBindingModel") EmploymentDetailsBindingModel employmentDetailsBindingModel,
+                                      Principal principal,
+                                      Model model, HttpServletRequest request) {
+        String userEmail = principal.getName();
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        if (inputFlashMap != null) {
+            if (inputFlashMap.containsKey("contactErrors")) {
+                model.addAttribute("contactErrors", (List<String>) inputFlashMap.get("contactErrors"));
+            } else {
+                model.addAttribute("employmentErrors", (List<String>) inputFlashMap.get("employmentErrors"));
+            }
+        }
+        if (!model.containsAttribute("person")) {
+            model.addAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
+        }
+        if (!model.containsAttribute("employmentDetailsBindingModel") || employmentDetailsBindingModel == null) {
+            model.addAttribute("employmentDetailsBindingModel", new EmploymentDetailsBindingModel());
+        }
+        if (!model.containsAttribute("contactDetailsBindingModel") || contactDetailsBindingModel == null) {
+            model.addAttribute("contactDetailsBindingModel", new ContactDetailsBindingModel());
+        }
+        return "edit-person-details";
+    }
+
+
+    @PostMapping("/edit-profile-contacts")
+    public RedirectView changeUserContactDetailsPost(@Valid @ModelAttribute("contactDetailsBindingModel")
+                                                             ContactDetailsBindingModel contactDetailsBindingModel,
+                                                     BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                                     Principal principal, Model model
+    ) {
+        String userEmail = principal.getName();
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("contactDetailsBindingModel", contactDetailsBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.contactDetailsBindingModel",
+                    bindingResult);
+            List<String> errorMessages = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            redirectAttributes.addFlashAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
+            redirectAttributes.addFlashAttribute("contactErrors", errorMessages);
+            return new RedirectView("/users/edit-profile", true);
+        }
+        this.userService.changeContactDetails(userEmail, this.modelMapper.map(contactDetailsBindingModel,
+                ContactDetailsServiceModel.class));
+        //redirectAttributes.addFlashAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
+        return new RedirectView("/home");
+    }
+
+    @PostMapping("/edit-profile-employment")
+    public RedirectView changeUserEmploymentDetailsPost(@Valid @ModelAttribute("employmentDetailsBindingModel")
+                                                                EmploymentDetailsBindingModel employmentDetailsBindingModel,
+                                                        BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                                                        Principal principal
+    ) throws PermissionError {
+        String userEmail = principal.getName();
+        if (!this.userService.isUserEmployedInHospital(userEmail)) {
+            if ((employmentDetailsBindingModel.getNewEmployer().trim().isBlank() &&
+                    !employmentDetailsBindingModel.getNewJob().trim().isBlank()) ||
+                    (!employmentDetailsBindingModel.getNewEmployer().trim().isBlank() &&
+                            employmentDetailsBindingModel.getNewJob().trim().isBlank())
+            ) {
+                redirectAttributes.addFlashAttribute("employmentDetailsBindingModel", employmentDetailsBindingModel);
+                redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.employmentDetailsBindingModel",
+                        bindingResult);
+                List<String> errorMessages = List.of("You can't submit only one field");
+                redirectAttributes.addFlashAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
+                redirectAttributes.addFlashAttribute("employmentErrors", errorMessages);
+                return new RedirectView("/users/edit-profile", true);
+            }
+            this.userService.changeEmploymentDetails(userEmail, this.modelMapper.map(employmentDetailsBindingModel,
+                    EmploymentDetailsServiceModel.class));
+            redirectAttributes.addFlashAttribute("person", this.userService.getPatientDetailsByEmail(userEmail));
+            return new RedirectView("/home");
+        }
+        throw new PermissionError("Hospital staff are not allowed to make amendments on employment details");
     }
 
 }

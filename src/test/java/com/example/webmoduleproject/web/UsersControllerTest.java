@@ -41,7 +41,9 @@ public class UsersControllerTest {
     private WebApplicationContext webApplicationContext;
     private String gp1Id;
     private String gp2Id;
+    private String userId;
     private String confirmedAppointmentId;
+    private DataSetup dataSetup;
     @Autowired
     private MockMvc mockMvc;
     private UserDetailsService userService;
@@ -50,11 +52,7 @@ public class UsersControllerTest {
     @Autowired
     private UserRoleRepository userRoleRepository;
     @Autowired
-    private SickLeaveRepository sickLeaveRepository;
-    @Autowired
     private AppointmentRepository appointmentRepository;
-    @Autowired
-    private AmbulatoryListRepository ambulatoryListRepository;
 
     @Test
     public void testRegisterPage() throws Exception {
@@ -86,7 +84,6 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testChangeGpPage() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/change-gp"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("choosegp"))
@@ -96,8 +93,6 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testChangeGpWithNew() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
-
         Assertions.assertEquals(userRepository.
                 findByEmail("firstmail@abv.bg").
                 get().getGp().getId(), gp1Id
@@ -116,7 +111,6 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testPatientAppointmentNavPage() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/users/appointments"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("appointment-nav"))
@@ -126,7 +120,6 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testPastPatientPage() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/users/appointments/past"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("appointment-list-patients"))
@@ -137,7 +130,6 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testFuturePatientAppointmentsPage() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/users/appointments/future"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("appointment-list-patients"))
@@ -148,7 +140,6 @@ public class UsersControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testCancelExistingAppointment() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/users/appointments/cancel-{id}", confirmedAppointmentId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/users/appointments/future"));
@@ -163,13 +154,133 @@ public class UsersControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
     public void testUserDetailsPage() throws Exception {
-        userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/users/details/{id}",gp2Id ))
+        this.mockMvc.perform(get("/users/details/{id}", userId ))
                 .andExpect(status().isOk())
                 .andExpect(view().name("person-details"))
                 .andExpect(model().attributeExists("person"));
+    }
+
+    @Test
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
+    public void testUserEditProfilePage() throws Exception {
+        this.mockMvc.perform(get("/users/edit-profile"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("edit-person-details"))
+                .andExpect(model().attributeExists("person"))
+                .andExpect(model().attributeExists("employmentDetailsBindingModel"))
+                .andExpect(model().attributeExists("contactDetailsBindingModel"));
+    }
+
+    @Test
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
+    public void testUserEditProfileContactsValidDataPost() throws Exception {
+        Assertions.assertNotEquals(this.userRepository.findByEmail("thirdmail@abv.bg").get()
+        .getTelephone(), "8888855555");
+
+        this.mockMvc.perform(post("/users/edit-profile-contacts")
+                .param("newTelephone" , "8888855555")
+                .param("newAddress", "Test address")
+                .with(csrf())
+        )
+                .andExpect(status().is3xxRedirection());
+
+        Assertions.assertEquals(this.userRepository.findByEmail("thirdmail@abv.bg").get()
+                .getTelephone(), "8888855555");
+    }
+
+    @Test
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
+    public void testUserEditProfileContactsInvalidDataPost() throws Exception {
+        String currTelephone = this.userRepository.findByEmail("thirdmail@abv.bg").get()
+                .getTelephone();
+
+        this.mockMvc.perform(post("/users/edit-profile-contacts")
+                .param("newTelephone" , "8888855555888888888888888")
+                .param("newAddress", "")
+                .with(csrf())
+        )
+                .andExpect(status().is3xxRedirection());
+
+        Assertions.assertEquals(this.userRepository.findByEmail("thirdmail@abv.bg").get()
+                .getTelephone(), currTelephone);
+    }
+
+    @Test
+    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    public void testUserEditProfileEmploymentInvalidDataPost() throws Exception {
+        String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob();
+
+        this.mockMvc.perform(post("/users/edit-profile-employment")
+                .param("newEmployer" , "")
+                .param("newJob", "   Freelancer  ")
+                .with(csrf())
+        )
+                .andExpect(status().is3xxRedirection());
+
+        Assertions.assertEquals(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob(), job);
+    }
+
+    @Test
+    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    public void testUserEditProfileEmploymentEmptyDataPost() throws Exception {
+        String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob();
+
+        this.mockMvc.perform(post("/users/edit-profile-employment")
+                .param("newEmployer" , "")
+                .param("newJob", "")
+                .with(csrf())
+        )
+                .andExpect(status().is3xxRedirection());
+
+        Assertions.assertNull(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob());
+    }
+
+    @Test
+    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
+    public void testUserEditProfileEmploymentNewDataPost() throws Exception {
+        String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob();
+
+        this.mockMvc.perform(post("/users/edit-profile-employment")
+                .param("newEmployer" , "New employer")
+                .param("newJob", "New job")
+                .with(csrf())
+        )
+                .andExpect(status().is3xxRedirection());
+
+        Assertions.assertNotEquals(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob(), job);
+        Assertions.assertEquals(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getEmployer(), "New employer");
+        Assertions.assertEquals(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob(), "New job");
+    }
+
+    @Test
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
+    public void testUserEditProfileEmploymentForbiddenAccess() throws Exception {
+        String employer = this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getEmployer();
+        String job = this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob();
+
+        this.mockMvc.perform(post("/users/edit-profile-employment")
+                .param("newEmployer" , "")
+                .param("newJob", "")
+                .with(csrf())
+        )
+                .andExpect(status().isForbidden());
+
+        Assertions.assertEquals(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getJob(), job);
+        Assertions.assertEquals(this.userRepository.findByEmail("firstmail@abv.bg").get()
+                .getEmployer(), employer);
     }
 
     @Test
@@ -215,102 +326,20 @@ public class UsersControllerTest {
                 findByEmail(newUserEmail).get().getFirstName(), "Shishko");
     }
 
-//    @Test
-//    public void testCreateNewUserWithValidData() throws Exception {
-//        String newUserEmail = "fifthmail@abv.bg";
-////        Assertions.assertTrue(userRepository.findByEmail(newUserEmail).isEmpty());
-//
-//        this.mockMvc.perform(post("/users/register")
-//                .param("firstName", "Shishko")
-//                .param("lastName", "Shishkov")
-//                .param("dateOfBirth", String.valueOf(LocalDate.of(1990, 10, 10)))
-//                .param("email", newUserEmail)
-//                .param("password", "TopSecret12!")
-//                .param("confirmPassword", "TopSecret12!")
-//                .param("position", "patient")
-//                .with(csrf())
-//        )
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(view().name("redirect:/complete-profile"));
-//
-////        Assertions.assertTrue(userRepository.findByEmail(newUserEmail).isPresent());
-//    }
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(springSecurity()).build();
         userService = new UserDetailsService(userRepository);
-
-        UserRole mockPatient = new UserRole();
-        mockPatient.setRole(RoleEnum.PATIENT);
-        mockPatient = userRoleRepository.save(mockPatient);
-        UserRole mockGp = new UserRole();
-        mockGp.setRole(RoleEnum.GP);
-        mockGp = userRoleRepository.save(mockGp);
-        UserRole mockMd = new UserRole();
-        mockMd.setRole(RoleEnum.MD);
-        mockMd = userRoleRepository.save(mockMd);
-
-        User gp1 = new User();
-        gp1.setFirstName("Misho");
-        gp1.setLastName("Shisho");
-        gp1.setEmail("secondmail@abv.bg");
-        gp1.setDateOfBirth(LocalDate.of(1990, 10, 10));
-        gp1.setId("2");
-        gp1.setHospitalId(1L);
-        gp1.setPassword("TopSecret123!");
-        gp1.setEmployer("Test Employer");
-        gp1.setJob("General Practitioner");
-        gp1.setTelephone("0888888888");
-        gp1.setAddress("Sample address");
-        gp1.setIdNumber("9010100000");
-        gp1.setRoles(List.of(mockPatient, mockGp, mockMd));
-        gp1 = userRepository.save(gp1);
-        gp1Id = gp1.getId();
-
-        User user1 = new User();
-        user1.setFirstName("Shisho");
-        user1.setLastName("Bakshisho");
-        user1.setEmail("firstmail@abv.bg");
-        user1.setDateOfBirth(LocalDate.of(1990, 10, 10));
-        user1.setId("1");
-        user1.setPassword("TopSecret123!");
-        user1.setTelephone("0888888888");
-        user1.setAddress("Sample address");
-        user1.setIdNumber("9010100000");
-        user1.setGp(gp1);
-        user1.setRoles(List.of(mockPatient));
-        user1 = userRepository.save(user1);
-
-
-        User gp2 = new User();
-        gp2.setFirstName("Tisho");
-        gp2.setLastName("Shisho");
-        gp2.setEmail("thirdmail@abv.bg");
-        gp2.setDateOfBirth(LocalDate.of(1990, 10, 10));
-        gp2.setId("2");
-        gp2.setGp(gp1);
-        gp2.setHospitalId(1L);
-        gp2.setPassword("TopSecret123!");
-        gp2.setEmployer("Test Employer");
-        gp2.setJob("General Practitioner");
-        gp2.setTelephone("0888888888");
-        gp2.setAddress("Sample address");
-        gp2.setIdNumber("9010100000");
-        gp2.setRoles(List.of(mockPatient, mockGp, mockMd));
-        gp2 = userRepository.save(gp2);
-        gp2Id = gp2.getId();
-
-        Appointment appointmentMock = new Appointment();
-        appointmentMock.setMd(gp1);
-        appointmentMock.setPatient(user1);
-        appointmentMock.setDate(LocalDate.now().plusDays(2));
-        appointmentMock.setReason("Test check");
-        appointmentMock.setTimeSpan("9:00 to 10:00");
-        appointmentMock.setStatus(StatusEnum.CONFIRMED);
-        appointmentMock = appointmentRepository.save(appointmentMock);
-        confirmedAppointmentId = appointmentMock.getId();
+        dataSetup = new DataSetup(userRepository, userRoleRepository,appointmentRepository);
+        dataSetup.BasicDataSetUp();
+        dataSetup.AppointmentDataSetup();
+        Appointment appointment = this.appointmentRepository.findById(dataSetup.getMockAppointmentId()).get();
+        appointment.setStatus(StatusEnum.CONFIRMED);
+        appointment = this.appointmentRepository.save(appointment);
+        confirmedAppointmentId = appointment.getId();
+        gp1Id = dataSetup.getMd1Id();
+        gp2Id = dataSetup.getMd2Id();
+        userId = dataSetup.getUserId();
     }
 
 }

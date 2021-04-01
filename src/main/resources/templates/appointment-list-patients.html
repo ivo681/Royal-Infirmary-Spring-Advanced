@@ -20,7 +20,7 @@
                 <thead>
                     <tr>
                         <th onclick="sortTable(0)" class="text-center sortable">Date</th>
-                        <th onclick="sortTable(1)" class="text-center sortable">Time slot</th>
+                        <th onclick="sortByTime(1)" class="text-center sortable">Time slot</th>
                         <th onclick="sortByText(2)" class="text-center sortable">Doctor</th>
                         <th onclick="sortByText(3)" class="text-center sortable">Job</th>
                         <th onclick="sortById(4)" class="text-center sortable">Hospital ID</th>
@@ -51,6 +51,11 @@
     </main>
     <footer th:replace="fragments/fragments::footer">
     </footer>
+<!--    <script>-->
+<!--        $(document).ready(function () {-->
+<!--            $('#myTable').dataTable();-->
+<!--        });-->
+<!--    </script>-->
 
 </body>
 

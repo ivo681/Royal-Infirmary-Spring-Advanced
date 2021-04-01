@@ -31,7 +31,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="reason">Reason for appointment</label>
-                                            <input th:field="*{reason}" th:errorclass="is-invalid" id="reason" name="reason" type="text" placeholder="Reason" class="form-control input-md">
+                                            <input th:field="*{reason}" th:errorclass="is-invalid" id="reason" name="reason" type="text"
+                                                   placeholder="Reason" class="form-control input-md" required>
                                             <small id="reasonError" th:each="e : ${#fields.errors('reason')}" th:text="${e}"
                                                    class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                                         </div>
@@ -47,7 +48,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="date">Preferred Date</label>
-                                            <input th:field="*{date}" th:errorclass="is-invalid" id="date" name="date" type="date" placeholder="Preferred Date" class="form-control input-md">
+                                            <input th:field="*{date}" th:errorclass="is-invalid" id="date" name="date" type="date"
+                                                   placeholder="Preferred Date" class="form-control input-md" required>
                                             <small id="dateError" th:each="e : ${#fields.errors('date')}" th:text="${e}"
                                                    class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                                         </div>

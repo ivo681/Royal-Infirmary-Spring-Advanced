@@ -103,7 +103,7 @@ function sortByDate(index) {
 }
 
 function convertTime(d) {
-  let f = d.split("-");
+  let f = d.split(" to ");
   let p = f[0].split(":");
   return +(p[0] + p[1]);
 }

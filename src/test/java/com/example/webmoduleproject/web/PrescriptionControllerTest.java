@@ -27,6 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class PrescriptionControllerTest {
     private String appointmentId;
+    private String mockAppointmentId;
+
+    private DataSetup dataSetup;
     @Autowired
     private MockMvc mockMvc;
     private UserDetailsService userService;
@@ -44,7 +47,6 @@ public class PrescriptionControllerTest {
     @Test
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testAllPatientPrescriptionsPage() throws Exception {
-        userService.loadUserByUsername("secondmail@abv.bg");
         this.mockMvc.perform(get("/prescriptions/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("prescriptions-list"))
@@ -54,7 +56,6 @@ public class PrescriptionControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testAllPrescriptionsPageForbiddenAccess() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/prescriptions/all"))
                 .andExpect(status().isForbidden());
     }
@@ -62,7 +63,6 @@ public class PrescriptionControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testOwnPrescriptionsPage() throws Exception {
-        userService.loadUserByUsername("firstmail@abv.bg");
         this.mockMvc.perform(get("/prescriptions/own"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("prescriptions-list"))
@@ -72,7 +72,6 @@ public class PrescriptionControllerTest {
     @Test
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testDetailsPrescriptionsPage() throws Exception {
-        userService.loadUserByUsername("secondmail@abv.bg");
         this.mockMvc.perform(get("/prescriptions/details/{id}", appointmentId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("prescription"))
@@ -82,86 +81,20 @@ public class PrescriptionControllerTest {
     @Test
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testDetailsPrescriptionsPageInvalidId() throws Exception {
-        userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/prescriptions/details/{id}", "Invalid id"))
+        this.mockMvc.perform(get("/prescriptions/details/{id}", mockAppointmentId))
                 .andExpect(status().is4xxClientError());
     }
 
 
     @BeforeEach
     public void setUp() {
-        userService = new UserDetailsService(userRepository);
-        UserRole mockPatient = new UserRole();
-        mockPatient.setRole(RoleEnum.PATIENT);
-        mockPatient = userRoleRepository.save(mockPatient);
-        UserRole mockGp = new UserRole();
-        mockGp.setRole(RoleEnum.GP);
-        mockGp = userRoleRepository.save(mockGp);
-        UserRole mockMd = new UserRole();
-        mockMd.setRole(RoleEnum.MD);
-        mockMd = userRoleRepository.save(mockMd);
-
-        User md = new User();
-        md.setFirstName("Misho");
-        md.setLastName("Shisho");
-        md.setEmail("secondmail@abv.bg");
-        md.setDateOfBirth(LocalDate.of(1990, 10, 10));
-        md.setId("2");
-        md.setHospitalId(1L);
-        md.setPassword("TopSecret123!");
-        md.setJob("General Practitioner");
-        md.setTelephone("0888888888");
-        md.setAddress("Sample address");
-        md.setIdNumber("9010100000");
-        md.setRoles(List.of(mockPatient, mockGp, mockMd));
-        md = userRepository.save(md);
-
-        User user1 = new User();
-        user1.setFirstName("Shisho");
-        user1.setLastName("Bakshisho");
-        user1.setEmail("firstmail@abv.bg");
-        user1.setDateOfBirth(LocalDate.of(1990, 10, 10));
-        user1.setId("1");
-        user1.setPassword("TopSecret123!");
-        user1.setTelephone("0888888888");
-        user1.setAddress("Sample address");
-        user1.setIdNumber("9010100000");
-        user1.setGp(md);
-        user1.setRoles(List.of(mockPatient));
-        user1 = userRepository.save(user1);
-
-        Appointment appointmentActual = new Appointment();
-        appointmentActual.setMd(md);
-        appointmentActual.setPatient(user1);
-        appointmentActual.setDate(LocalDate.now());
-        appointmentActual.setReason("Test check");
-        appointmentActual.setTimeSpan("9:00 to 10:00");
-        appointmentActual.setStatus(StatusEnum.CONFIRMED);
-        appointmentActual = appointmentRepository.save(appointmentActual);
-        appointmentId = appointmentActual.getId();
-
-        AmbulatoryList ambulatoryList = new AmbulatoryList();
-        ambulatoryList.setDate(appointmentActual.getDate());
-        ambulatoryList.setPatient(user1);
-        ambulatoryList.setMd(md);
-        ambulatoryList.setAppointment(appointmentActual);
-        ambulatoryList.setMedicines("Aspirin");
-        ambulatoryList.setPatientHomeAddress(user1.getAddress());
-        ambulatoryList.setMdTelephoneNumber(md.getTelephone());
-        ambulatoryList.setPatientTelephoneNumber(user1.getTelephone());
-        ambulatoryList.setDiagnosis("Test");
-        ambulatoryList.setNumber(1L);
-        ambulatoryList = ambulatoryListRepository.save(ambulatoryList);
-
-        Prescription prescription = new Prescription();
-        prescription.setMd(md);
-        prescription.setAppointment(appointmentActual);
-        prescription.setPatient(user1);
-        prescription.setNumber(1L);
-        prescription.setMedicines(ambulatoryList.getMedicines());
-        prescription.setDate(ambulatoryList.getDate());
-        prescription.setMdTelephoneNumber(ambulatoryList.getMdTelephoneNumber());
-        prescription.setPatientHomeAddress(ambulatoryList.getPatientHomeAddress());
-        prescriptionRepository.save(prescription);
+        dataSetup = new DataSetup(userRepository, userRoleRepository,
+                appointmentRepository, ambulatoryListRepository, prescriptionRepository);
+        dataSetup.BasicDataSetUp();
+        dataSetup.AppointmentDataSetup();
+        dataSetup.AmbulatoryListDataSetup();
+        dataSetup.PrescriptionDataSetup();
+        appointmentId = dataSetup.getAppointmentId();
+        mockAppointmentId = dataSetup.getMockAppointmentId();
     }
 }
