@@ -13,7 +13,7 @@ public class ContactDetailsBindingModel {
     }
 
     @NotBlank(message = "Telephone field cannot be empty")
-    @Pattern(regexp = "\\s*(?:\\+?(\\d{1,5}))?[-. (]*(\\d{3})[-. )]*(\\d{3})[-. ]*(\\d{4})(?: *x(\\d+))?\\s*", message = "Please enter a valid 10 digit telephone number")
+    @Pattern(regexp =  "\\d{10,14}", message = "Please enter a valid 10 digit telephone number")
     public String getNewTelephone() {
         return newTelephone;
     }

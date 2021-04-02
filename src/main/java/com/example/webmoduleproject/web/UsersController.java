@@ -223,7 +223,11 @@ public class UsersController {
                                                      Principal principal, Model model
     ) {
         String userEmail = principal.getName();
-        if (bindingResult.hasErrors()) {
+        boolean telephoneNumberTaken = this.userService.isTelephoneNumberTaken(contactDetailsBindingModel.getNewTelephone().trim());
+        if (bindingResult.hasErrors() || telephoneNumberTaken) {
+            if (telephoneNumberTaken){
+                bindingResult.rejectValue("newTelephone", "error.contactDetailsBindingModel", "This telephone number is already registered in our system");
+            }
             redirectAttributes.addFlashAttribute("contactDetailsBindingModel", contactDetailsBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.contactDetailsBindingModel",
                     bindingResult);
