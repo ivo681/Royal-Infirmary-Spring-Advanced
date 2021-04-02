@@ -38,7 +38,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Personal ID</label>
-                                        <input th:field="*{idNumber}" th:errorclass="is-invalid" name="idNumber" type="text" class="form-control input-md" required autofocus>
+                                        <input th:field="*{idNumber}" th:errorclass="is-invalid" name="idNumber"
+                                               minlength="10" maxlength="10" type="text" class="form-control input-md" required autofocus>
                                         <small id="idNumberError" th:each="e : ${#fields.errors('idNumber')}" th:text="${e}"
                                                class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                                     </div>
@@ -48,7 +49,7 @@
                                     <div class="form-group">
                                         <label class="control-label">Telephone</label>
                                         <input th:field="*{telephone}" th:errorclass="is-invalid" name="telephone" type="text" placeholder="0*********"
-                                            class="form-control input-md" required autofocus>
+                                               minlength="10" maxlength="14" class="form-control input-md" required autofocus>
                                         <small id="telephoneError" th:each="e : ${#fields.errors('telephone')}" th:text="${e}"
                                                class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
 
@@ -58,7 +59,7 @@
                                     <div class="form-group">
                                         <label class="control-label">Address</label>
                                         <input th:field="*{address}" th:errorclass="is-invalid" name="address" type="text" placeholder="Address"
-                                               class="form-control input-md" required autofocus>
+                                               minlength="3" class="form-control input-md" required autofocus>
                                         <small id="addressError" th:each="e : ${#fields.errors('address')}" th:text="${e}"
                                                class="invalid invalid-feedback text-light form-text bg-danger rounded"></small>
                                     </div>

@@ -67,7 +67,7 @@
                            class="text-light form-text bg-danger rounded"></small>
                     <label class="visually-hidden">Telephone</label>
                     <input th:field="*{newTelephone}" type="text" name="telephone" class="form-control" placeholder="Telephone"
-                           minlength="10" required autofocus>
+                           minlength="10" maxlength="14" required autofocus>
 
                     <label class="visually-hidden">Address</label>
                     <input th:field="*{newAddress}" type="text" name="address" class="form-control" placeholder="Address"

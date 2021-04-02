@@ -210,26 +210,6 @@ function sortById(index) {
   });
 }
 
-// function deleteTableRow(btn) {
-//   let row = btn.parentNode.parentNode;
-//   if (row.parentNode.children.length > 1) {
-//     row.parentNode.removeChild(row);
-//   } else {
-//     Array.from(row.getElementsByTagName("input")).forEach(element => {
-//       element.value = "";
-//     });
-//   }
-//
-// }
-//
-// function insertTableRow() {
-//   let row = Array.from(document.getElementsByTagName("tr"))[1].cloneNode(true);
-//   Array.from(row.getElementsByTagName("input")).forEach(element => {
-//     element.value = "";
-//   });
-//   let tbody = Array.from(document.getElementsByTagName("tbody"))[0];
-//   tbody.appendChild(row);
-// }
 
 async function downloadTableWithPdf() {
 
