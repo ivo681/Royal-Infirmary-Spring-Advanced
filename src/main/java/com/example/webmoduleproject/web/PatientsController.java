@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.web;
 
+import com.example.webmoduleproject.exceptions.PermissionError;
 import com.example.webmoduleproject.service.AppointmentService;
 import com.example.webmoduleproject.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,10 +35,14 @@ public class PatientsController {
 
     @PreAuthorize("hasRole('ROLE_GP')")
     @GetMapping("/details/{id}")
-    public String viewPatientDetails(@PathVariable("id") String id,
-                                      Model model) {
-        model.addAttribute("person", this.userService.getPatientDetails(id));
-        return "person-details";
+    public String viewPatientDetails(@PathVariable("id") String patientId,
+                                     Model model, Principal principal) throws PermissionError {
+        String userEmail = principal.getName();
+        if (this.userService.isTheGpOfTheUserWithId(userEmail, patientId)) {
+            model.addAttribute("person", this.userService.getPatientDetails(patientId));
+            return "person-details";
+        }
+        throw new PermissionError("Logged in user is not the GP of the patient with the provided id");
     }
 
     @GetMapping("/appointments")

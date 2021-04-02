@@ -41,10 +41,6 @@ public interface UserRepository extends JpaRepository<User, String> {
             "u.gp.email = :email")
     List<User> getAllPatientsByGpEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.hospitalId is not NULL AND " +
-            "u.email = :email")
-    Optional<User> getHospitalGpByEmail(String email);
-
     @Query("SELECT u.gp.id FROM User u WHERE u.email = :email")
     Optional<String> getGpIdByUserEmail(String email);
 
@@ -55,9 +51,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT concat(u.firstName,' ', u.lastName) FROM User u WHERE u.id = :id")
     Optional<String> getFullNameById(String id);
-
-    @Query("SELECT concat(u.firstName,' ', u.lastName) FROM User u WHERE u.email = :userEmail")
-    Optional<String> getFullNameByUserEmail(String userEmail);
 
     @Query("SELECT u FROM User u WHERE u.email = :userEmail AND " +
             "u.employer IS NOT NULL")
@@ -71,4 +64,14 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT u FROM User u WHERE u.hospitalId IS NOT NULL AND u.email = :userEmail")
     Optional<User> getUserByEmailIfHospitalEmployee(String userEmail);
+
+    @Query("SELECT u FROM User u WHERE u.id =:patientId AND " +
+            "u.gp.email = :userEmail")
+    Optional<User> isTheGpOfTheUserWithId(String userEmail, String patientId);
+
+    @Query("SELECT u FROM User u WHERE u.telephone = :number")
+    Optional<User> findByTelephoneNumber(String number);
+
+    @Query("SELECT u FROM User u WHERE u.idNumber = :idNumber")
+    Optional<User> findByIdNumber(String idNumber);
 }

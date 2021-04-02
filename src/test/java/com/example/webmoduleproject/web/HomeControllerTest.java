@@ -57,7 +57,8 @@ public class HomeControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testHomePageAccess() throws Exception {
         this.mockMvc.perform(get("/"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/home"));
     }
 
     @Test

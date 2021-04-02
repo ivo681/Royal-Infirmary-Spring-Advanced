@@ -38,16 +38,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public void createNewPrescription(String appointmentId, String medicines) {
-        Prescription prescription = new Prescription();
-//        prescription.setDate(LocalDate.now());
-        prescription.setDate(this.appointmentService.getAppointmentById(appointmentId).getDate());
-        prescription.setMd(this.appointmentService.getMdByAppointmentId(appointmentId));
-        prescription.setPatient(this.appointmentService.getPatientByAppointmentId(appointmentId));
-        prescription.setNumber(generateDocumentNumber());
-        prescription.setPatientHomeAddress(prescription.getPatient().getAddress());
-        prescription.setMdTelephoneNumber(prescription.getMd().getTelephone());
-        prescription.setMedicines(medicines.trim());
-        prescription.setAppointment(this.appointmentService.getAppointmentById(appointmentId));
+        Prescription prescription = createPrescriptionEntity(appointmentId, medicines);
         this.prescriptionRepository.save(prescription);
     }
 
@@ -98,6 +89,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         )).collect(Collectors.toList());
     }
 
+    @Override
+    public void createPrescriptionFromSeededAppointments(String appointmentId, String medicines) {
+        Prescription prescription = createPrescriptionEntity(appointmentId, medicines);
+        this.prescriptionRepository.save(prescription);
+    }
+
     private Long generateDocumentNumber(){
         Random random = new Random();
         long documentNumber = (long) (100000000 + random.nextInt(900000000));
@@ -105,5 +102,18 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             documentNumber = (long) (100000000 + random.nextInt(900000000));
         }
         return documentNumber;
+    }
+
+    private Prescription createPrescriptionEntity(String appointmentId, String medicines){
+        Prescription prescription = new Prescription();
+        prescription.setDate(this.appointmentService.getAppointmentById(appointmentId).getDate());
+        prescription.setMd(this.appointmentService.getMdByAppointmentId(appointmentId));
+        prescription.setPatient(this.appointmentService.getPatientByAppointmentId(appointmentId));
+        prescription.setNumber(generateDocumentNumber());
+        prescription.setPatientHomeAddress(prescription.getPatient().getAddress());
+        prescription.setMdTelephoneNumber(prescription.getMd().getTelephone());
+        prescription.setMedicines(medicines.trim());
+        prescription.setAppointment(this.appointmentService.getAppointmentById(appointmentId));
+        return prescription;
     }
 }

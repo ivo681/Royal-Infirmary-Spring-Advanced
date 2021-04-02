@@ -16,6 +16,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,7 +62,6 @@ public class UserServiceImpl implements UserService {
     public void seedGps() throws IOException {
         if (this.userRepository.count() == 0) {
             String content = String.join("", Files.readAllLines(Path.of(GPS_PATH)));
-
             MdSeedDto[] gpsSeedDtos = this.gson.fromJson(content, MdSeedDto[].class);
             User admin = null;
             UserRole mdRole = this.userRoleRepository.findByRole(RoleEnum.MD).get();
@@ -75,10 +76,7 @@ public class UserServiceImpl implements UserService {
                 newUser.setAddress("Sofia " + gpsSeedDto.getAddress());
                 newUser.setEmployer("Royal Infirmary St. Sofia");
                 newUser.setIdNumber(generateIdNumber(newUser.getDateOfBirth().format(DateTimeFormatter.ofPattern("yy MM dd"))));
-                ArrayList<UserRole> roles = new ArrayList<>();
-                roles.add(mdRole);
-                roles.add(patientRole);
-                roles.add(gpRole);
+                ArrayList<UserRole> roles = new ArrayList<>(List.of(mdRole, patientRole, gpRole));
                 if (this.userRepository.count() == 0) {
                     roles.add(this.userRoleRepository.findByRole(RoleEnum.ADMIN).get());
                     newUser.setRoles(roles);
@@ -153,15 +151,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //DONE
     private String generateIdNumber(String firstPart) {
         String secondPart = String.valueOf(this.random.nextInt(10000 - 999) + 999);
-        return secondPart.length() < 4 ? String.format("%s0%s", firstPart.replace(" ", ""), secondPart) :
+        String idNumber = secondPart.length() < 4 ? String.format("%s0%s", firstPart.replace(" ", ""), secondPart) :
                 String.format("%s%s", firstPart.replace(" ", ""), secondPart);
+        while (isIdNumberTaken(idNumber)){
+            secondPart = String.valueOf(this.random.nextInt(10000 - 999) + 999);
+            idNumber = secondPart.length() < 4 ? String.format("%s0%s", firstPart.replace(" ", ""), secondPart) :
+                    String.format("%s%s", firstPart.replace(" ", ""), secondPart);
+        }
+        return idNumber;
     }
 
-
-    //DONE
     @Override
     public void registerAndLoginUser(UserRegisterServiceModel model) {
         User user = this.modelMapper.map(model, User.class);
@@ -182,19 +183,16 @@ public class UserServiceImpl implements UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
-    //DONE-
     @Override
     public boolean hasTelephone(String email) {
         return this.userRepository.findByEmail(email).get().getTelephone() != null;
     }
 
-    //DONE-
     @Override
     public boolean takenHospitalId(Long id) {
         return this.userRepository.findByHospitalId(id).isPresent();
     }
 
-    //DONE-
     @Override
     public boolean emailExists(String email) {
         return this.userRepository.findByEmail(email).isPresent();
@@ -234,16 +232,14 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setEmployer("Royal Infirmary St. Sofia");
         }
-        this.userRepository.save(user);
+        this.userRepository.saveAndFlush(user);
     }
 
-    //DONE
     @Override
     public boolean hasGp(String userEmail) {
         return this.userRepository.findByEmail(userEmail).get().getGp() != null;
     }
 
-    //DONE
     @Override
     public List<GpViewModel> getAllGps(String userEmail) {
         List<GpServiceModel> gpServiceModels = this.userRepository.getAllGpsExcept(userEmail).stream().map(doctor -> {
@@ -265,35 +261,41 @@ public class UserServiceImpl implements UserService {
         this.userRepository.save(user);
     }
 
-    //DONE
     @Override
     public void addMdJob(String userEmail, String job) {
         User user = this.userRepository.findByEmail(userEmail).get();
         if (user.getJob() == null) {
             user.setJob(job);
-            this.userRepository.save(user);
+            if (job.equalsIgnoreCase("General Practitioner")){
+                List<UserRole> currentRoles = user.getRoles();
+                currentRoles.add(this.userRoleRepository.findByRole(RoleEnum.GP).get());
+                user.setRoles(currentRoles);
+
+                //updating current User with GP role without logging out and in again
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                List<GrantedAuthority> updatedAuthorities = new ArrayList<>(authentication.getAuthorities());
+                updatedAuthorities.add(new SimpleGrantedAuthority("ROLE_GP"));
+                Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+                        authentication.getPrincipal(), authentication.getAuthorities(),
+                        updatedAuthorities
+                );
+                SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+            }
+            this.userRepository.saveAndFlush(user);
         }
     }
 
-    //DONE
     @Override
     public boolean hasJob(String userEmail) {
         return this.userRepository.findByEmail(userEmail).get().getJob() != null;
     }
 
-    //DONE
     @Override
     public boolean hasMdRole(String userEmail) {
         List<UserRole> userRoleByEmail = getUserRoleByEmail(userEmail);
         Optional<UserRole> MdRole = userRoleByEmail.stream().filter(userRole ->
                 userRole.getRole().equals(RoleEnum.MD)).findAny();
         return MdRole.isPresent();
-    }
-
-    //DONE
-    @Override
-    public boolean isGpInHospital(String userEmail) {
-        return this.userRepository.getHospitalGpByEmail(userEmail).isPresent();
     }
 
     @Override
@@ -317,7 +319,6 @@ public class UserServiceImpl implements UserService {
         return this.modelMapper.map(model, UserDetailsViewModel.class);
     }
 
-    //DONE
     @Override
     public String getGpIdByUserEmail(String email) {
         return this.userRepository.getGpIdByUserEmail(email).get();
@@ -339,16 +340,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    //DONE
     @Override
     public String getMdFullNameById(String id) {
         return this.userRepository.getFullNameById(id).get();
-    }
-
-    //DONE
-    @Override
-    public String getFullNameByUserEmail(String userEmail) {
-        return this.userRepository.getFullNameByUserEmail(userEmail).get();
     }
 
     @Override
@@ -365,23 +359,15 @@ public class UserServiceImpl implements UserService {
                 collect(Collectors.toList());
     }
 
-    //DONE
     @Override
     public boolean isPatientEmployedByEmail(String userEmail) {
         return this.userRepository.getUserByEmailIfEmployed(userEmail).isPresent();
     }
 
-    //DONE
     @Override
     public User findByEmail(String userEmail) {
         Optional<User> byEmail = this.userRepository.findByEmail(userEmail);
         return byEmail.orElse(null);
-    }
-
-    //DONE
-    @Override
-    public User findById(String id) {
-        return this.userRepository.findById(id).get();
     }
 
     @Override
@@ -431,7 +417,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changeEmploymentDetails(String userEmail, EmploymentDetailsServiceModel serviceModel) {
         User user = this.userRepository.findByEmail(userEmail).get();
-        if (serviceModel.getNewEmployer() != null && !serviceModel.getNewEmployer().trim().isBlank()
+        if (serviceModel.getNewEmployer() != null && serviceModel.getNewJob() != null
+        && !serviceModel.getNewEmployer().trim().isBlank()
         && !serviceModel.getNewJob().trim().isBlank()){
             user.setEmployer(serviceModel.getNewEmployer().trim());
             user.setJob(serviceModel.getNewJob().trim());
@@ -447,6 +434,27 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.getUserByEmailIfHospitalEmployee(userEmail).isPresent();
     }
 
+    @Override
+    public boolean isTheGpOfTheUserWithId(String userEmail, String patientId) {
+        return this.userRepository.isTheGpOfTheUserWithId(
+                userEmail, patientId).isPresent();
+    }
+
+    @Override
+    public boolean isUserRegisteredInHospital(String id) {
+        return this.userRepository.findById(id).isPresent();
+    }
+
+    @Override
+    public boolean isTelephoneNumberTaken(String number) {
+        return this.userRepository.findByTelephoneNumber(number).isPresent();
+    }
+
+    @Override
+    public boolean isIdNumberTaken(String idNumber) {
+        return this.userRepository.findByIdNumber(idNumber).isPresent();
+    }
+
     private Long generateHospitalId() {
         long hospitalId = (long) (100000 + this.random.nextInt(900000));
         while (takenHospitalId(hospitalId)) {
@@ -458,8 +466,4 @@ public class UserServiceImpl implements UserService {
     private int getRandomGpIndex(int length) {
         return this.random.nextInt(length);
     }
-
-
-
-
 }

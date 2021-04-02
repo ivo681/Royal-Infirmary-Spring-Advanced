@@ -50,7 +50,7 @@ public class UsersController {
     }
 
     @GetMapping("/login")
-    public String login(HttpServletRequest request, Model model) {
+    public String login() {
         return "login";
     }
 
@@ -87,7 +87,6 @@ public class UsersController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
             return "register";
-
         }
 
         if (this.userService.emailExists(userRegisterBindingModel.getEmail())) {
@@ -96,7 +95,6 @@ public class UsersController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel",
                     bindingResult);
             return "register";
-
         }
 
         UserRegisterServiceModel userRegisterServiceModel = this.modelMapper.map(userRegisterBindingModel, UserRegisterServiceModel.class);
@@ -110,7 +108,6 @@ public class UsersController {
         String userEmail = principal.getName();
         this.userService.setGpById(userEmail, id);
         return "redirect:/home";
-
     }
 
     @GetMapping("/change-gp")
@@ -121,6 +118,9 @@ public class UsersController {
         }
         if (!this.userService.hasGp(userEmail)) {
             return "redirect:/choose-gp";
+        }
+        if (this.userService.hasMdRole(userEmail) && !this.userService.hasJob(userEmail)) {
+            return "redirect:/choose-job";
         }
         String gpIdByUserEmail = this.userService.getGpIdByUserEmail(userEmail);
         List<GpViewModel> allGps = this.userService.getAllGpsExcept(gpIdByUserEmail, userEmail);
@@ -176,11 +176,14 @@ public class UsersController {
 
 
     @GetMapping("/details/{id}")
-    @PreAuthorize("hasRole('ROLE_GP')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String getUserDetailsForAdmin(@PathVariable("id") String id,
-                                         Model model) {
-        model.addAttribute("person", this.userService.getPatientDetails(id));
-        return "person-details";
+                                         Model model) throws NotFoundError {
+        if (this.userService.isUserRegisteredInHospital(id)){
+            model.addAttribute("person", this.userService.getPatientDetails(id));
+            return "person-details";
+        }
+        throw new NotFoundError("User is not found with provided id in the hospital database");
     }
 
     @GetMapping("/edit-profile")

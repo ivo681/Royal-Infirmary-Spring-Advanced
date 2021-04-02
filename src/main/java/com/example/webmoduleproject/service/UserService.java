@@ -44,8 +44,6 @@ public interface UserService {
 
     boolean hasMdRole(String userEmail);
 
-    boolean isGpInHospital(String userEmail);
-
     List<PatientListViewModel> getPatientListByGpEmail(String userEmail);
 
     UserDetailsViewModel getPatientDetails(String id);
@@ -56,15 +54,11 @@ public interface UserService {
 
     String getMdFullNameById(String id);
 
-    String getFullNameByUserEmail(String userEmail);
-
     List<GpViewModel> getAllGpsExcept(String mdId, String userEmail);
 
     boolean isPatientEmployedByEmail(String userEmail);
 
     User findByEmail(String userEmail);
-
-    User findById(String id);
 
     List<PatientListViewModel> getPatientList();
 
@@ -77,4 +71,12 @@ public interface UserService {
     void changeEmploymentDetails(String userEmail, EmploymentDetailsServiceModel map);
 
     boolean isUserEmployedInHospital(String userEmail);
+
+    boolean isTheGpOfTheUserWithId(String userEmail, String patientId);
+
+    boolean isUserRegisteredInHospital(String id);
+
+    boolean isTelephoneNumberTaken(String number);
+
+    boolean isIdNumberTaken(String idNumber);
 }

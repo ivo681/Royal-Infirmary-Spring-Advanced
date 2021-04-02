@@ -56,7 +56,7 @@ public class User extends BaseEntity{
         this.dateOfBirth = dateOfBirth;
     }
 
-    @Column(name = "telephone")
+    @Column(name = "telephone", unique = true)
     public String getTelephone() {
         return telephone;
     }
@@ -92,7 +92,7 @@ public class User extends BaseEntity{
         this.roles = roles;
     }
 
-    @Column(name = "id_number")
+    @Column(name = "id_number", unique = true)
     public String getIdNumber() {
         return idNumber;
     }

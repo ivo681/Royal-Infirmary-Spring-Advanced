@@ -22,7 +22,7 @@
                             <h1>Complete your profile</h1>
                         </div>
                         <form th:object="${completeProfileBindingModel}"
-                              th:action="@{/complete-profile}" th:method="patch">
+                              th:action="@{/complete-profile}" th:method="post">
                             <div sec:authorize="hasRole('ROLE_MD')" class="row">
                                 <div class="col-md-6" style="float:none;margin:auto;">
                                     <div class="form-group">

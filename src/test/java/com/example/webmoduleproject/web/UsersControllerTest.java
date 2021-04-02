@@ -158,7 +158,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD"})
+    @WithMockUser(username = "thirdmail@abv.bg", roles = {"PATIENT", "GP", "MD", "ADMIN"})
     public void testUserDetailsPage() throws Exception {
         this.mockMvc.perform(get("/users/details/{id}", userId ))
                 .andExpect(status().isOk())

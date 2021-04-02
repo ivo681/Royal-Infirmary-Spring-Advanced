@@ -14,19 +14,19 @@ public class AppointmentCleanerScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 55 23 * * *")
+    @Scheduled(cron = "0 50 23 * * *")
     public void updateNoShowAppointmentsStatus(){
         this.appointmentService.updateStatusofNoShowPatientsForAppointments();
     }
 
     @Transactional
-    @Scheduled(cron = "0 56 23 * * *")
+    @Scheduled(cron = "0 53 23 * * *")
     public void deleteUnconfirmedAndUnattendedAppointmentsToday(){
         this.appointmentService.deleteUnconfirmedAndUnattendedAppointmentsFromDatabase();
     }
 
     @Transactional
-    @Scheduled(cron = "0 58 23 * * *")
+    @Scheduled(cron = "0 56 23 * * *")
     public void updateCompletedAppointmentsStatus(){
         this.appointmentService.changeStatusOfCompletedAppointmentsForTheDay();
     }

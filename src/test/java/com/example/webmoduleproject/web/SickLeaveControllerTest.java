@@ -144,8 +144,7 @@ public class SickLeaveControllerTest {
     public void testShowSickLeaveDetailsWithInvalidId() throws Exception {
         this.mockMvc.perform(get("/sick-leaves/details/{id}", mockAppointmentId)
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/error"));
+                .andExpect(status().is4xxClientError());
     }
 
     @BeforeEach

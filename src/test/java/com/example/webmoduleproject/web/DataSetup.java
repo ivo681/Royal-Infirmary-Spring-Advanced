@@ -124,17 +124,88 @@ class DataSetup {
         user1.setLastName("Bakshisho");
         user1.setEmail("firstmail@abv.bg");
         user1.setDateOfBirth(LocalDate.of(1990, 10, 10));
-        user1.setId("1");
         user1.setGp(md);
+        user1.setId("1");
         user1.setPassword("TopSecret123!");
-        user1.setTelephone("0888888888");
+        user1.setTelephone("0888886888");
         user1.setAddress("Sample address");
-        user1.setIdNumber("9010100000");
+        user1.setIdNumber("9010103000");
         user1.setEmployer("Test employer");
         user1.setJob("Test job");
         user1.setRoles(List.of(mockPatient));
         user1 = userRepository.save(user1);
         userId = user1.getId();
+    }
+
+    public void ProfileCompletionPartialDataSetUp() {
+        UserRole mockAdmin = new UserRole();
+        mockAdmin.setRole(RoleEnum.ADMIN);
+        mockAdmin = userRoleRepository.save(mockAdmin);
+        UserRole mockPatient = new UserRole();
+        mockPatient.setRole(RoleEnum.PATIENT);
+        mockPatient = userRoleRepository.save(mockPatient);
+        UserRole mockGp = new UserRole();
+        mockGp.setRole(RoleEnum.GP);
+        mockGp = userRoleRepository.save(mockGp);
+        UserRole mockMd = new UserRole();
+        mockMd.setRole(RoleEnum.MD);
+        mockMd = userRoleRepository.save(mockMd);
+
+        md = new User();
+        md.setFirstName("Tisho");
+        md.setLastName("Shishov");
+        md.setEmail("thirdmail@abv.bg");
+        md.setDateOfBirth(LocalDate.of(1990, 10, 10));
+        md.setId("3");
+        md.setHospitalId(3L);
+        md.setPassword("TopSecret123!");
+        md.setTelephone("0888888878");
+        md.setAddress("Sample address3");
+        md.setIdNumber("9010100004");
+        md.setRoles(List.of(mockPatient, mockGp, mockMd));
+        md = userRepository.save(md);
+        md1Id = md.getId();
+
+        md2 = new User();
+        md2.setFirstName("Misho");
+        md2.setLastName("Shisho");
+        md2.setEmail("secondmail@abv.bg");
+        md2.setDateOfBirth(LocalDate.of(1990, 10, 10));
+        md2.setId("2");
+        md2.setHospitalId(1L);
+        md2.setPassword("TopSecret123!");
+        md2.setJob("General Practitioner");
+        md2.setTelephone("0888888868");
+        md2.setAddress("Sample address");
+        md2.setIdNumber("9010100000");
+        md2.setRoles(List.of(mockPatient, mockGp, mockMd));
+        md2 = userRepository.save(md2);
+        md2Id = md2.getId();
+
+        user1 = new User();
+        user1.setFirstName("Shisho");
+        user1.setLastName("Bakshisho");
+        user1.setEmail("firstmail@abv.bg");
+        user1.setDateOfBirth(LocalDate.of(1990, 10, 10));
+        user1.setPassword("TopSecret123!");
+        user1.setRoles(List.of(mockPatient));
+        user1 = userRepository.save(user1);
+        userId = user1.getId();
+
+        User user2 = new User();
+        user2.setFirstName("Test4");
+        user2.setLastName("Shishov");
+        user2.setEmail("fourthmail@abv.bg");
+        user2.setDateOfBirth(LocalDate.of(1990, 10, 10));
+        user2.setId("4");
+        user2.setGp(md);
+        user2.setHospitalId(3L);
+        user2.setPassword("TopSecret123!");
+        user2.setTelephone("0888688878");
+        user2.setAddress("Sample address4");
+        user2.setIdNumber("9010105004");
+        user2.setRoles(List.of(mockPatient, mockGp, mockMd));
+        userRepository.save(user2);
     }
 
     public void AppointmentDataSetup() {

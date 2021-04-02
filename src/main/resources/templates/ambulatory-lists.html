@@ -41,7 +41,7 @@
                         <td th:text="*{lastName}" class="text-center"></td>
                         <td th:text="*{idNumber}" class="text-center"></td>
                         <td th:text="*{diagnosis}" class="text-center"></td>
-                        <td class="text-center"><a th:href="@{/ambulatory-list/details/{id}(id = *{appointmentId})}"
+                        <td class="text-center"><a th:href="@{/ambulatory-lists/details/{id}(id = *{appointmentId})}"
                                 class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>
                     </tr>
                     <tr th:if="${own}" th:each="l : ${lists}" th:object="${l}">
@@ -50,7 +50,7 @@
                         <td th:text="*{job}" class="text-center"></td>
                         <td th:text="*{idNumber}" class="text-center"></td>
                         <td th:text="*{diagnosis}" class="text-center"></td>
-                        <td class="text-center"><a th:href="@{/ambulatory-list/details/{id}(id = *{appointmentId})}"
+                        <td class="text-center"><a th:href="@{/ambulatory-lists/details/{id}(id = *{appointmentId})}"
                                                    class="btn btn-primary btn-xs"><span class="glyphicon "></span> Details</a></td>
                     </tr>
                 </table>

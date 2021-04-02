@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.web;
 
+import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.binding.AppointmentBindingModel;
 import com.example.webmoduleproject.model.service.AppointmentServiceModel;
 import com.example.webmoduleproject.model.view.appointments.AppointmentConfirmViewModel;
@@ -65,14 +66,14 @@ public class AppointmentsController {
 
     @PostMapping("/book/{id}")
     public String appointmentCreate(@Valid @ModelAttribute("appointmentBindingModel") AppointmentBindingModel appointmentBindingModel,
-                                    BindingResult bindingResult, @PathVariable("id") String id,
+                                    BindingResult bindingResult, @PathVariable("id") String mdId,
                                      Principal principal, @RequestParam(name="md", required=true) String mdName,
                                      RedirectAttributes redirectAttributes) {
         String userEmail = principal.getName();
         boolean availabilityForDateAndTime = this.appointmentService.checkAvailabilityForDateAndTime(appointmentBindingModel.getDate(),
                 appointmentBindingModel.getTimeSpan(), mdName);
         boolean alreadyHaveConfirmedAppointment = this.appointmentService.checkForConfirmedAppointment(
-                appointmentBindingModel.getDate(), userEmail, id
+                appointmentBindingModel.getDate(), userEmail, mdId
         );
         if (bindingResult.hasErrors() || !availabilityForDateAndTime ||
         alreadyHaveConfirmedAppointment) {
@@ -85,26 +86,26 @@ public class AppointmentsController {
             redirectAttributes.addFlashAttribute("appointmentBindingModel", appointmentBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.appointmentBindingModel",
                     bindingResult);
-            return "redirect:/appointments/book/" + id;
+            return "redirect:/appointments/book/" + mdId;
         }
         AppointmentServiceModel appointmentServiceModel = this.modelMapper
                 .map(appointmentBindingModel, AppointmentServiceModel.class);
         appointmentServiceModel.setUserEmail(userEmail);
-        appointmentServiceModel.setMd_Id(id);
+        appointmentServiceModel.setMd_Id(mdId);
         String newAppointmentId = this.appointmentService.appointmentCreate(appointmentServiceModel);
         return String.format("redirect:/appointments/confirm/%s", newAppointmentId);
     }
 
     @GetMapping("/confirm/{id}")
     public String appointmentConfirmPage(@PathVariable("id") String id,
-                                   Principal principal, Model model) {
+                                   Principal principal, Model model) throws NotFoundError {
         if (this.appointmentService.isAppointmentUnconfirmed(id)){
             AppointmentConfirmViewModel unconfirmedAppointmentById = this.appointmentService.getUnconfirmedAppointmentById(id);
             unconfirmedAppointmentById.setUserEmail(principal.getName());
             model.addAttribute("unconfirmedAppointmentById", unconfirmedAppointmentById);
             return "appointmentconfirm";
         }
-        return "redirect:/patients/all/";
+        throw new NotFoundError("Unconfirmed appointment not found with this id");
     }
 
     @PostMapping("/confirm/{id}")
@@ -112,19 +113,22 @@ public class AppointmentsController {
                                      @RequestParam(value="action", required=true) String action,
                                      @RequestParam(name="date", required=true) String dateStr,
                                      @RequestParam(name="timeSpan", required=true) String timeSpan,
-                                     @RequestParam(name="md", required=true) String mdName){
-        LocalDate date = LocalDate.parse(dateStr);
-        if (action.equals("cancel")) {
-            this.appointmentService.cancelAppointmentById(id);
-            return "redirect:/appointments/book";
-        } else {
-            if (!this.appointmentService.checkAvailabilityForDateAndTime(
-                    date , timeSpan, mdName
-            )){
+                                     @RequestParam(name="md", required=true) String mdName) throws NotFoundError {
+        if (this.appointmentService.isAppointmentUnconfirmed(id)) {
+            LocalDate date = LocalDate.parse(dateStr);
+            if (action.equals("cancel")) {
+                this.appointmentService.cancelAppointmentById(id);
                 return "redirect:/appointments/book";
+            } else {
+                if (!this.appointmentService.checkAvailabilityForDateAndTime(
+                        date, timeSpan, mdName
+                )) {
+                    return "redirect:/appointments/book";
+                }
+                this.appointmentService.confirmAppointmentById(id);
+                return "redirect:/home";
             }
-            this.appointmentService.confirmAppointmentById(id);
-            return "redirect:/home";
         }
+        throw new NotFoundError("Unconfirmed appointment not found with this id");
     }
 }

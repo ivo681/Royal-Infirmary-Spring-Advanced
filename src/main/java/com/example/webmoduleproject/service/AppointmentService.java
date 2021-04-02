@@ -67,4 +67,6 @@ public interface AppointmentService {
     void seedAppointments() throws IOException;
 
     boolean isUserTheMdInAppointment(String userEmail, String id);
+
+    boolean doesUserHaveAccessToDetails(String appointmentId, String userEmail);
 }

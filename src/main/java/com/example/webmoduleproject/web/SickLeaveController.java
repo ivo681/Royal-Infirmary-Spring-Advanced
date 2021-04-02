@@ -1,5 +1,7 @@
 package com.example.webmoduleproject.web;
 
+import com.example.webmoduleproject.exceptions.DocumentExtractDetailError;
+import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.binding.SickLeaveBindingModel;
 import com.example.webmoduleproject.model.service.documents.SickLeaveBindingServiceModel;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
@@ -44,9 +46,10 @@ public class SickLeaveController {
     @PreAuthorize("hasRole('ROLE_MD')")
     @GetMapping("/new/{id}")
     public String sickLeaveBuildByAppointmentId(@PathVariable("id") String appointmentId,
-                                                      Principal principal, Model model) {
+                                                      Principal principal, Model model) throws NotFoundError {
         String userEmail = principal.getName();
-        if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId, userEmail) && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
+        if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId, userEmail)
+                && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
             if (!this.sickLeaveService.existingSickLeaveByAppointmentIdMdCheck(appointmentId, userEmail)) {
                 if (!model.containsAttribute("sickLeaveBindingModel")) {
                     model.addAttribute("sickLeaveBindingModel", new SickLeaveBindingModel());
@@ -62,10 +65,8 @@ public class SickLeaveController {
                 
             }
             return "redirect:/sick-leaves/details/" + appointmentId;
-            
         }
-        return "redirect:/error";
-        
+        throw new NotFoundError("Appointment not found with this id and md email");
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")
@@ -74,7 +75,7 @@ public class SickLeaveController {
                                                      sickLeaveBindingModel,
                                              BindingResult bindingResult, RedirectAttributes redirectAttributes,
                                              @PathVariable("id") String appointmentId,
-                                             Principal principal) {
+                                             Principal principal) throws NotFoundError {
         String userEmail = principal.getName();
         if (this.appointmentService.doesAppointmentExistByIdAndMdEmail(appointmentId,userEmail )
                 && this.ambulatoryListService.existingListForAppointment(appointmentId)) {
@@ -93,33 +94,36 @@ public class SickLeaveController {
                 this.sickLeaveService.createNewSickLeave(appointmentId, this.modelMapper.map(sickLeaveBindingModel, SickLeaveBindingServiceModel.class));
             }
             return "redirect:/sick-leaves/details/" + appointmentId;
-            
         }
-        return "redirect:/error";
-        
+        throw new NotFoundError("Appointment not found with this id and md email");
     }
 
     @GetMapping("/details/{id}")
     public String ambulatoryListCreate(@PathVariable("id") String appointmentId,
-                                             Model model) {
-        if (this.sickLeaveService.existingSickLeaveByAppointmentId(appointmentId)) {
-            SickLeaveViewModel sickLeaveView = this.sickLeaveService.getSickLeaveByAppointmentId(appointmentId);
-            MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
-            mdDetailsByAppointmentId.setTelephone(sickLeaveView.getMdTelephoneNumber());
-            PatientSickLeaveDetails patientSickLeaveDetails = this.appointmentService.
-                    getSickPatientViewModelByAppointmentId(appointmentId);
-            patientSickLeaveDetails.setTelephone(sickLeaveView.getPatientTelephoneNumber());
-            patientSickLeaveDetails.setJob(sickLeaveView.getPatientJob());
-            patientSickLeaveDetails.setEmployer(sickLeaveView.getPatientEmployer());
-            patientSickLeaveDetails.setAddress(sickLeaveView.getPatientHomeAddress());
-            model.addAttribute("sickLeaveView", sickLeaveView);
-            model.addAttribute("patientView", patientSickLeaveDetails);
-            model.addAttribute("mdView", mdDetailsByAppointmentId);
-            return "sick-leave-confirm";
-            
+                                             Model model, Principal principal) throws NotFoundError, DocumentExtractDetailError {
+        String userEmail = principal.getName();
+        if (this.appointmentService.doesUserHaveAccessToDetails(appointmentId,userEmail ) &&
+                this.sickLeaveService.existingSickLeaveByAppointmentId(appointmentId)) {
+            try {
+                SickLeaveViewModel sickLeaveView = this.sickLeaveService.getSickLeaveByAppointmentId(appointmentId);
+                MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+                mdDetailsByAppointmentId.setTelephone(sickLeaveView.getMdTelephoneNumber());
+                PatientSickLeaveDetails patientSickLeaveDetails = this.appointmentService.
+                        getSickPatientViewModelByAppointmentId(appointmentId);
+                patientSickLeaveDetails.setTelephone(sickLeaveView.getPatientTelephoneNumber());
+                patientSickLeaveDetails.setJob(sickLeaveView.getPatientJob());
+                patientSickLeaveDetails.setEmployer(sickLeaveView.getPatientEmployer());
+                patientSickLeaveDetails.setAddress(sickLeaveView.getPatientHomeAddress());
+                model.addAttribute("sickLeaveView", sickLeaveView);
+                model.addAttribute("patientView", patientSickLeaveDetails);
+                model.addAttribute("mdView", mdDetailsByAppointmentId);
+                return "sick-leave-confirm";
+            }
+            catch (Exception e) {
+                throw new DocumentExtractDetailError("Details for existing sick leave could not be extracted properly");
+            }
         }
-        return "redirect:/error";
-        
+        throw new NotFoundError("Sick leave not found with this appointment and user email");
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")

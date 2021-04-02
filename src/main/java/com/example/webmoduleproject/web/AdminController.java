@@ -2,7 +2,6 @@ package com.example.webmoduleproject.web;
 
 import com.example.webmoduleproject.service.LogService;
 import com.example.webmoduleproject.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
     private final UserService userService;
     private final LogService logService;
-    private final ModelMapper modelMapper;
 
-    public AdminController(UserService userService, LogService logService, ModelMapper modelMapper) {
+    public AdminController(UserService userService, LogService logService) {
         this.userService = userService;
         this.logService = logService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/menu")

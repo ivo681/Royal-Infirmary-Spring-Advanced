@@ -15,7 +15,7 @@ public class LogCleanerScheduler {
 
     @Transactional
     @Scheduled(cron = "0 59 23 * * *")
-    public void updateNoShowAppointmentsStatus(){
+    public void removeLogsOfTheDay(){
         this.logService.clearLogsFromDatabase();
     }
 }

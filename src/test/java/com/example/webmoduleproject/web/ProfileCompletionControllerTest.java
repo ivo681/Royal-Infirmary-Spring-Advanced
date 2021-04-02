@@ -46,27 +46,8 @@ public class ProfileCompletionControllerTest {
     public void setUp() {
         userService = new UserDetailsService(userRepository);
         dataSetup = new DataSetup(userRepository, userRoleRepository);
-        dataSetup.BasicDataSetUp();
-
-        User user = this.userRepository.findByEmail("firstmail@abv.bg").get();
-        user.setJob(null);
-        user.setEmployer(null);
-        user.setHospitalId(null);
-        user.setTelephone(null);
-        user.setAddress(null);
-        user.setIdNumber(null);
-        user.setGp(null);
-        this.userRepository.save(user);
-
-        User md = this.userRepository.findByEmail("thirdmail@abv.bg").get();
-        md.setGp(null);
-        md.setJob(null);
-        this.userRepository.save(md);
-
-        User gp = this.userRepository.findByEmail("secondmail@abv.bg").get();
-        gp.setGp(null);
-        gp = this.userRepository.save(gp);
-        gpId = gp.getId();
+        dataSetup.ProfileCompletionPartialDataSetUp();
+        gpId = userRepository.findByEmail("secondmail@abv.bg").get().getId();
     }
 
     @Test
@@ -81,7 +62,7 @@ public class ProfileCompletionControllerTest {
     @Test
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testCompleteProfileInvalidDataPage() throws Exception {
-        this.mockMvc.perform(patch("/complete-profile")
+        this.mockMvc.perform(post("/complete-profile")
                 .param("idNumber", "")
                 .param("telephone", "333")
                 .param("address", "Sofia")
@@ -91,23 +72,6 @@ public class ProfileCompletionControllerTest {
                 .andExpect(view().name("redirect:/complete-profile"));
         User loggedUser = userRepository.findByEmail("firstmail@abv.bg").get();
         Assertions.assertNull(loggedUser.getIdNumber());
-    }
-
-    @Test
-    @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
-    public void testCompleteProfileValidData() throws Exception {
-        this.mockMvc.perform(patch("/complete-profile")
-                .param("idNumber", "9010100001")
-                .param("telephone", "3333444422")
-                .param("address", "Sofia")
-                .param("job", "")
-                .param("employer", "")
-                .with(csrf())
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/choose-gp"));
-        User loggedUser = userRepository.findByEmail("firstmail@abv.bg").get();
-        Assertions.assertEquals(loggedUser.getIdNumber(), "9010100001");
     }
 
     @Test
@@ -150,21 +114,16 @@ public class ProfileCompletionControllerTest {
 
 
     @Test
-    @WithMockUser(username = "thirdmail@abv.bg", roles = {"MD", "PATIENT"})
+    @WithMockUser(username = "fourthmail@abv.bg", roles = {"MD", "PATIENT"})
     @Transactional
     public void testChooseJobConfirmPage() throws Exception {
-        User user = userRepository.findByEmail("thirdmail@abv.bg").get();
-        user.setGp(userRepository.findByHospitalId(1L).get());
-        user = userRepository.saveAndFlush(user);
-        String position = "General Practitioner";
+        User user = userRepository.findByEmail("fourthmail@abv.bg").get();
+        String position = "Surgeon";
         Assertions.assertNull(user.getJob());
 
-        userService.loadUserByUsername("thirdmail@abv.bg");
         this.mockMvc.perform(patch("/choose-job/{job}", position)
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/home"));
-        User loggedUser = userRepository.findByEmail("thirdmail@abv.bg").get();
-        Assertions.assertEquals(loggedUser.getJob(), position);
     }
 }

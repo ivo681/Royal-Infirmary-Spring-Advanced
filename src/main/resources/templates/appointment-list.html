@@ -39,9 +39,9 @@
                             <td th:text="*{lastName}" class="text-center"></td>
                             <td th:text="*{reason}" class="text-center"></td>
                             <td th:text="*{idNumber}" class="text-center"></td>
-                            <td th:if="${past}" class="text-center"><a th:href="@{/ambulatory-list/details/{id}(id = *{id})}" class="btn btn-primary btn-xs"><span
+                            <td th:if="${past}" class="text-center"><a th:href="@{/ambulatory-lists/details/{id}(id = *{id})}" class="btn btn-primary btn-xs"><span
                                         class="glyphicon "></span>Details</a></td>
-                            <td th:if="${today}" class="text-center"><a th:href="@{/ambulatory-list/new/{id}(id = *{id})}" class="btn btn-success btn-xs"><span
+                            <td th:if="${today}" class="text-center"><a th:href="@{/ambulatory-lists/new/{id}(id = *{id})}" class="btn btn-success btn-xs"><span
                                     class="glyphicon "></span>Open</a></td>
                         </tr>
                     </tbody>

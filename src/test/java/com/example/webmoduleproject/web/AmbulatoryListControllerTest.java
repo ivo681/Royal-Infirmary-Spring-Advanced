@@ -53,7 +53,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testAllPatientAmbulatoryListsPage() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/all"))
+        this.mockMvc.perform(get("/ambulatory-lists/all"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ambulatory-lists"))
                 .andExpect(model().attribute("own", false));
@@ -63,7 +63,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testOwnAmbulatoryListsPage() throws Exception {
         //userService.loadUserByUsername("firstmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/own"))
+        this.mockMvc.perform(get("/ambulatory-lists/own"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ambulatory-lists"))
                 .andExpect(model().attribute("own", true));
@@ -73,7 +73,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testAllAmbulatoryListsAccess() throws Exception {
         //userService.loadUserByUsername("firstmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/all"))
+        this.mockMvc.perform(get("/ambulatory-lists/all"))
                 .andExpect(status().isForbidden());
     }
 
@@ -81,7 +81,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "firstmail@abv.bg", roles = {"PATIENT"})
     public void testBuildNewAmbulatoryListWithForbiddenAccess() throws Exception {
         //userService.loadUserByUsername("firstmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/new/{id}", appointmentId))
+        this.mockMvc.perform(get("/ambulatory-lists/new/{id}", appointmentId))
                 .andExpect(status().isForbidden());
     }
 
@@ -89,7 +89,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testBuildNewAmbulatoryListWithInvalidAppointment() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/new/{id}", "someWrongId"))
+        this.mockMvc.perform(get("/ambulatory-lists/new/{id}", "someWrongId"))
                 .andExpect(status().is4xxClientError());
     }
 
@@ -97,7 +97,7 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testBuildNewAmbulatoryListPage() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(get("/ambulatory-list/new/{id}", mockAppointmentId))
+        this.mockMvc.perform(get("/ambulatory-lists/new/{id}", mockAppointmentId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("ambulatory"))
                 .andExpect(model().attributeExists("mdViewModel"));
@@ -107,13 +107,13 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testCreateNewAmbulatoryList() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-lists/create-{id}", mockAppointmentId)
         .param("diagnosis", "Test diagnosis")
         .param("medicines", "")
                 .with(csrf())
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/ambulatory-list/details/" + mockAppointmentId));
+                .andExpect(view().name("redirect:/ambulatory-lists/details/" + mockAppointmentId));
 
         Assertions.assertTrue(ambulatoryListRepository.findByAppointmentId(mockAppointmentId).isPresent());
     }
@@ -122,13 +122,13 @@ public class AmbulatoryListControllerTest {
     @WithMockUser(username = "secondmail@abv.bg", roles = {"PATIENT", "MD", "GP"})
     public void testCreateNewAmbulatoryListInvalidData() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
-        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-lists/create-{id}", mockAppointmentId)
                 .param("diagnosis", "Te")
                 .param("medicines", "")
                 .with(csrf())
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/ambulatory-list/new/" + mockAppointmentId));
+                .andExpect(view().name("redirect:/ambulatory-lists/new/" + mockAppointmentId));
 
         Assertions.assertTrue(ambulatoryListRepository.findByAppointmentId(mockAppointmentId).isEmpty());
     }
@@ -139,13 +139,13 @@ public class AmbulatoryListControllerTest {
         //userService.loadUserByUsername("secondmail@abv.bg");
         Assertions.assertTrue(prescriptionRepository.findByAppointmentId(mockAppointmentId).isEmpty());
 
-        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-lists/create-{id}", mockAppointmentId)
                 .param("diagnosis", "Test diagnosis")
                 .param("medicines", "Aspirin")
                 .with(csrf())
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/ambulatory-list/details/" + mockAppointmentId));
+                .andExpect(view().name("redirect:/ambulatory-lists/details/" + mockAppointmentId));
 
         Assertions.assertTrue(prescriptionRepository.findByAppointmentId(mockAppointmentId).isPresent());
     }
@@ -156,13 +156,13 @@ public class AmbulatoryListControllerTest {
         //userService.loadUserByUsername("secondmail@abv.bg");
         Assertions.assertTrue(prescriptionRepository.findByAppointmentId(mockAppointmentId).isEmpty());
 
-        this.mockMvc.perform(post("/ambulatory-list/create-{id}", mockAppointmentId)
+        this.mockMvc.perform(post("/ambulatory-lists/create-{id}", mockAppointmentId)
                 .param("diagnosis", "Test diagnosis")
                 .param("medicines", "         ")
                 .with(csrf())
         )
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/ambulatory-list/details/" + mockAppointmentId));
+                .andExpect(view().name("redirect:/ambulatory-lists/details/" + mockAppointmentId));
 
         Assertions.assertTrue(prescriptionRepository.findByAppointmentId(mockAppointmentId).isEmpty());
     }
@@ -172,7 +172,7 @@ public class AmbulatoryListControllerTest {
     public void testGetAmbulatoryListDetailsPageNotExisting() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
 
-        this.mockMvc.perform(get("/ambulatory-list/details/{id}", mockAppointmentId)
+        this.mockMvc.perform(get("/ambulatory-lists/details/{id}", mockAppointmentId)
         )
                 .andExpect(status().is4xxClientError());
     }
@@ -184,7 +184,7 @@ public class AmbulatoryListControllerTest {
     public void testGetAmbulatoryListDetailsPageWithMd() throws Exception {
         //userService.loadUserByUsername("secondmail@abv.bg");
 
-        this.mockMvc.perform(get("/ambulatory-list/details/{id}", appointmentId)
+        this.mockMvc.perform(get("/ambulatory-lists/details/{id}", appointmentId)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("ambulatory-confirm"))
@@ -196,7 +196,7 @@ public class AmbulatoryListControllerTest {
     public void testGetAmbulatoryListDetailsPageWithPatient() throws Exception {
         //userService.loadUserByUsername("firstmail@abv.bg");
 
-        this.mockMvc.perform(get("/ambulatory-list/details/{id}", appointmentId)
+        this.mockMvc.perform(get("/ambulatory-lists/details/{id}", appointmentId)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("ambulatory-confirm"))

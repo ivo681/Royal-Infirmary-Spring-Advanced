@@ -17,4 +17,5 @@ public interface PrescriptionService {
 
     List<PrescriptionListAllViewModel> getAllPrescriptionsByPatientEmail(String userEmail);
 
+    void createPrescriptionFromSeededAppointments(String id, String medicines);
 }

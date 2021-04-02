@@ -80,4 +80,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
     @Query("SELECT a FROM Appointment a WHERE a.id = :id AND " +
             "a.md.email = :userEmail")
     Optional<Appointment> isUserTheMdInAppointment(String userEmail, String id);
+
+    @Query("SELECT a FROM Appointment a WHERE a.id = :id AND " +
+            "(a.md.email = :userEmail OR a.patient.email = :userEmail)")
+    Optional<Appointment> doesUserHaveAccessToAppointment(String id, String userEmail);
 }

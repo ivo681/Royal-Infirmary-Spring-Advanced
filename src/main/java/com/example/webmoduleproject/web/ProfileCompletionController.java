@@ -71,11 +71,19 @@ public class ProfileCompletionController {
         return "redirect:/home";
     }
 
-    @PatchMapping("/complete-profile")
+    @PostMapping("/complete-profile")
     public String completeProfile(@Valid @ModelAttribute("completeProfileBindingModel") CompleteProfileBindingModel completeProfileBindingModel,
                                   BindingResult bindingResult, RedirectAttributes redirectAttributes, Principal principal) {
         String userEmail = principal.getName();
-        if (bindingResult.hasErrors()) {
+        boolean idNumberTaken = this.userService.isIdNumberTaken(completeProfileBindingModel.getIdNumber().trim());
+        boolean telephoneNumberTaken = this.userService.isTelephoneNumberTaken(completeProfileBindingModel.getTelephone().trim());
+        if (bindingResult.hasErrors() || idNumberTaken || telephoneNumberTaken) {
+            if (idNumberTaken){
+                bindingResult.rejectValue("idNumber", "error.completeProfileBindingModel", "This id number is already registered in our system");
+            }
+            if (telephoneNumberTaken){
+                bindingResult.rejectValue("telephone", "error.completeProfileBindingModel", "This telephone number is already registered in our system");
+            }
             redirectAttributes.addFlashAttribute("completeProfileBindingModel", completeProfileBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.completeProfileBindingModel",
                     bindingResult);

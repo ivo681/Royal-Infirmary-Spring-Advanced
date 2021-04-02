@@ -1,5 +1,6 @@
 package com.example.webmoduleproject.web;
 
+import com.example.webmoduleproject.exceptions.DocumentExtractDetailError;
 import com.example.webmoduleproject.exceptions.NotFoundError;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
 import com.example.webmoduleproject.model.view.buildBlocks.PatientPrescriptionDetails;
@@ -34,20 +35,26 @@ public class PrescriptionController {
 
     @GetMapping("/details/{id}")
     public String getExistingPrescription(@PathVariable("id") String appointmentId,
-                                                Model model) throws NotFoundError {
-        if (this.prescriptionService.existingPrescriptionByAppointmentId(appointmentId)) {
-            PrescriptionViewModel prescriptionViewModel = this.prescriptionService.getPrescriptionByAppointmentId(appointmentId);
-            MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
-            mdDetailsByAppointmentId.setTelephone(prescriptionViewModel.getMdTelephoneNumber());
-            PatientPrescriptionDetails patientViewModelByAppointmentId = this.appointmentService.getPatientPrescriptionViewModelByAppointmentId(appointmentId);
-            patientViewModelByAppointmentId.setAddress(prescriptionViewModel.getPatientHomeAddress());
-            model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
-            model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
-            model.addAttribute("prescription", prescriptionViewModel);
-            return "prescription";
+                                                Model model, Principal principal) throws NotFoundError, DocumentExtractDetailError {
+        String userEmail = principal.getName();
+        if (this.appointmentService.doesUserHaveAccessToDetails(appointmentId,userEmail ) &&
+                this.prescriptionService.existingPrescriptionByAppointmentId(appointmentId)) {
+            try {
+                PrescriptionViewModel prescriptionViewModel = this.prescriptionService.getPrescriptionByAppointmentId(appointmentId);
+                MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+                mdDetailsByAppointmentId.setTelephone(prescriptionViewModel.getMdTelephoneNumber());
+                PatientPrescriptionDetails patientViewModelByAppointmentId = this.appointmentService.getPatientPrescriptionViewModelByAppointmentId(appointmentId);
+                patientViewModelByAppointmentId.setAddress(prescriptionViewModel.getPatientHomeAddress());
+                model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
+                model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
+                model.addAttribute("prescription", prescriptionViewModel);
+                return "prescription";
+            } catch (Exception e) {
+                throw new DocumentExtractDetailError("Details for existing prescription could not be extracted properly");
+            }
         }
-        throw new NotFoundError("Prescription was not found with this appointment id");
-//        return "redirect:/home";
+        throw new NotFoundError("Prescription was not found with this appointment id and user email");
+
     }
 
     @PreAuthorize("hasRole('ROLE_MD')")

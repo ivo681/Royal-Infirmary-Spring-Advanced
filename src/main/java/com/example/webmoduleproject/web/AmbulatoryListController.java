@@ -27,7 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
-@RequestMapping("/ambulatory-list")
+@RequestMapping("/ambulatory-lists")
 public class AmbulatoryListController {
     private final UserService userService;
     private final AmbulatoryListService ambulatoryListService;
@@ -61,7 +61,7 @@ public class AmbulatoryListController {
                 model.addAttribute("today", LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
                 return "ambulatory";
             }
-            return "redirect:/ambulatory-list/details/" + id;
+            return "redirect:/ambulatory-lists/details/" + id;
         }
         throw new NotFoundError("Appointment not found with this id and md email");
     }
@@ -79,7 +79,7 @@ public class AmbulatoryListController {
                     redirectAttributes.addFlashAttribute("ambulatoryListBindingModel", ambulatoryListBindingModel);
                     redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.ambulatoryListBindingModel",
                             bindingResult);
-                    return "redirect:/ambulatory-list/new/" + appointmentId;
+                    return "redirect:/ambulatory-lists/new/" + appointmentId;
                 }
                 this.ambulatoryListService.createNewList(appointmentId,
                         this.modelMapper.map(ambulatoryListBindingModel, AmbulatoryListServiceModel.class));
@@ -87,40 +87,39 @@ public class AmbulatoryListController {
                     this.prescriptionService.createNewPrescription(appointmentId, ambulatoryListBindingModel.getMedicines());
                 }
             }
-            return "redirect:/ambulatory-list/details/" + appointmentId;
-            //make it return the confirmed ambulatory list
+            return "redirect:/ambulatory-lists/details/" + appointmentId;
         }
         throw new NotFoundError("Appointment not found with this id and md email");
     }
 
     @GetMapping("/details/{id}")
-    public String getExistingAmbulatoryList(@PathVariable("id") String id, Model model, Principal principal)
+    public String getExistingAmbulatoryList(@PathVariable("id") String appointmentId, Model model, Principal principal)
             throws NotFoundError, DocumentExtractDetailError {
         String userEmail = principal.getName();
-        if (this.ambulatoryListService.existingListForAppointment(id)) {
+        if (this.appointmentService.doesUserHaveAccessToDetails(appointmentId,userEmail ) &&
+                this.ambulatoryListService.existingListForAppointment(appointmentId)) {
             try {
-                AmbulatoryListViewModel ambulatoryListByAppointmentId = this.ambulatoryListService.getAmbulatoryListByAppointmentId(id);
-                MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(id);
-                PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(id);
+                AmbulatoryListViewModel ambulatoryListByAppointmentId = this.ambulatoryListService.getAmbulatoryListByAppointmentId(appointmentId);
+                MdDocumentDetails mdDetailsByAppointmentId = this.appointmentService.getMdDetailsByAppointmentId(appointmentId);
+                PatientAmbulatoryListDetails patientViewModelByAppointmentId = this.appointmentService.getPatientViewModelByAppointmentId(appointmentId);
                 mdDetailsByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getMdTelephoneNumber());
                 patientViewModelByAppointmentId.setTelephone(ambulatoryListByAppointmentId.getPatientTelephoneNumber());
                 patientViewModelByAppointmentId.setAddress(ambulatoryListByAppointmentId.getPatientHomeAddress());
                 model.addAttribute("mdViewModel", mdDetailsByAppointmentId);
                 model.addAttribute("patientViewModel", patientViewModelByAppointmentId);
                 model.addAttribute("ambulatoryList", ambulatoryListByAppointmentId);
-                if (this.appointmentService.isUserTheMdInAppointment(userEmail, id)) {
+                if (this.appointmentService.isUserTheMdInAppointment(userEmail, appointmentId)) {
                     model.addAttribute("patientEmployed", this.userService.isPatientEmployedByEmail(patientViewModelByAppointmentId.getEmail()));
-                    model.addAttribute("givePrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
                     model.addAttribute("showButtons", LocalDate.now().equals(ambulatoryListByAppointmentId.getDate()));
                 } else {
                     model.addAttribute("patientEmployed", false);
-                    model.addAttribute("givePrescription", false);
                     model.addAttribute("showButtons", false);
                 }
+                model.addAttribute("showPrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
+                return "ambulatory-confirm";
             } catch (Exception e) {
                 throw new DocumentExtractDetailError("Details for existing ambulatory list could not be extracted properly");
             }
-            return "ambulatory-confirm";
         }
         throw new NotFoundError("Ambulatory list not found with this appointment id");
     }
