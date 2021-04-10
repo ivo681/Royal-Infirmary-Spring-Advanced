@@ -8,10 +8,7 @@ import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListAll
 import com.example.webmoduleproject.model.view.ambulatoryLists.AmbulatoryListViewModel;
 import com.example.webmoduleproject.model.view.buildBlocks.MdDocumentDetails;
 import com.example.webmoduleproject.model.view.buildBlocks.PatientAmbulatoryListDetails;
-import com.example.webmoduleproject.service.AmbulatoryListService;
-import com.example.webmoduleproject.service.AppointmentService;
-import com.example.webmoduleproject.service.PrescriptionService;
-import com.example.webmoduleproject.service.UserService;
+import com.example.webmoduleproject.service.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,13 +30,15 @@ public class AmbulatoryListController {
     private final AmbulatoryListService ambulatoryListService;
     private final AppointmentService appointmentService;
     private final PrescriptionService prescriptionService;
+    private final SickLeaveService sickLeaveService;
     private final ModelMapper modelMapper;
 
-    public AmbulatoryListController(UserService userService, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, PrescriptionService prescriptionService, ModelMapper modelMapper) {
+    public AmbulatoryListController(UserService userService, AmbulatoryListService ambulatoryListService, AppointmentService appointmentService, PrescriptionService prescriptionService, SickLeaveService sickLeaveService, ModelMapper modelMapper) {
         this.userService = userService;
         this.ambulatoryListService = ambulatoryListService;
         this.appointmentService = appointmentService;
         this.prescriptionService = prescriptionService;
+        this.sickLeaveService = sickLeaveService;
         this.modelMapper = modelMapper;
     }
 
@@ -115,6 +114,7 @@ public class AmbulatoryListController {
                     model.addAttribute("patientEmployed", false);
                     model.addAttribute("showButtons", false);
                 }
+                model.addAttribute("existingSickLeave", sickLeaveService.existingSickLeaveByAppointmentId(appointmentId));
                 model.addAttribute("showPrescription", !ambulatoryListByAppointmentId.getMedicines().isBlank());
                 return "ambulatory-confirm";
             } catch (Exception e) {
