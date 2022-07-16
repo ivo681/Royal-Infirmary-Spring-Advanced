@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @SpringBootApplication
 public class WebModuleProjectApplication {
-    //v16/07/2022
 
     public static void main(String[] args) {
         SpringApplication.run(WebModuleProjectApplication.class, args);
